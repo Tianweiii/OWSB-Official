@@ -1,0 +1,637 @@
+package models.Utils;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+
+/**
+ * A class used to query from a target db file.
+ * The root path the class uses is ./src
+ * <br>
+ * Example usage:
+ * <pre>
+ * <code>
+ * QueryBuilder&lt;SomeClass&gt; qb = new QueryBuilder&lt;&gt;(new SomeClass());<br>
+ * qb.select("name", "age").from("db/fileName").where("name", "=", "John").get();<br>
+ * qb.target("db/fileName").values(new String[]{"Allen", "21", "1"}).create();<br>
+ * qb.update("9", new String[]{"Doe", "22", "1"});<br>
+ * qb.delete("9");
+ * </code>
+ * </pre>
+ *
+ * @param <T> The type of the class to be used.
+ * */
+public class QueryBuilder<T>{
+
+	private final T aClass;
+	private final String[] classAttrs;
+
+	private String fileName;
+	private String[] selectedColumns;
+	private String[] whereClause;
+	private String[] sortByClause;
+
+	private String targetFile;
+	private String createValues;
+
+	public QueryBuilder(T someClass){
+		this.aClass = someClass;
+		this.classAttrs = getAttrs();
+		String className = getClassName();
+		setClassName(className);
+	}
+
+	public String getClassName() {
+		return aClass.getClass().getSimpleName();
+	}
+
+	public void setClassName(String className){
+		this.fileName = className;
+	}
+
+	/**
+	 * Returns an QueryBuilder of the type you passed in.
+	 * The columns are <b>optional</b>.
+	 * The default column is <b>" * "</b>.
+	 *
+	 * @param columns <b>Optional: String[]</b> <br> An optional array of strings.
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 *
+	 * */
+	public QueryBuilder<T> select(String[]... columns){
+		if (columns.length == 0) {
+			this.selectedColumns = new String[]{"all"};
+		}else {
+			this.selectedColumns = columns[0];
+		}
+		return this;
+	}
+
+	/**
+	 * Returns an QueryBuilder of the type you passed in.
+	 * The root path is /src.
+	 * The fileName argument must be of type <b>String</b>, and can omit the
+	 * .txt
+	 * <p>
+	 *
+	 * @param  fileName <b>String</b> <br> The path of the file relative to ./src without the file extension
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 **/
+	public QueryBuilder<T> from(String fileName) {
+		if (fileName.contains(".txt")) {
+			fileName = fileName.replace(".txt", "");
+		}
+		this.fileName = fileName;
+		return this;
+	}
+
+	/**
+	 * Sets the where clause to be used while querying data.
+	 *
+	 * @param fieldOne <b>String</b> <br> The left side of the comparison.
+	 * @param operator <b>String</b> <br> The comparison operator. Currently supported operators are:
+	 *                 '=', '!=', 'like'
+	 *
+	 * @param fieldTwo <b>String</b> <br> The right side of the comparison.
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> where(String fieldOne, String operator, String fieldTwo) {
+		this.whereClause = new String[]{fieldOne, operator, fieldTwo};
+		return this;
+	}
+
+	/**
+	 * Sets the sort by clause to be used when querying data.
+	 * Defaults to sorting by the ID field.
+	 *
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> sort() {
+		this.sortByClause = new String[]{getClassName().toLowerCase() + "_id", "asc"};
+		return this;
+	}
+
+	/**
+	 * Sets the sort by clause to be used when querying data.
+	 * Defaults to sorting by the ID field.
+	 *
+	 * @param itemToSortBy <b>String</b> <br> The item to be sorted by.
+	 * @param order <b>String</b> <br> The order to be sorted by. Currently supported orders are:
+	 *              <b>asc</b>, <b>desc</b>
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> sort(String itemToSortBy, String order) {
+		this.sortByClause = new String[]{itemToSortBy, order};
+		return this;
+	}
+
+	/**
+	 * Retrieves the data according to the statements that have been used.
+	 * Retrieves the data from the path ./src/main/java/{fileName}.txt
+	 * Use the <b>customFrom()</b> method to change this.
+	 *
+	 * @return An array with HashMaps with the columns as the key and the data as the item.
+	 * */
+	public ArrayList<HashMap<String, String>> get(){
+		ArrayList<HashMap<String, String>> allData = new ArrayList<>();
+		String textFileName = this.fileName + ".txt";
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("src/main/java/" + textFileName));
+			String line = br.readLine();
+
+			while (line != null) {
+				ArrayList<HashMap<String, String>> dataHolder = getHashMaps(line.split(","), this.classAttrs);
+				allData.addAll(dataHolder);
+				line = br.readLine();
+			}
+
+			//Sort By Statement
+			if (this.sortByClause != null) {
+				switch (this.sortByClause[1]) {
+					case "asc":
+						allData.sort(Comparator.comparing(o -> o.get(this.sortByClause[0])));
+						break;
+					case "desc":
+						allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
+						break;
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return allData;
+	}
+
+	/**
+	 * Retrieves the data with the relations that have been passed by the user
+	 * according to the statements that have been used.
+	 *
+	 * @param someClass the target relation to retrieve the data from
+	 * @return A hashmap with the origin data and the relation data.
+	 * */
+	public HashMap<String, ArrayList<HashMap<String,String>>> getWithRelations(Object someClass) {
+		String targetRelation = someClass.getClass().getSimpleName().toLowerCase();
+
+		ArrayList<HashMap<String, String>> allData = this.get(); //get data\
+		for (HashMap<String, String> data : allData) {
+			if (data.get(targetRelation + "_id") == null) {
+				throw new RuntimeException(targetRelation + "_id not included in 'select' clause");
+			}
+		}
+		ArrayList<HashMap<String, String>> dataWithRelation = new ArrayList<>();
+		HashMap<String, ArrayList<HashMap<String,String>>> finalData = new HashMap<>();
+
+		for (HashMap<String, String> data : allData) {
+			String targetFile = targetRelation + ".txt";
+			QueryBuilder<?> qb = new QueryBuilder<>(someClass);
+			ArrayList<HashMap<String, String>> relationData = qb.select()
+					.from("db/" + targetFile)
+					.where(targetRelation + "_id", "=", data.get(targetRelation + "_id"))
+					.get();
+
+			dataWithRelation.addAll(relationData);
+		}
+		finalData.put(targetRelation, dataWithRelation);
+		finalData.put(this.getClassName().toLowerCase(), allData);
+		return finalData;
+	}
+
+	/**
+	 * Gets the Hashmap which contains fields selected using the select() method.
+	 *
+	 * @param entryData <b>String[]</b> <br> An array that contains the selected fields from the user.
+	 * @param classAttrs <b>String[]</b> <br> The attributes of the class passed into QueryBuilder.
+	 * @return ArrayList that contains the hashmap of the selected fields.
+	 *
+	 * */
+	private ArrayList<HashMap<String, String>> getHashMaps(String[] entryData, String[] classAttrs) {
+		HashMap<String, String> dataMap = new HashMap<>();
+		ArrayList<HashMap<String, String>> dataHolder = new ArrayList<>();
+
+		for (int i = 0; i < classAttrs.length; i++) {
+			dataMap.put(classAttrs[i], entryData[i]);
+		}
+
+		dataHolder.add(dataMap);
+
+		//Where Statement
+		if (this.whereClause != null) {
+			switch (this.whereClause[1]) {
+				case "=":
+					dataHolder.removeIf(data-> !data.get(this.whereClause[0]).equals(this.whereClause[2]));
+					break;
+				case "!=" :
+					dataHolder.removeIf(data-> data.get(this.whereClause[0]).equals(this.whereClause[2]));
+					break;
+				case "like":
+					dataHolder.removeIf(data-> !data.get(this.whereClause[0]).contains(this.whereClause[2]));
+					break;
+			}
+
+		}
+
+		//Select Statement
+		if (this.selectedColumns[0].equals("all")) {
+			return dataHolder;
+		}else {
+			for (String classAttr : classAttrs) {
+				if (!Arrays.asList(this.selectedColumns).contains(classAttr)) {
+					dataHolder.forEach(data-> data.remove(classAttr));
+				}
+			}
+		}
+		return dataHolder;
+	}
+
+	/**
+	 * Sets target file to be modified.
+	 *
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> target(){
+		this.targetFile = getClassName();
+		return this;
+	}
+
+	/**
+	 * Sets target file to be modified.
+	 *
+	 * @param target <b>String</b> <br> The path of the file relative to ./src without the file extension
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> target(String target){
+		this.targetFile = target;
+		return this;
+	}
+
+	/**
+	 * Sets the values that will be added into the target file
+	 *
+	 * @param dataArr <b>String[]</b> <br> The values that will be added into the target file.
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> values(String[] dataArr){
+		this.createValues = String.join(",", dataArr);
+		return this;
+	}
+
+	/**
+	 * Inserts the new data into the target file.
+	 *
+	 * @see QueryBuilder#validateData(String values)
+	 * @see QueryBuilder#validateData(String values, Boolean isTargeted)
+	 * @see QueryBuilder#target()
+	 * @see QueryBuilder#values(String[] dataArr)
+	 * @throws IOException will throw error if file does not exist or validation fails
+	 * */
+	public void create() throws IOException {
+		System.out.println(Arrays.toString(this.classAttrs));
+		HashMap<String, String> validatedData = this.validateData(this.createValues);
+		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
+		int latestId = Integer.parseInt(this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
+				.from(this.targetFile)
+				.where(this.getClassName().toLowerCase()+"_id", ">", "0")
+				.sort(this.getClassName().toLowerCase()+"_id", "desc")
+				.get()
+				.get(0)
+				.get(this.getClassName().toLowerCase()+"_id"))+1;
+		try {
+			BufferedWriter bw = new BufferedWriter(fw);
+			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
+			for (String item: this.getAttrs(false)) {
+				lineToWrite.append(validatedData.get(item)).append(",");
+			}
+			//Remove last comma
+			bw.write(lineToWrite.substring(0, lineToWrite.length()-1));
+			bw.newLine();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Updates a specific part of an item inside the database.
+	 * <b>.target()</b> should be used to set the target file.
+	 *
+	 * @throws IOException will throw error if file does not exist
+	 * @param targetId <b>String</b> <br> The id of the data that will be updated.
+	 * @param targetChange <b>HashMap</b> <br> The data that will be updated.
+	 * @see QueryBuilder#target()
+	 * */
+	public void update(String targetId, HashMap<String, String> targetChange) throws IOException {
+		HashMap<String, String> validatedData = this.validateData(String.join(",", targetChange.values()), true);
+		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
+
+		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		try {
+			BufferedReader br = new BufferedReader(fr);
+
+			ArrayList<String> lines = new ArrayList<>();
+			ArrayList<String> dataToWrite = new ArrayList<>();
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+
+			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String[] classAttrs = this.getAttrs();
+
+			for (String s : lines) {
+				HashMap<String, String> lineData = new HashMap<>();
+
+				for (int j = 0; j < classAttrs.length; j++) {
+					lineData.put(classAttrs[j], s.split(",")[j]);
+				}
+
+				if (s.split(",")[0].equals(targetId)) {
+					for (String attr : classAttrs) {
+						if (attr.equals(targetChange.keySet().toArray()[0])) {
+							dataToWrite.add(targetChange.get(attr));
+						} else {
+							dataToWrite.add(lineData.get(attr));
+						}
+					}
+					bw.write(String.join(",", dataToWrite));
+					bw.newLine();
+				} else {
+					bw.write(s);
+					bw.newLine();
+				}
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Updates all parts of a specific item inside the database.
+	 *
+	 * @throws IOException will throw error if file does not exist
+	 * @param targetId <b>String</b> <br> The id of the data that will be updated.
+	 * @param data <b>String[]</b> <br> The data that will be updated.
+	 * @see QueryBuilder#target()
+	 * */
+	public void update(String targetId, String[] data) throws IOException {
+		HashMap<String, String> validatedData = this.validateData(String.join(",", data));
+		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
+
+		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		try {
+			BufferedReader br = new BufferedReader(fr);
+
+			ArrayList<String> lines = new ArrayList<>();
+			ArrayList<String> dataToWrite = new ArrayList<>();
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+
+			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String[] classAttrs = this.getAttrs(false);
+
+			for (String lineItem: lines) {
+				if (lineItem.split(",")[0].equals(targetId)) {
+					dataToWrite.add(targetId);
+					for (String attr: classAttrs) {
+						dataToWrite.add(validatedData.get(attr));
+					}
+					bw.write(String.join(",", dataToWrite));
+					bw.newLine();
+				}else {
+					bw.write(lineItem);
+					bw.newLine();
+				}
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Updates multiple IDs inside the database with the same data inputted.
+	 *
+	 * @param data <b>String[]</b> <br> The data that will be updated.
+	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
+	 * @throws IOException will throw error if file does not exist
+	 * */
+	public void updateMany(String[] targetIds, String[] data) throws IOException {
+		for (String id : targetIds) {
+			this.update(id, data);
+		}
+	}
+
+	/**
+	 * Updates multiple IDs inside the database with the same data inputted.
+	 *
+	 * @param targetChange <b>HashMap&lt;String, String&gt;</b> <br> The data that will be updated.
+	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
+	 * @throws IOException will throw error if file does not exist
+	 * */
+	public void updateMany(String[] targetIds, HashMap<String, String> targetChange) throws IOException {
+		for (String id : targetIds) {
+			this.update(id, targetChange);
+		}
+	}
+
+	/**
+	 * Updates multiple IDs inside the database with the multiple data inputted.
+	 * Number of targets must be equal to number of data
+	 *
+	 * @param targetChanges <b>ArrayList&lt;HashMap&lt;String, String&gt;&gt;</b> <br> The data that will be updated.
+	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
+	 * @throws IOException will throw error if file does not exist
+	 * */
+	public void updateManyParallelMap(String[] targetIds, ArrayList<HashMap<String, String>> targetChanges) throws IOException {
+		if (targetIds.length != targetChanges.size()) {
+			throw new RuntimeException("Number of targets must be equal to number of data");
+		}
+		for (int i = 0; i < targetIds.length; i++) {
+			this.update(targetIds[i], targetChanges.get(i));
+		}
+	}
+
+	/**
+	 * Updates multiple IDs inside the database with multiple data inputted.
+	 * Number of targets must be equal to number of data
+	 *
+	 * @param data <b>ArrayList&lt;String[]&gt;</b> <br> The data that will be updated.
+	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
+	 * @throws IOException will throw error if file does not exist
+	 * */
+	public void updateManyParallelArr(String[] targetIds, ArrayList<String[]> data) throws IOException {
+		if (targetIds.length != data.size()) {
+			throw new RuntimeException("Number of targets must be equal to number of data");
+		}
+		for (int i = 0; i < targetIds.length; i++) {
+			this.update(targetIds[i], data.get(i));
+		}
+	}
+
+	/**
+	 * Deletes a specific item inside the database.
+	 *
+	 * @param targetId <b>String</b> <br> The id of the data that will be deleted.
+	 * @throws FileNotFoundException will throw error if file does not exist
+	 * @see QueryBuilder#target()
+	 * */
+	public void delete(String targetId) throws FileNotFoundException {
+		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
+
+		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		try {
+			BufferedReader br = new BufferedReader(fr);
+
+			ArrayList<String> lines = new ArrayList<>();
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+
+			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			for (String lineItem: lines) {
+				if (!lineItem.split(",")[0].equals(targetId)) {
+					bw.write(String.join(",", lineItem));
+					bw.newLine();
+				}
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Validates the data entered by the user.
+	 *
+	 * @param values <b>String</b> <br> The values that will be validated.
+	 * @throws RuntimeException will throw error if validation fails.
+	 * @return HashMap that contains the validated data.
+	 * */
+	public HashMap<String, String> validateData(String values){
+		HashMap<String, String> dataMap = new HashMap<>();
+
+		String[] classAttrs = this.getAttrs(false);
+		String[] dataToValidate = values.split(",");
+
+		if (dataToValidate.length != classAttrs.length) {
+			throw new RuntimeException("Number of values does not match number of attributes");
+		}
+
+		for (int i = 0; i < classAttrs.length; i++) {
+			dataMap.put(classAttrs[i], dataToValidate[i]);
+		}
+
+		for (String item: dataMap.keySet()) {
+			if (dataMap.get(item).equals("null")) {
+				throw new RuntimeException("Null values are not allowed");
+			}
+		}
+
+		if (dataMap.get("age") != null &&!dataMap.get("age").matches("-?\\d+(\\\\.\\d+)?")){
+			throw new RuntimeException("Age must be a number");
+		}
+
+		return dataMap;
+	}
+
+	/**
+	 * Validates specific data that is entered by the user.
+	 *
+	 * @param values <b>String</b> <br> The data that will be validated.
+	 * @param isTargeted <b>Boolean</b> <br> If the data is being targeted.
+	 * @throws RuntimeException will throw error if validation fails.
+	 * @return HashMap that contains the validated data.
+	 * */
+	public HashMap<String, String> validateData(String values, Boolean isTargeted){
+		HashMap<String, String> dataMap = new HashMap<>();
+
+		String[] classAttrs = this.getAttrs(false);
+		String[] dataToValidate = values.split(",");
+
+		if (dataToValidate.length != classAttrs.length && !isTargeted) {
+			throw new RuntimeException("Number of values does not match number of attributes");
+		}
+
+		for (int i = 0; i < dataToValidate.length; i++) {
+			dataMap.put(classAttrs[i], dataToValidate[i]);
+		}
+
+		for (String item: dataMap.keySet()) {
+			if (dataMap.get(item).equals("null")) {
+				throw new RuntimeException("Null values are not allowed");
+			}
+		}
+
+		if (dataMap.get("age") != null && !dataMap.get("age").matches("-?\\d+(\\\\.\\d+)?")){
+			throw new RuntimeException("Age must be a number");
+		}
+
+		return dataMap;
+	}
+
+	/**
+	 * Adds an element to the start of an array.
+	 * Used for adding the id of the class into the available attributes.
+	 *
+	 * @param array <b>T[]</b> <br> The array to be modified.
+	 * @param element <b>T</b> <br> The item to be added into the array.
+	 * @return The new array with the element at index 0.
+	 * */
+	public static <T> T[] addToBeginningOfArray(T[] array, T element) {
+		T[] result = Arrays.copyOf(array, array.length + 1);
+		result[0] = element;
+		System.arraycopy(array, 0, result, 1, array.length);
+
+		return result;
+	}
+
+	/**
+	 * Returns an array of <b>String</b> containing the attributes of the class
+	 * passed into the <b>QueryBuilder</b> class.
+	 *
+	 * @return An array of <b>String</b> with the class fields.
+	 * */
+	private String[] getAttrs(){
+		Field[] attrs = this.aClass.getClass().getDeclaredFields();
+
+		return Arrays.stream(attrs).map(Field::getName).toArray(String[]::new);
+	}
+
+	/**
+	 * Returns an array of <b>String</b> containing the attributes of the class
+	 * passed into the <b>QueryBuilder</b> class.
+	 *
+	 * @param withId <b>Boolean</b> <br> If true, the id of the class will be included
+	 * @return An array of <b>String</b> with the class fields.
+	 * */
+	private String[] getAttrs(Boolean withId){
+		Field[] attrs = this.aClass.getClass().getDeclaredFields();
+
+		int n = Arrays.stream(attrs).map(Field::getName).toArray(String[]::new).length-1;
+		String[] classAttrs = new String[n];
+		System.arraycopy(Arrays.stream(attrs).map(Field::getName).toArray(String[]::new),1,classAttrs,0, n);
+
+		return withId ?
+				Arrays.stream(attrs).map(Field::getName).toArray(String[]::new) :
+				classAttrs;
+	}
+
+}
