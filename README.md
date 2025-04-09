@@ -17,7 +17,10 @@ Verify Maven is installed:
 mvn -v
 ```
 
-Verify build
+Verify build & install dependencies
 ```bash
 mvn clean install
 ```
+
+## 🏃‍♂️ Run build
+Main inside org.start.owsb
