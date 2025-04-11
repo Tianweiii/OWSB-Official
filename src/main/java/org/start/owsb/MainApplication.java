@@ -6,11 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.Users.User;
+import utils.QueryBuilder;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
@@ -37,5 +38,17 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         launch();
+        //Test queryBuilder usage
+        QueryBuilder<User> qb = new QueryBuilder<>(new User());
+        ArrayList<HashMap<String, String>> res = qb.select()
+                .from("db/User.txt")
+                .where("email", "=", "many@mail.com")
+
+                .and("username", "=", "Maika")
+                .or("role_id", "=", "1")
+                .and("position", "=", "addyib")
+                .get();
+//        String roleid = res.get(0).get("role_id");
+        System.out.println(res);
     }
 }

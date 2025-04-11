@@ -1,7 +1,7 @@
-3,Maika,man@mail.com,abcde,addy,21,2
+3,Maika,many@mail.com,abcde,addy,21,2
 1,John,man@mail.com,abcde,addy,20,1
 2,Poon,man@mail.com,abcde,addy,21,2
-4,Mannn,man@mail.com,abcde,addy,20,1
+4,Mannn,man@mail.com,abcde,addyib,20,1
 5,Albert,man@mail.com,abcde,addy,20,3
 6,Sien,man@mail.com,abcde,addy,40,1
 7,Amber,man@mail.com,abcde,addy,69,1
