@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.Users.User;
-import utils.QueryBuilder;
+import models.Utils.QueryBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
