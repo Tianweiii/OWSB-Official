@@ -2,10 +2,7 @@ package models.Utils;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * A class used to query from a target db file.
@@ -32,6 +29,9 @@ public class QueryBuilder<T>{
 	private String fileName;
 	private String[] selectedColumns;
 	private String[] whereClause;
+	private ArrayDeque<String[]> andOperatorStack;
+	private ArrayDeque<String[]> orOperatorStack;
+	private ArrayDeque<Integer> queue;
 	private String[] sortByClause;
 
 	private String targetFile;
@@ -85,6 +85,9 @@ public class QueryBuilder<T>{
 			fileName = fileName.replace(".txt", "");
 		}
 		this.fileName = fileName;
+		this.andOperatorStack = new ArrayDeque<>();
+		this.queue = new ArrayDeque<>();
+		this.orOperatorStack = new ArrayDeque<>();
 		return this;
 	}
 
@@ -100,6 +103,24 @@ public class QueryBuilder<T>{
 	 * */
 	public QueryBuilder<T> where(String fieldOne, String operator, String fieldTwo) {
 		this.whereClause = new String[]{fieldOne, operator, fieldTwo};
+		return this;
+	}
+
+	public QueryBuilder<T> and(String fieldOne, String operator, String fieldTwo) {
+		if (this.whereClause == null) {
+			throw new RuntimeException("No where clause has been set");
+		}
+		this.andOperatorStack.add(new String[]{fieldOne, operator, fieldTwo});
+		this.queue.add(1);
+		return this;
+	}
+
+	public QueryBuilder<T> or(String fieldOne, String operator, String fieldTwo) {
+		if (this.whereClause == null) {
+			throw new RuntimeException("No where clause has been set");
+		}
+		this.orOperatorStack.add(new String[]{fieldOne, operator, fieldTwo});
+		this.queue.add(0);
 		return this;
 	}
 
@@ -201,6 +222,112 @@ public class QueryBuilder<T>{
 	}
 
 	/**
+	 *
+	 * Runs the switch case for the where clause
+	 *
+	 * @param equation The equation to be run
+	 * @param dataHolder The data holder with the data to be filtered
+	 */
+	private void updateSwitchCase(String[] equation, ArrayList<HashMap<String, String>> dataHolder) {
+		switch (equation[1]) {
+			case "=":
+				dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
+				break;
+			case "!=" :
+				dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
+				break;
+			case "like":
+				dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
+				break;
+		}
+
+	}
+
+	/**
+	 *
+	 * Checks if the data to be added is already in the data holder stack
+	 *
+	 * @param dataHolderStack The data holder stack to compare to
+	 * @param dataToAdd The data that is to be added if not in dataHolderStack
+	 * @return boolean
+	 */
+	private boolean checkDuplicates(ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataToAdd) {
+		for (ArrayList<HashMap<String, String>> list : dataHolderStack) {
+			if (list.size() == dataToAdd.size() && list.containsAll(dataToAdd) && dataToAdd.containsAll(list)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 *
+	 * Recursively parses the queue of the logical operators
+	 *
+	 * @param queue The queue of the logical operators
+	 * @param dataHolder The data holder
+	 * @param dataHolderStack The data holder stack
+	 * @param dataCopy The copy of the data holder
+	 * @param andStack The stack of the AND statements
+	 * @param orStack The stack of the OR statements
+	 * @return The data holder stack
+	 */
+	private ArrayDeque<ArrayList<HashMap<String, String>>> recursiveLogicalOperatorCheck(ArrayDeque<Integer> queue, ArrayList<HashMap<String, String>> dataHolder, ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataCopy, ArrayDeque<String[]> andStack, ArrayDeque<String[]> orStack) {
+		Iterator<Integer> iterator = queue.iterator();
+		ArrayDeque<String[]> andStackClone = andStack.clone();
+		if (queue.isEmpty()) {
+			return dataHolderStack;
+		}
+		//If only item is an OR statement
+		if (queue.size() == 1 && queue.peek() == 0) {
+			updateSwitchCase(orStack.getFirst(), dataCopy);
+
+			if (!dataCopy.isEmpty()) {
+				dataHolderStack.add(dataCopy);
+			}
+
+			return dataHolderStack;
+		} else {
+			while (iterator.hasNext()) {
+				int index = iterator.next();
+				//If the queue has an OR statement, but there are still AND statements in the stack.
+				//Example: queue: [OR, AND], AND stack: id = 1, OR stack: id = 5
+				if (index == 0 && !andStackClone.isEmpty()) {
+					//Reverse the queue
+					ArrayDeque<Integer> reverseQueue = new ArrayDeque<>();
+					for (int i: queue) {
+						reverseQueue.push(i);
+					}
+
+					return recursiveLogicalOperatorCheck(reverseQueue, dataCopy, dataHolderStack, dataCopy, andStackClone, orStack);
+				}//If the queue has an OR statement and the AND stack is empty
+				else if (index == 0) {
+					updateSwitchCase(orStack.getFirst(), dataHolder);
+
+					if (!dataHolder.isEmpty()) {
+						dataHolderStack.add(dataHolder);
+					}
+
+					iterator.remove();
+				}//If current item in queue is AND statement
+				else {
+					updateSwitchCase(andStackClone.getFirst(), dataHolder);
+
+					if (!dataHolder.isEmpty()) {
+						if (!checkDuplicates(dataHolderStack, dataHolder)) {
+							dataHolderStack.add(dataHolder);
+						}
+					}
+
+					iterator.remove();
+					andStackClone.remove();
+				}
+			}
+		}
+		return dataHolderStack;
+	}
+
+	/**
 	 * Gets the Hashmap which contains fields selected using the select() method.
 	 *
 	 * @param entryData <b>String[]</b> <br> An array that contains the selected fields from the user.
@@ -211,27 +338,41 @@ public class QueryBuilder<T>{
 	private ArrayList<HashMap<String, String>> getHashMaps(String[] entryData, String[] classAttrs) {
 		HashMap<String, String> dataMap = new HashMap<>();
 		ArrayList<HashMap<String, String>> dataHolder = new ArrayList<>();
+		ArrayList<HashMap<String, String>> dataCopy = new ArrayList<>();
+		ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack = new ArrayDeque<>();
 
 		for (int i = 0; i < classAttrs.length; i++) {
 			dataMap.put(classAttrs[i], entryData[i]);
 		}
 
 		dataHolder.add(dataMap);
+		dataCopy.add(dataMap);
 
 		//Where Statement
 		if (this.whereClause != null) {
-			switch (this.whereClause[1]) {
-				case "=":
-					dataHolder.removeIf(data-> !data.get(this.whereClause[0]).equals(this.whereClause[2]));
-					break;
-				case "!=" :
-					dataHolder.removeIf(data-> data.get(this.whereClause[0]).equals(this.whereClause[2]));
-					break;
-				case "like":
-					dataHolder.removeIf(data-> !data.get(this.whereClause[0]).contains(this.whereClause[2]));
-					break;
+			updateSwitchCase(this.whereClause, dataHolder);
+			if (!dataHolder.isEmpty()){
+				dataHolderStack.add(dataHolder);
 			}
+		}
 
+		if (!this.queue.isEmpty()) {
+			ArrayDeque<Integer> queueCopy = this.queue.clone();
+			ArrayDeque<ArrayList<HashMap<String, String>>> res = recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
+
+		}
+
+		if (!dataHolderStack.isEmpty()) {
+			ArrayList<HashMap<String, String>> temp = new ArrayList<>();
+			for (int i = 0; i < dataHolderStack.size(); i++) {
+				if (!dataHolderStack.peek().isEmpty()) {
+					HashMap<String, String> item = dataHolderStack.pop().get(0);
+					temp.add(item);
+				}
+			}
+			dataHolder = temp;
+			temp = null;
+			System.gc();
 		}
 
 		//Select Statement
