@@ -440,13 +440,11 @@ public class QueryBuilder<T extends Initializable>{
 	public void create() throws IOException {
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
 		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
-		int latestId = Integer.parseInt(this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
+		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
-				.sort(this.getClassName().toLowerCase()+"_id", "desc")
-				.get()
-				.get(0)
+				.get();
+		int latestId = Integer.parseInt(data.get(data.size()-1)
 				.get(this.getClassName().toLowerCase()+"_id"))+1;
-		System.out.println(validatedData + " " + latestId);
 		try {
 			BufferedWriter bw = new BufferedWriter(fw);
 			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
