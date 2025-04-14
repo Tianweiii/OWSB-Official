@@ -10,6 +10,7 @@ import models.Users.User;
 import models.Utils.QueryBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,19 +37,19 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws IOException {
-        launch();
+    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+//        launch();
         //Test queryBuilder usage
-        QueryBuilder<User> qb = new QueryBuilder<>(new User());
+        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
+        String[] columns = new String[]{"email", "password"};
         ArrayList<HashMap<String, String>> res = qb.select()
                 .from("db/User.txt")
-                .where("email", "=", "many@mail.com")
-
-                .and("username", "=", "Maika")
-                .or("role_id", "=", "1")
-                .and("position", "=", "addyib")
+//                .where("email", "=", "many@mail.com")
+                .sort("user_id", "desc")
                 .get();
+        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
 //        String roleid = res.get(0).get("role_id");
         System.out.println(res);
+
     }
 }

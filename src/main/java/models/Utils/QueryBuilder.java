@@ -1,7 +1,10 @@
 package models.Utils;
 
+import models.Initializable;
+
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -15,31 +18,36 @@ import java.util.*;
  * qb.select("name", "age").from("db/fileName").where("name", "=", "John").get();<br>
  * qb.target("db/fileName").values(new String[]{"Allen", "21", "1"}).create();<br>
  * qb.update("9", new String[]{"Doe", "22", "1"});<br>
- * qb.delete("9");
+ * qb.target("db/fileName").delete("9");
  * </code>
  * </pre>
  *
  * @param <T> The type of the class to be used.
  * */
-public class QueryBuilder<T>{
+public class QueryBuilder<T extends Initializable>{
 
 	private final T aClass;
+	private final Class<T> aClassType;
 	private final String[] classAttrs;
 
 	private String fileName;
 	private String[] selectedColumns;
 	private String[] whereClause;
-	private ArrayDeque<String[]> andOperatorStack;
-	private ArrayDeque<String[]> orOperatorStack;
-	private ArrayDeque<Integer> queue;
+	private final ArrayDeque<String[]> andOperatorStack;
+	private final ArrayDeque<String[]> orOperatorStack;
+	private final ArrayDeque<Integer> queue;
 	private String[] sortByClause;
 
 	private String targetFile;
 	private String createValues;
 
-	public QueryBuilder(T someClass){
-		this.aClass = someClass;
+	public QueryBuilder(Class<T> someClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		this.aClassType = someClass;
+		this.aClass = someClass.getDeclaredConstructor().newInstance();
 		this.classAttrs = getAttrs();
+		this.andOperatorStack = new ArrayDeque<>();
+		this.queue = new ArrayDeque<>();
+		this.orOperatorStack = new ArrayDeque<>();
 		String className = getClassName();
 		setClassName(className);
 	}
@@ -85,9 +93,6 @@ public class QueryBuilder<T>{
 			fileName = fileName.replace(".txt", "");
 		}
 		this.fileName = fileName;
-		this.andOperatorStack = new ArrayDeque<>();
-		this.queue = new ArrayDeque<>();
-		this.orOperatorStack = new ArrayDeque<>();
 		return this;
 	}
 
@@ -154,6 +159,33 @@ public class QueryBuilder<T>{
 	 * Retrieves the data from the path ./src/main/java/{fileName}.txt
 	 * Use the <b>customFrom()</b> method to change this.
 	 *
+	 * @return An array with HashMaps with the instances of the class passed into the QueryBuilder.
+	 * */
+
+	public ArrayList<T> getAsObjects() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		ArrayList<HashMap<String, String>> data = this.get();
+		System.out.println(data);
+		ArrayList<T> objects = new ArrayList<>();
+
+		for (HashMap<String, String> item: data) {
+			try {
+				T instance = this.aClassType.getDeclaredConstructor().newInstance();
+				instance.initialize(item);
+				objects.add(instance);
+			} catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+			         IllegalAccessException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+		return objects;
+	}
+
+	/**
+	 * Retrieves the data according to the statements that have been used.
+	 * Retrieves the data from the path ./src/main/java/{fileName}.txt
+	 * Use the <b>customFrom()</b> method to change this.
+	 *
 	 * @return An array with HashMaps with the columns as the key and the data as the item.
 	 * */
 	public ArrayList<HashMap<String, String>> get(){
@@ -187,39 +219,6 @@ public class QueryBuilder<T>{
 		return allData;
 	}
 
-	/**
-	 * Retrieves the data with the relations that have been passed by the user
-	 * according to the statements that have been used.
-	 *
-	 * @param someClass the target relation to retrieve the data from
-	 * @return A hashmap with the origin data and the relation data.
-	 * */
-	public HashMap<String, ArrayList<HashMap<String,String>>> getWithRelations(Object someClass) {
-		String targetRelation = someClass.getClass().getSimpleName().toLowerCase();
-
-		ArrayList<HashMap<String, String>> allData = this.get(); //get data\
-		for (HashMap<String, String> data : allData) {
-			if (data.get(targetRelation + "_id") == null) {
-				throw new RuntimeException(targetRelation + "_id not included in 'select' clause");
-			}
-		}
-		ArrayList<HashMap<String, String>> dataWithRelation = new ArrayList<>();
-		HashMap<String, ArrayList<HashMap<String,String>>> finalData = new HashMap<>();
-
-		for (HashMap<String, String> data : allData) {
-			String targetFile = targetRelation + ".txt";
-			QueryBuilder<?> qb = new QueryBuilder<>(someClass);
-			ArrayList<HashMap<String, String>> relationData = qb.select()
-					.from("db/" + targetFile)
-					.where(targetRelation + "_id", "=", data.get(targetRelation + "_id"))
-					.get();
-
-			dataWithRelation.addAll(relationData);
-		}
-		finalData.put(targetRelation, dataWithRelation);
-		finalData.put(this.getClassName().toLowerCase(), allData);
-		return finalData;
-	}
 
 	/**
 	 *
@@ -293,8 +292,14 @@ public class QueryBuilder<T>{
 				//If the queue has an OR statement, but there are still AND statements in the stack.
 				//Example: queue: [OR, AND], AND stack: id = 1, OR stack: id = 5
 				if (index == 0 && !andStackClone.isEmpty()) {
+					//Handle edge case for queue that ends with OR but still have AND in queue
+					if (queue.getLast() == 0){
+						recursiveLogicalOperatorCheck(new ArrayDeque<>(queue.removeLast()), dataHolder, dataHolderStack, dataCopy, andStackClone, orStack);
+					}
+
 					//Reverse the queue
 					ArrayDeque<Integer> reverseQueue = new ArrayDeque<>();
+
 					for (int i: queue) {
 						reverseQueue.push(i);
 					}
@@ -405,6 +410,9 @@ public class QueryBuilder<T>{
 	 * @return a QueryBuilder of the type you passed in for method chaining.
 	 * */
 	public QueryBuilder<T> target(String target){
+		if (target.contains(".txt")) {
+			target = target.replace(".txt", "");
+		}
 		this.targetFile = target;
 		return this;
 	}
@@ -430,22 +438,22 @@ public class QueryBuilder<T>{
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
 	public void create() throws IOException {
-		System.out.println(Arrays.toString(this.classAttrs));
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
 		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
 		int latestId = Integer.parseInt(this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
-				.where(this.getClassName().toLowerCase()+"_id", ">", "0")
 				.sort(this.getClassName().toLowerCase()+"_id", "desc")
 				.get()
 				.get(0)
 				.get(this.getClassName().toLowerCase()+"_id"))+1;
+		System.out.println(validatedData + " " + latestId);
 		try {
 			BufferedWriter bw = new BufferedWriter(fw);
 			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
 			for (String item: this.getAttrs(false)) {
 				lineToWrite.append(validatedData.get(item)).append(",");
 			}
+			System.out.printf(lineToWrite.substring(0, lineToWrite.length()-1));
 			//Remove last comma
 			bw.write(lineToWrite.substring(0, lineToWrite.length()-1));
 			bw.newLine();
