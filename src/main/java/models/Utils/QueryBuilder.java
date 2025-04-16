@@ -33,9 +33,9 @@ public class QueryBuilder<T extends Initializable>{
 	private String fileName;
 	private String[] selectedColumns;
 	private String[] whereClause;
-	private ArrayDeque<String[]> andOperatorStack;
-	private ArrayDeque<String[]> orOperatorStack;
-	private ArrayDeque<Integer> queue;
+	private final ArrayDeque<String[]> andOperatorStack;
+	private final ArrayDeque<String[]> orOperatorStack;
+	private final ArrayDeque<Integer> queue;
 	private String[] sortByClause;
 
 	private String targetFile;
@@ -93,9 +93,6 @@ public class QueryBuilder<T extends Initializable>{
 			fileName = fileName.replace(".txt", "");
 		}
 		this.fileName = fileName;
-		this.andOperatorStack = new ArrayDeque<>();
-		this.queue = new ArrayDeque<>();
-		this.orOperatorStack = new ArrayDeque<>();
 		return this;
 	}
 

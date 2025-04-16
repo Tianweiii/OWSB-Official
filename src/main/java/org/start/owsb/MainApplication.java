@@ -46,7 +46,7 @@ public class MainApplication extends Application {
                 .from("db/User.txt")
 //                .where("email", "=", "many@mail.com")
                 .get();
-        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
+//        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
 //        String roleid = res.get(0).get("role_id");
         System.out.println(res);
     }
