@@ -33,9 +33,9 @@ public class QueryBuilder<T extends Initializable>{
 	private String fileName;
 	private String[] selectedColumns;
 	private String[] whereClause;
-	private final ArrayDeque<String[]> andOperatorStack;
-	private final ArrayDeque<String[]> orOperatorStack;
-	private final ArrayDeque<Integer> queue;
+	private ArrayDeque<String[]> andOperatorStack;
+	private ArrayDeque<String[]> orOperatorStack;
+	private ArrayDeque<Integer> queue;
 	private String[] sortByClause;
 
 	private String targetFile;
@@ -220,119 +220,6 @@ public class QueryBuilder<T extends Initializable>{
 			throw new RuntimeException(e);
 		}
 		return allData;
-	}
-
-
-	/**
-	 *
-	 * Runs the switch case for the where clause
-	 *
-	 * @param equation The equation to be run
-	 * @param dataHolder The data holder with the data to be filtered
-	 */
-	private void updateSwitchCase(String[] equation, ArrayList<HashMap<String, String>> dataHolder) {
-		switch (equation[1]) {
-			case "=":
-				dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
-				break;
-			case "!=" :
-				dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
-				break;
-			case "like":
-				dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
-				break;
-		}
-
-	}
-
-	/**
-	 *
-	 * Checks if the data to be added is already in the data holder stack
-	 *
-	 * @param dataHolderStack The data holder stack to compare to
-	 * @param dataToAdd The data that is to be added if not in dataHolderStack
-	 * @return boolean
-	 */
-	private boolean checkDuplicates(ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataToAdd) {
-		for (ArrayList<HashMap<String, String>> list : dataHolderStack) {
-			if (list.size() == dataToAdd.size() && list.containsAll(dataToAdd) && dataToAdd.containsAll(list)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 *
-	 * Recursively parses the queue of the logical operators
-	 *
-	 * @param queue The queue of the logical operators
-	 * @param dataHolder The data holder
-	 * @param dataHolderStack The data holder stack
-	 * @param dataCopy The copy of the data holder
-	 * @param andStack The stack of the AND statements
-	 * @param orStack The stack of the OR statements
-	 * @return The data holder stack
-	 */
-	private ArrayDeque<ArrayList<HashMap<String, String>>> recursiveLogicalOperatorCheck(ArrayDeque<Integer> queue, ArrayList<HashMap<String, String>> dataHolder, ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataCopy, ArrayDeque<String[]> andStack, ArrayDeque<String[]> orStack) {
-		Iterator<Integer> iterator = queue.iterator();
-		ArrayDeque<String[]> andStackClone = andStack.clone();
-		if (queue.isEmpty()) {
-			return dataHolderStack;
-		}
-		//If only item is an OR statement
-		if (queue.size() == 1 && queue.peek() == 0) {
-			updateSwitchCase(orStack.getFirst(), dataCopy);
-
-			if (!dataCopy.isEmpty()) {
-				dataHolderStack.add(dataCopy);
-			}
-
-			return dataHolderStack;
-		} else {
-			while (iterator.hasNext()) {
-				int index = iterator.next();
-				//If the queue has an OR statement, but there are still AND statements in the stack.
-				//Example: queue: [OR, AND], AND stack: id = 1, OR stack: id = 5
-				if (index == 0 && !andStackClone.isEmpty()) {
-					//Handle edge case for queue that ends with OR but still have AND in queue
-					if (queue.getLast() == 0){
-						recursiveLogicalOperatorCheck(new ArrayDeque<>(queue.removeLast()), dataHolder, dataHolderStack, dataCopy, andStackClone, orStack);
-					}
-
-					//Reverse the queue
-					ArrayDeque<Integer> reverseQueue = new ArrayDeque<>();
-
-					for (int i: queue) {
-						reverseQueue.push(i);
-					}
-
-					return recursiveLogicalOperatorCheck(reverseQueue, dataCopy, dataHolderStack, dataCopy, andStackClone, orStack);
-				}//If the queue has an OR statement and the AND stack is empty
-				else if (index == 0) {
-					updateSwitchCase(orStack.getFirst(), dataHolder);
-
-					if (!dataHolder.isEmpty()) {
-						dataHolderStack.add(dataHolder);
-					}
-
-					iterator.remove();
-				}//If current item in queue is AND statement
-				else {
-					updateSwitchCase(andStackClone.getFirst(), dataHolder);
-
-					if (!dataHolder.isEmpty()) {
-						if (!checkDuplicates(dataHolderStack, dataHolder)) {
-							dataHolderStack.add(dataHolder);
-						}
-					}
-
-					iterator.remove();
-					andStackClone.remove();
-				}
-			}
-		}
-		return dataHolderStack;
 	}
 
 	/**
