@@ -27,6 +27,7 @@ import java.util.*;
 public class QueryBuilder<T extends Initializable>{
 
 	private final T aClass;
+	private final Class<T> aClassType;
 	private final String[] classAttrs;
 
 	private String fileName;
@@ -161,7 +162,7 @@ public class QueryBuilder<T extends Initializable>{
 	 * @return An array with HashMaps with the instances of the class passed into the QueryBuilder.
 	 * */
 
-	public ArrayList<T> getAsObjects() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+	public ArrayList<T> getAsObjects() {
 		ArrayList<HashMap<String, String>> data = this.get();
 		System.out.println(data);
 		ArrayList<T> objects = new ArrayList<>();
