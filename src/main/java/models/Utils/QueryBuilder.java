@@ -1,7 +1,10 @@
 package models.Utils;
 
+import models.Initializable;
+
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -15,31 +18,36 @@ import java.util.*;
  * qb.select("name", "age").from("db/fileName").where("name", "=", "John").get();<br>
  * qb.target("db/fileName").values(new String[]{"Allen", "21", "1"}).create();<br>
  * qb.update("9", new String[]{"Doe", "22", "1"});<br>
- * qb.delete("9");
+ * qb.target("db/fileName").delete("9");
  * </code>
  * </pre>
  *
  * @param <T> The type of the class to be used.
  * */
-public class QueryBuilder<T>{
+public class QueryBuilder<T extends Initializable>{
 
 	private final T aClass;
+	private final Class<T> aClassType;
 	private final String[] classAttrs;
 
 	private String fileName;
 	private String[] selectedColumns;
 	private String[] whereClause;
-	private ArrayDeque<String[]> andOperatorStack;
-	private ArrayDeque<String[]> orOperatorStack;
-	private ArrayDeque<Integer> queue;
+	private final ArrayDeque<String[]> andOperatorStack;
+	private final ArrayDeque<String[]> orOperatorStack;
+	private final ArrayDeque<Integer> queue;
 	private String[] sortByClause;
 
 	private String targetFile;
 	private String createValues;
 
-	public QueryBuilder(T someClass){
-		this.aClass = someClass;
+	public QueryBuilder(Class<T> someClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		this.aClassType = someClass;
+		this.aClass = someClass.getDeclaredConstructor().newInstance();
 		this.classAttrs = getAttrs();
+		this.andOperatorStack = new ArrayDeque<>();
+		this.queue = new ArrayDeque<>();
+		this.orOperatorStack = new ArrayDeque<>();
 		String className = getClassName();
 		setClassName(className);
 	}
@@ -154,6 +162,33 @@ public class QueryBuilder<T>{
 	 * Retrieves the data from the path ./src/main/java/{fileName}.txt
 	 * Use the <b>customFrom()</b> method to change this.
 	 *
+	 * @return An array with HashMaps with the instances of the class passed into the QueryBuilder.
+	 * */
+
+	public ArrayList<T> getAsObjects() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		ArrayList<HashMap<String, String>> data = this.get();
+		System.out.println(data);
+		ArrayList<T> objects = new ArrayList<>();
+
+		for (HashMap<String, String> item: data) {
+			try {
+				T instance = this.aClassType.getDeclaredConstructor().newInstance();
+				instance.initialize(item);
+				objects.add(instance);
+			} catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+			         IllegalAccessException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+		return objects;
+	}
+
+	/**
+	 * Retrieves the data according to the statements that have been used.
+	 * Retrieves the data from the path ./src/main/java/{fileName}.txt
+	 * Use the <b>customFrom()</b> method to change this.
+	 *
 	 * @return An array with HashMaps with the columns as the key and the data as the item.
 	 * */
 	public ArrayList<HashMap<String, String>> get(){
@@ -187,38 +222,117 @@ public class QueryBuilder<T>{
 		return allData;
 	}
 
-	/**
-	 * Retrieves the data with the relations that have been passed by the user
-	 * according to the statements that have been used.
-	 *
-	 * @param someClass the target relation to retrieve the data from
-	 * @return A hashmap with the origin data and the relation data.
-	 * */
-	public HashMap<String, ArrayList<HashMap<String,String>>> getWithRelations(Object someClass) {
-		String targetRelation = someClass.getClass().getSimpleName().toLowerCase();
 
-		ArrayList<HashMap<String, String>> allData = this.get(); //get data\
-		for (HashMap<String, String> data : allData) {
-			if (data.get(targetRelation + "_id") == null) {
-				throw new RuntimeException(targetRelation + "_id not included in 'select' clause");
+	/**
+	 *
+	 * Runs the switch case for the where clause
+	 *
+	 * @param equation The equation to be run
+	 * @param dataHolder The data holder with the data to be filtered
+	 */
+	private void updateSwitchCase(String[] equation, ArrayList<HashMap<String, String>> dataHolder) {
+		switch (equation[1]) {
+			case "=":
+				dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
+				break;
+			case "!=" :
+				dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
+				break;
+			case "like":
+				dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
+				break;
+		}
+
+	}
+
+	/**
+	 *
+	 * Checks if the data to be added is already in the data holder stack
+	 *
+	 * @param dataHolderStack The data holder stack to compare to
+	 * @param dataToAdd The data that is to be added if not in dataHolderStack
+	 * @return boolean
+	 */
+	private boolean checkDuplicates(ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataToAdd) {
+		for (ArrayList<HashMap<String, String>> list : dataHolderStack) {
+			if (list.size() == dataToAdd.size() && list.containsAll(dataToAdd) && dataToAdd.containsAll(list)) {
+				return true;
 			}
 		}
-		ArrayList<HashMap<String, String>> dataWithRelation = new ArrayList<>();
-		HashMap<String, ArrayList<HashMap<String,String>>> finalData = new HashMap<>();
+		return false;
+	}
 
-		for (HashMap<String, String> data : allData) {
-			String targetFile = targetRelation + ".txt";
-			QueryBuilder<?> qb = new QueryBuilder<>(someClass);
-			ArrayList<HashMap<String, String>> relationData = qb.select()
-					.from("db/" + targetFile)
-					.where(targetRelation + "_id", "=", data.get(targetRelation + "_id"))
-					.get();
-
-			dataWithRelation.addAll(relationData);
+	/**
+	 *
+	 * Recursively parses the queue of the logical operators
+	 *
+	 * @param queue The queue of the logical operators
+	 * @param dataHolder The data holder
+	 * @param dataHolderStack The data holder stack
+	 * @param dataCopy The copy of the data holder
+	 * @param andStack The stack of the AND statements
+	 * @param orStack The stack of the OR statements
+	 * @return The data holder stack
+	 */
+	private ArrayDeque<ArrayList<HashMap<String, String>>> recursiveLogicalOperatorCheck(ArrayDeque<Integer> queue, ArrayList<HashMap<String, String>> dataHolder, ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataCopy, ArrayDeque<String[]> andStack, ArrayDeque<String[]> orStack) {
+		Iterator<Integer> iterator = queue.iterator();
+		ArrayDeque<String[]> andStackClone = andStack.clone();
+		if (queue.isEmpty()) {
+			return dataHolderStack;
 		}
-		finalData.put(targetRelation, dataWithRelation);
-		finalData.put(this.getClassName().toLowerCase(), allData);
-		return finalData;
+		//If only item is an OR statement
+		if (queue.size() == 1 && queue.peek() == 0) {
+			updateSwitchCase(orStack.getFirst(), dataCopy);
+
+			if (!dataCopy.isEmpty()) {
+				dataHolderStack.add(dataCopy);
+			}
+
+			return dataHolderStack;
+		} else {
+			while (iterator.hasNext()) {
+				int index = iterator.next();
+				//If the queue has an OR statement, but there are still AND statements in the stack.
+				//Example: queue: [OR, AND], AND stack: id = 1, OR stack: id = 5
+				if (index == 0 && !andStackClone.isEmpty()) {
+					//Handle edge case for queue that ends with OR but still have AND in queue
+					if (queue.getLast() == 0){
+						recursiveLogicalOperatorCheck(new ArrayDeque<>(queue.removeLast()), dataHolder, dataHolderStack, dataCopy, andStackClone, orStack);
+					}
+
+					//Reverse the queue
+					ArrayDeque<Integer> reverseQueue = new ArrayDeque<>();
+
+					for (int i: queue) {
+						reverseQueue.push(i);
+					}
+
+					return recursiveLogicalOperatorCheck(reverseQueue, dataCopy, dataHolderStack, dataCopy, andStackClone, orStack);
+				}//If the queue has an OR statement and the AND stack is empty
+				else if (index == 0) {
+					updateSwitchCase(orStack.getFirst(), dataHolder);
+
+					if (!dataHolder.isEmpty()) {
+						dataHolderStack.add(dataHolder);
+					}
+
+					iterator.remove();
+				}//If current item in queue is AND statement
+				else {
+					updateSwitchCase(andStackClone.getFirst(), dataHolder);
+
+					if (!dataHolder.isEmpty()) {
+						if (!checkDuplicates(dataHolderStack, dataHolder)) {
+							dataHolderStack.add(dataHolder);
+						}
+					}
+
+					iterator.remove();
+					andStackClone.remove();
+				}
+			}
+		}
+		return dataHolderStack;
 	}
 
 	/**
@@ -359,7 +473,19 @@ public class QueryBuilder<T>{
 		if (!this.queue.isEmpty()) {
 			ArrayDeque<Integer> queueCopy = this.queue.clone();
 			ArrayDeque<ArrayList<HashMap<String, String>>> res = recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
+		}
 
+		if (!dataHolderStack.isEmpty()) {
+			ArrayList<HashMap<String, String>> temp = new ArrayList<>();
+			for (int i = 0; i < dataHolderStack.size(); i++) {
+				if (!dataHolderStack.peek().isEmpty()) {
+					HashMap<String, String> item = dataHolderStack.pop().get(0);
+					temp.add(item);
+				}
+			}
+			dataHolder = temp;
+			temp = null;
+			System.gc();
 		}
 
 		if (!dataHolderStack.isEmpty()) {
@@ -405,6 +531,9 @@ public class QueryBuilder<T>{
 	 * @return a QueryBuilder of the type you passed in for method chaining.
 	 * */
 	public QueryBuilder<T> target(String target){
+		if (target.contains(".txt")) {
+			target = target.replace(".txt", "");
+		}
 		this.targetFile = target;
 		return this;
 	}
@@ -430,15 +559,12 @@ public class QueryBuilder<T>{
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
 	public void create() throws IOException {
-		System.out.println(Arrays.toString(this.classAttrs));
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
 		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
-		int latestId = Integer.parseInt(this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
+		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
-				.where(this.getClassName().toLowerCase()+"_id", ">", "0")
-				.sort(this.getClassName().toLowerCase()+"_id", "desc")
-				.get()
-				.get(0)
+				.get();
+		int latestId = Integer.parseInt(data.get(data.size()-1)
 				.get(this.getClassName().toLowerCase()+"_id"))+1;
 		try {
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -446,6 +572,7 @@ public class QueryBuilder<T>{
 			for (String item: this.getAttrs(false)) {
 				lineToWrite.append(validatedData.get(item)).append(",");
 			}
+			System.out.printf(lineToWrite.substring(0, lineToWrite.length()-1));
 			//Remove last comma
 			bw.write(lineToWrite.substring(0, lineToWrite.length()-1));
 			bw.newLine();
