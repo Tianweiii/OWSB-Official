@@ -92,9 +92,6 @@ public class QueryBuilder<T extends Initializable>{
 			fileName = fileName.replace(".txt", "");
 		}
 		this.fileName = fileName;
-		this.andOperatorStack = new ArrayDeque<>();
-		this.queue = new ArrayDeque<>();
-		this.orOperatorStack = new ArrayDeque<>();
 		return this;
 	}
 
