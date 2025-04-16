@@ -162,7 +162,7 @@ public class QueryBuilder<T extends Initializable>{
 	 * @return An array with HashMaps with the instances of the class passed into the QueryBuilder.
 	 * */
 
-	public ArrayList<T> getAsObjects() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+	public ArrayList<T> getAsObjects() {
 		ArrayList<HashMap<String, String>> data = this.get();
 		System.out.println(data);
 		ArrayList<T> objects = new ArrayList<>();
@@ -443,6 +443,7 @@ public class QueryBuilder<T extends Initializable>{
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
 	public void create() throws IOException {
+		System.out.println(Arrays.toString(this.classAttrs));
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
 		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
 		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
@@ -456,7 +457,6 @@ public class QueryBuilder<T extends Initializable>{
 			for (String item: this.getAttrs(false)) {
 				lineToWrite.append(validatedData.get(item)).append(",");
 			}
-			System.out.printf(lineToWrite.substring(0, lineToWrite.length()-1));
 			//Remove last comma
 			bw.write(lineToWrite.substring(0, lineToWrite.length()-1));
 			bw.newLine();
