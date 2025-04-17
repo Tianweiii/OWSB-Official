@@ -1,0 +1,146 @@
+<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
+<jasperReport name="TestReport" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cca6aef4-5234-4081-9f00-68a782011931">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#BFD6FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#E6EFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<dataset name="TABLE_DATASET" uuid="d7e8ec45-6e4c-4366-9bd2-d23f51fee687">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BEAN_DATA_SOURCE"/>
+		<query language="CSV"><![CDATA[]]></query>
+		<field name="paymentID" class="java.lang.String"/>
+		<field name="name" class="java.lang.String"/>
+		<field name="amount" class="java.lang.Double"/>
+		<field name="paymentMethod" class="java.lang.String"/>
+		<field name="PO_ID" class="java.lang.String"/>
+		<field name="paymentReference" class="java.lang.String"/>
+	</dataset>
+	<parameter name="TABLE_DATA_SOURCE" forPrompting="false" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<query language="CSV"><![CDATA[]]></query>
+	<field name="reportCreater" class="java.lang.String"/>
+	<field name="reportCreatedDate" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="rectangle" uuid="25ae4d8a-49de-418f-ae97-eb84ab6062f8" x="-20" y="-20" width="595" height="99" backcolor="#0D92FF"/>
+		<element kind="staticText" uuid="328c7689-95a3-4e32-9ba0-2cfb6e8e820f" x="10" y="15" width="280" height="29" forecolor="#FFFFFF" fontSize="22.0" hTextAlign="Center">
+			<text><![CDATA[Payment Summary Report]]></text>
+		</element>
+		<element kind="textField" uuid="76623f44-ed4f-4096-a075-b6e76a1a3562" x="360" y="40" width="204" height="29" forecolor="#FFFFFF">
+			<expression><![CDATA["Created by: " + $F{reportCreater} + "\nCreated at: " + $F{reportCreatedDate}
+]]></expression>
+		</element>
+	</title>
+	<detail>
+		<band height="209" splitType="Stretch">
+			<element kind="component" uuid="05c178b2-3840-48cb-942e-04c5a161f139" x="0" y="0" width="560" height="59">
+				<component kind="table">
+					<datasetRun uuid="b596320d-053b-4479-a9c2-295a77a20bd5" subDataset="TABLE_DATASET">
+						<dataSourceExpression><![CDATA[$P{TABLE_DATA_SOURCE}]]></dataSourceExpression>
+					</datasetRun>
+					<column kind="single" uuid="f95a2d84-fca1-42ed-a490-5ab697ac2144" width="60">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="ae8ca526-e1c6-4f4f-8b89-b1b1bdfbda0a" x="0" y="0" width="60" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Payment ID]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="11bb3d4f-1b3e-4f14-a092-43eab4e24f0c" x="0" y="0" width="60" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{paymentID}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+					</column>
+					<column kind="single" uuid="65b00410-1cd3-4fc2-a408-37ed10f4d972" width="120">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="793c5413-88e2-451c-ae64-83df9cffd4df" x="0" y="0" width="120" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Username]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="7c847f18-8269-49bf-a6ec-83f035daab83" x="0" y="0" width="120" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{name}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+					</column>
+					<column kind="single" uuid="11455732-42ea-46dc-abc8-06e2aa116469" width="110">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="c39acba2-541d-4223-a183-dd448c4f5181" x="0" y="0" width="110" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Amount (RM)]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="84819e7e-407c-4892-ade4-d8dfdf83f380" x="0" y="0" width="110" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{amount}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+					</column>
+					<column kind="single" uuid="15d0fd07-3e30-418e-87d4-678abb2e9d4d" width="90">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="02c87cba-ca9f-4881-aa69-7f8fa3f6bfbe" x="0" y="0" width="90" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Payment Method]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="d760cae8-b7a3-4da2-a95d-091ec61b8cfe" x="0" y="0" width="90" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{paymentMethod}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+					</column>
+					<column kind="single" uuid="31720860-a3ab-4e1a-b1cb-b844ed6ae04e" width="50">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="cbaa5c2d-ef73-4a3c-810d-335d28157c69" x="0" y="0" width="50" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[PO ID]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="4fdec37e-5f77-4886-810f-6a9a50f03614" x="0" y="0" width="50" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{PO_ID}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+					</column>
+					<column kind="single" uuid="4096b01a-cd3a-415e-8461-cba0e8c0f949" width="130">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="c05db6c7-740a-4899-b95e-f9cb2d0ffa04" x="0" y="0" width="130" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Payment Reference]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="98925b21-70ec-4264-9c1a-cec3a5a059ce" x="0" y="0" width="130" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{paymentReference}]]></expression>
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+					</column>
+				</component>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

@@ -6,11 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.Datas.Payment;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.InputStream;
 
 public class MainApplication extends Application {
     @Override
@@ -35,7 +37,9 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws IOException {
-        launch();
+    public static void main(String[] args) {
+//        launch();
+
+        Payment.generatePaymentReportPDF();
     }
 }
