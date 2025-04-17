@@ -1,6 +1,10 @@
 package models.Users;
 
-public class User {
+import models.Initializable;
+
+import java.util.HashMap;
+
+public class User implements Initializable {
 	private int user_id;
 	private String username;
 	private String email;
@@ -16,6 +20,17 @@ public class User {
 
 	public User() {
 
+	}
+
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.user_id = data.get("user_id") != null ? Integer.parseInt(data.get("user_id")) : 0;
+		this.username = data.get("username");
+		this.email = data.get("email");
+		this.password = data.get("password");
+		this.position = data.get("position");
+		this.age = data.get("age") != null ? Integer.parseInt(data.get("age")) : 0;
+		this.role_id = data.get("role_id") != null ? Integer.parseInt(data.get("role_id")) : 0;
 	}
 
 	public String getName() {

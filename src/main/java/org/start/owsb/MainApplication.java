@@ -6,13 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Datas.Payment;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
+import models.Users.User;
+import models.Utils.QueryBuilder;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
@@ -37,9 +37,17 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 //        launch();
-
-        Payment.generatePaymentReportPDF();
+        //Test queryBuilder usage
+        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
+        String[] columns = new String[]{"email", "password"};
+        ArrayList<HashMap<String, String>> res = qb.select()
+                .from("db/User.txt")
+//                .where("email", "=", "many@mail.com")
+                .get();
+//        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
+//        String roleid = res.get(0).get("role_id");
+        System.out.println(res);
     }
 }
