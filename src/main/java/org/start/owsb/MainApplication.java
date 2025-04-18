@@ -1,12 +1,11 @@
 package org.start.owsb;
 
-import controllers.SpinnerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.Users.User;
+import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 
 import java.io.IOException;
@@ -26,19 +25,23 @@ public class MainApplication extends Application {
 //        stage.show();
 
         // temp test
-        FXMLLoader spinnerSceneLoader = new FXMLLoader(getClass().getResource("test.fxml"));
-        Parent root = (Parent) spinnerSceneLoader.load();
+//        FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
+//        sidebar.load();
+        Layout layout = new Layout();
+        Navigator navigator = Navigator.getInstance();
+        FXMLLoader home = new FXMLLoader(getClass().getResource("test.fxml"));
+        navigator.setLayout(layout);
+        navigator.navigate(home.load());
 
-        SpinnerController ctrlrPointer = (SpinnerController) spinnerSceneLoader.getController();
-
-
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
+        
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        launch();
+        launch();
         //Test queryBuilder usage
         QueryBuilder<User> qb = new QueryBuilder<>(User.class);
         String[] columns = new String[]{"email", "password"};

@@ -1,6 +1,6 @@
 package models.Utils;
 
-import models.Initializable;
+import models.ModelInitializable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -24,7 +24,7 @@ import java.util.*;
  *
  * @param <T> The type of the class to be used.
  * */
-public class QueryBuilder<T extends Initializable>{
+public class QueryBuilder<T extends ModelInitializable>{
 
 	private final T aClass;
 	private final Class<T> aClassType;
@@ -227,16 +227,41 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param dataHolder The data holder with the data to be filtered
 	 */
 	private void updateSwitchCase(String[] equation, ArrayList<HashMap<String, String>> dataHolder) {
-		switch (equation[1]) {
-			case "=":
-				dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
-				break;
-			case "!=" :
-				dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
-				break;
-			case "like":
-				dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
-				break;
+		if (equation[2].matches("[0-9]+")) {
+			int value = Integer.parseInt(equation[2]);
+			switch (equation[1]) {
+				case "=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) == value));
+					break;
+				case "!=":
+					dataHolder.removeIf(data -> Integer.parseInt(data.get(equation[0])) == value);
+					break;
+				case ">":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) > value));
+					break;
+				case "<":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) < value));
+					break;
+				case ">=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) >= value));
+					break;
+				case "<=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) <= value));
+					break;
+			}
+		} else {
+			switch (equation[1]) {
+				case "=":
+					dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
+					break;
+				case "!=" :
+					dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
+					break;
+				case "like":
+					dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
+					break;
+			}
+
 		}
 
 	}
