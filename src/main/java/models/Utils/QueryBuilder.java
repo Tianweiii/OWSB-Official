@@ -25,6 +25,7 @@ import java.util.*;
  * @param <T> The type of the class to be used.
  * */
 public class QueryBuilder<T extends ModelInitializable>{
+	private final String FILE_ROOT = "src/main/java/";
 
 	private final T aClass;
 	private final Class<T> aClassType;
@@ -164,7 +165,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 
 	public ArrayList<T> getAsObjects() {
 		ArrayList<HashMap<String, String>> data = this.get();
-		System.out.println(data);
 		ArrayList<T> objects = new ArrayList<>();
 
 		for (HashMap<String, String> item: data) {
@@ -193,7 +193,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 		String textFileName = this.fileName + ".txt";
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("src/main/java/" + textFileName));
+			BufferedReader br = new BufferedReader(new FileReader(FILE_ROOT + textFileName));
 			String line = br.readLine();
 
 			while (line != null) {
@@ -206,10 +206,19 @@ public class QueryBuilder<T extends ModelInitializable>{
 			if (this.sortByClause != null) {
 				switch (this.sortByClause[1]) {
 					case "asc":
-						allData.sort(Comparator.comparing(o -> o.get(this.sortByClause[0])));
+						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
+							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+						} else {
+							allData.sort(Comparator.comparing(o -> o.get(this.sortByClause[0])));
+						}
 						break;
 					case "desc":
-						allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
+						//TODO reverse sort for integers
+						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
+							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+						} else {
+							allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
+						}
 						break;
 				}
 			}
@@ -381,20 +390,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 
 		if (!this.queue.isEmpty()) {
 			ArrayDeque<Integer> queueCopy = this.queue.clone();
-			ArrayDeque<ArrayList<HashMap<String, String>>> res = recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
-		}
-
-		if (!dataHolderStack.isEmpty()) {
-			ArrayList<HashMap<String, String>> temp = new ArrayList<>();
-			for (int i = 0; i < dataHolderStack.size(); i++) {
-				if (!dataHolderStack.peek().isEmpty()) {
-					HashMap<String, String> item = dataHolderStack.pop().get(0);
-					temp.add(item);
-				}
-			}
-			dataHolder = temp;
-			temp = null;
-			System.gc();
+			recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
 		}
 
 		if (!dataHolderStack.isEmpty()) {
@@ -470,7 +466,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	public void create() throws IOException {
 		System.out.println(Arrays.toString(this.classAttrs));
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
-		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
+		FileWriter fw = new FileWriter(FILE_ROOT + this.targetFile + ".txt", true);
 		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
 				.get();
@@ -505,7 +501,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 		HashMap<String, String> validatedData = this.validateData(String.join(",", targetChange.values()), true);
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -517,7 +513,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 			String[] classAttrs = this.getAttrs();
 
@@ -562,7 +558,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 		HashMap<String, String> validatedData = this.validateData(String.join(",", data));
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -574,7 +570,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 			String[] classAttrs = this.getAttrs(false);
 
@@ -668,7 +664,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	public void delete(String targetId) throws FileNotFoundException {
 		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -679,7 +675,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			for (String lineItem: lines) {

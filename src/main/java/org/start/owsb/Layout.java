@@ -8,9 +8,18 @@ import java.io.IOException;
 
 public class Layout {
 	private final BorderPane root = new BorderPane();
-	private SidebarView sidebarView = new SidebarView();
+	private SidebarView sidebarView;
+	private static Layout instance;
 
-	public Layout() throws IOException {
+	public static Layout getInstance() throws IOException {
+		if (instance == null) {
+			instance = new Layout();
+		}
+		return instance;
+	}
+
+	public void initSidebar(String[] options) throws IOException {
+		sidebarView = new SidebarView(options);
 		root.setLeft(sidebarView.getView());
 	}
 

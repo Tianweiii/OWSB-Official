@@ -27,11 +27,16 @@ public class MainApplication extends Application {
         // temp test
 //        FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
 //        sidebar.load();
-        Layout layout = new Layout();
+        Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
+        //Set login page or initial landing page here
         FXMLLoader home = new FXMLLoader(getClass().getResource("test.fxml"));
         navigator.setLayout(layout);
         navigator.navigate(home.load());
+
+        //Init sidebar code
+        // Layout layout = Layout.getInstance();
+        // layout.initSidebar(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
 
         Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);
@@ -47,7 +52,8 @@ public class MainApplication extends Application {
         String[] columns = new String[]{"email", "password"};
         ArrayList<HashMap<String, String>> res = qb.select()
                 .from("db/User.txt")
-//                .where("email", "=", "many@mail.com")
+//                .where("user_id", ">", "2")
+                .sort("user_id", "desc")
                 .get();
 //        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
 //        String roleid = res.get(0).get("role_id");

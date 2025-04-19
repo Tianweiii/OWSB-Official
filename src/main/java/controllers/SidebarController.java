@@ -3,7 +3,7 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
@@ -21,9 +21,10 @@ public class SidebarController implements Initializable {
 
 	public void setText() {
 		for(int i = 0; i < sidebarItems.length; i++) {
-			Label label = new Label(sidebarItems[i]);
-			label.setPadding(new Insets(5, 5, 5, 15));
-			sidebarGrid.add(label, 0, i);
+			Button button = new Button(sidebarItems[i]);
+			button.setPadding(new Insets(5, 5, 5, 15));
+			button.setBackground(null);
+			sidebarGrid.add(button, 0, i);
 		}
 	}
 	@Override

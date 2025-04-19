@@ -17,7 +17,7 @@ public class SidebarView implements View{
 	private AnchorPane sidebarController;
 	//Init sidebar on login
 
-	public SidebarView() throws IOException {
+	public SidebarView(String[] sidebarItems) throws IOException {
 		FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
 		this.sidebarController = sidebar.load();
 		//Sidebar scaling to screen size
@@ -31,9 +31,8 @@ public class SidebarView implements View{
 			return pane;
 		}).collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-		SidebarController ctrlPointer =
-				sidebar.getController();
-		ctrlPointer.setSidebarItems(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
+		SidebarController ctrlPointer = sidebar.getController();
+		ctrlPointer.setSidebarItems(sidebarItems);
 		ctrlPointer.setText();
 	}
 
