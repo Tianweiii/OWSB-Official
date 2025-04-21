@@ -1,6 +1,7 @@
 package models.Datas;
 
-import models.Initializable;
+import models.ModelInitializable;
+import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class InventoryUpdateLog implements Initializable {
+public class InventoryUpdateLog implements ModelInitializable {
 
     private String logID;
     private int itemID;

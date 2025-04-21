@@ -4,9 +4,10 @@ module org.start.owsb {
     requires net.sf.jasperreports.core;
     requires java.sql;
     requires javafx.swing;
+	requires java.desktop;
 
 
-    opens org.start.owsb to javafx.fxml;
+	opens org.start.owsb to javafx.fxml;
     exports org.start.owsb;
 
     opens controllers to javafx.fxml;
