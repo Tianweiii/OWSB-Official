@@ -16,7 +16,7 @@ ArrayList<YourModel> res = qb.select().from("db/fileName").getAsObjects();
 
 
 ## Selecting columns
-You select columns by using the `.select()` method. 
+You select columns by using the `.select()` method.
 This method accepts an array of strings. If no columns are selected, the default column is selected which is `*`.
 ```java
 QueryBuilder<YourModel> qb = new QueryBuilder(YourModel.class);
@@ -93,16 +93,16 @@ ArrayList<String[]> someDataToUpdateArr = new ArrayList();
 HashMap<String, String> dataToUpdate = new HashMap<>();
 
 someDataToUpdateArr.add(new String[]{"Doe", "22", "1"});
-someDataToUpdateArr.add(new String[]{"Cook", "24", "3"});
+        someDataToUpdateArr.add(new String[]{"Cook", "24", "3"});
 
-dataToUpdate.put("name", "John");
+        dataToUpdate.put("name", "John");
 dataToUpdate.put("age", "22");
 dataToUpdate.put("id", "1");
 someDataToUpdate.add(dataToUpdate);
 
 qb.updateMany(new String[] {"9", "10"},new String[]{"Doe","22","1"});
-qb.updateManyParallelMap(new String[] {"9", "10"}, someDataToUpdate);
-qb.updateManyParallelArr(new String[] {"9", "10"}, someDataToUpdateArr);
+        qb.updateManyParallelMap(new String[] {"9", "10"}, someDataToUpdate);
+        qb.updateManyParallelArr(new String[] {"9", "10"}, someDataToUpdateArr);
 ```
 
 ## Deleting entries

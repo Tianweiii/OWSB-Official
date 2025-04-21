@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="stockManagementStage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="840.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.StockManagementController">
+   <children>
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="280.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Assets/icon/Box.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="362.0" layoutY="36.0" text="Stock Management">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="280.0" layoutY="106.0" text="Filter by" textFill="#707070">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="filterSelection" layoutX="280.0" layoutY="137.0" prefWidth="150.0" promptText="All" />
+      <HBox layoutX="280.0" layoutY="185.0" prefHeight="627.0" prefWidth="1171.0">
+         <children>
+            <TableView fx:id="itemTable" prefHeight="627.0" prefWidth="1173.0">
+               <columns>
+                  <TableColumn fx:id="itemID" prefWidth="169.5" text="Item ID" />
+                  <TableColumn fx:id="itemName" minWidth="0.0" prefWidth="199.0" text="Item Name" />
+                  <TableColumn fx:id="supplierName" prefWidth="200.0" text="Supplier Name" />
+                  <TableColumn fx:id="createdAt" minWidth="0.0" prefWidth="195.5" text="Created At" />
+                  <TableColumn fx:id="lastUpdated" minWidth="0.0" prefWidth="214.0" text="Last Updated" />
+                  <TableColumn fx:id="quantity" minWidth="0.0" prefWidth="193.5" text="Quantity" />
+               </columns>
+            </TableView>
+         </children>
+      </HBox>
+      <Label layoutX="475.0" layoutY="106.0" text="Search Bar" textFill="#707070">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtSearchKeyword" layoutX="475.0" layoutY="137.0" prefHeight="28.0" prefWidth="387.0" promptText="Search for item or supplier name..." />
+   </children>
+</AnchorPane>

@@ -1,9 +1,5 @@
 package models.Users;
 
-import java.util.ArrayList;
-import java.util.List;
-import models.Datas.Item;
-
 public class InventoryManager extends User{
     private String managerCode;
     private String assignedWarehouse;
@@ -32,14 +28,6 @@ public class InventoryManager extends User{
 
     public void setAssignedWarehouse(String assignedWarehouse) {
         this.assignedWarehouse = assignedWarehouse;
-    }
-
-    public void viewItemList() {
-//        View Item
-    }
-
-    public void generateStockReport() {
-//        Gen stock report
     }
 
     @Override

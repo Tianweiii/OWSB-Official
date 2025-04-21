@@ -11,34 +11,37 @@ import models.Utils.QueryBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
-//        Scene scene = new Scene(parent);
-//        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
-//        stage.setTitle("OWSB");
+        // temp test
+//        FXMLLoader spinnerSceneLoader = new FXMLLoader(getClass().getResource("test.fxml"));
+//        Parent root = (Parent) spinnerSceneLoader.load();
 //
+//        SpinnerController ctrlrPointer = (SpinnerController) spinnerSceneLoader.getController();
+//
+//
+//        Scene scene = new Scene(root);
 //        stage.setScene(scene);
 //        stage.show();
-
-        // temp test
-        FXMLLoader spinnerSceneLoader = new FXMLLoader(getClass().getResource("test.fxml"));
-        Parent root = (Parent) spinnerSceneLoader.load();
-
-        SpinnerController ctrlrPointer = (SpinnerController) spinnerSceneLoader.getController();
-
+        FXMLLoader stockManagementLoader = new FXMLLoader(getClass().getResource("/InventoryFXML/StockManagement.fxml"));
+//        FXMLLoader stockReportGenerationLoader = new FXMLLoader(getClass().getResource("/InventoryFXML/StockReportGeneration.fxml"));
+        Parent root = stockManagementLoader.load();
 
         Scene scene = new Scene(root);
+        stage.setFullScreen(true);
+//        stage.setFullScreenExitKeyCombination();
         stage.setScene(scene);
         stage.show();
+
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        launch();
+        launch(args);
         //Test queryBuilder usage
         QueryBuilder<User> qb = new QueryBuilder<>(User.class);
         String[] columns = new String[]{"email", "password"};
