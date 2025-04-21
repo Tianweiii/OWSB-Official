@@ -1,10 +1,10 @@
 package models.Users;
 
-import models.Initializable;
+import models.ModelInitializable;
 
 import java.util.HashMap;
 
-public class User implements Initializable {
+public class User implements ModelInitializable {
 	private int user_id;
 	private String username;
 	private String email;

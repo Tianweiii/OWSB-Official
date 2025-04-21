@@ -2,6 +2,6 @@ package models;
 
 import java.util.HashMap;
 
-public interface Initializable {
+public interface ModelInitializable {
 	void initialize(HashMap<String, String> data);
 }
