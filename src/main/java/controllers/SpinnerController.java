@@ -5,9 +5,11 @@
  */
 package controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
+
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +19,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
+import models.Utils.Navigator;
 
 /**
  *
@@ -31,7 +34,11 @@ public class SpinnerController implements Initializable {
     @FXML private Button button;
 
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void handleButtonAction(ActionEvent event) throws IOException {
+        // Example navigation
+//        Navigator navigator = Navigator.getInstance();
+//        SomeView someView = new SomeView();
+//        navigator.navigate(someView.load());
         RotateTransition spinSpinner;
         spinSpinner = new RotateTransition(Duration.millis(1000), spinnerPolygon);
         double randomNum = angleToSpin();

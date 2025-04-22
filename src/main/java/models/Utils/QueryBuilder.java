@@ -1,6 +1,6 @@
 package models.Utils;
 
-import models.Initializable;
+import models.ModelInitializable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -24,7 +24,8 @@ import java.util.*;
  *
  * @param <T> The type of the class to be used.
  * */
-public class QueryBuilder<T extends Initializable>{
+public class QueryBuilder<T extends ModelInitializable>{
+	private final String FILE_ROOT = "src/main/java/";
 
 	private final T aClass;
 	private final Class<T> aClassType;
@@ -164,7 +165,6 @@ public class QueryBuilder<T extends Initializable>{
 
 	public ArrayList<T> getAsObjects() {
 		ArrayList<HashMap<String, String>> data = this.get();
-		System.out.println(data);
 		ArrayList<T> objects = new ArrayList<>();
 
 		for (HashMap<String, String> item: data) {
@@ -193,7 +193,7 @@ public class QueryBuilder<T extends Initializable>{
 		String textFileName = this.fileName + ".txt";
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("src/main/java/" + textFileName));
+			BufferedReader br = new BufferedReader(new FileReader(FILE_ROOT + textFileName));
 			String line = br.readLine();
 
 			while (line != null) {
@@ -206,10 +206,19 @@ public class QueryBuilder<T extends Initializable>{
 			if (this.sortByClause != null) {
 				switch (this.sortByClause[1]) {
 					case "asc":
-						allData.sort(Comparator.comparing(o -> o.get(this.sortByClause[0])));
+						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
+							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+						} else {
+							allData.sort(Comparator.comparing(o -> o.get(this.sortByClause[0])));
+						}
 						break;
 					case "desc":
-						allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
+						//TODO reverse sort for integers
+						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
+							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+						} else {
+							allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
+						}
 						break;
 				}
 			}
@@ -227,16 +236,41 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param dataHolder The data holder with the data to be filtered
 	 */
 	private void updateSwitchCase(String[] equation, ArrayList<HashMap<String, String>> dataHolder) {
-		switch (equation[1]) {
-			case "=":
-				dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
-				break;
-			case "!=" :
-				dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
-				break;
-			case "like":
-				dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
-				break;
+		if (equation[2].matches("[0-9]+")) {
+			int value = Integer.parseInt(equation[2]);
+			switch (equation[1]) {
+				case "=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) == value));
+					break;
+				case "!=":
+					dataHolder.removeIf(data -> Integer.parseInt(data.get(equation[0])) == value);
+					break;
+				case ">":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) > value));
+					break;
+				case "<":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) < value));
+					break;
+				case ">=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) >= value));
+					break;
+				case "<=":
+					dataHolder.removeIf(data -> !(Integer.parseInt(data.get(equation[0])) <= value));
+					break;
+			}
+		} else {
+			switch (equation[1]) {
+				case "=":
+					dataHolder.removeIf(data-> !data.get(equation[0]).equals(equation[2]));
+					break;
+				case "!=" :
+					dataHolder.removeIf(data-> data.get(equation[0]).equals(equation[2]));
+					break;
+				case "like":
+					dataHolder.removeIf(data-> !data.get(equation[0]).contains(equation[2]));
+					break;
+			}
+
 		}
 
 	}
@@ -356,20 +390,7 @@ public class QueryBuilder<T extends Initializable>{
 
 		if (!this.queue.isEmpty()) {
 			ArrayDeque<Integer> queueCopy = this.queue.clone();
-			ArrayDeque<ArrayList<HashMap<String, String>>> res = recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
-		}
-
-		if (!dataHolderStack.isEmpty()) {
-			ArrayList<HashMap<String, String>> temp = new ArrayList<>();
-			for (int i = 0; i < dataHolderStack.size(); i++) {
-				if (!dataHolderStack.peek().isEmpty()) {
-					HashMap<String, String> item = dataHolderStack.pop().get(0);
-					temp.add(item);
-				}
-			}
-			dataHolder = temp;
-			temp = null;
-			System.gc();
+			recursiveLogicalOperatorCheck(queueCopy, dataHolder, dataHolderStack, dataCopy, this.andOperatorStack, this.orOperatorStack);
 		}
 
 		if (!dataHolderStack.isEmpty()) {
@@ -442,10 +463,9 @@ public class QueryBuilder<T extends Initializable>{
 	 * @see QueryBuilder#values(String[] dataArr)
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
-	public void create() throws IOException {
-		System.out.println(Arrays.toString(this.classAttrs));
+	public boolean create() throws IOException {
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
-		FileWriter fw = new FileWriter("src/main/java/" + this.targetFile + ".txt", true);
+		FileWriter fw = new FileWriter(FILE_ROOT + this.targetFile + ".txt", true);
 		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
 				.get();
@@ -462,8 +482,10 @@ public class QueryBuilder<T extends Initializable>{
 			bw.newLine();
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
+//			throw new RuntimeException(e);
 		}
 	}
 
@@ -476,11 +498,11 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param targetChange <b>HashMap</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public void update(String targetId, HashMap<String, String> targetChange) throws IOException {
+	public boolean update(String targetId, HashMap<String, String> targetChange) throws IOException {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", targetChange.values()), true);
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -492,7 +514,7 @@ public class QueryBuilder<T extends Initializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 			String[] classAttrs = this.getAttrs();
 
@@ -520,8 +542,11 @@ public class QueryBuilder<T extends Initializable>{
 			}
 			bw.close();
 			fw.close();
+
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
+//			throw new RuntimeException(e);
 		}
 	}
 
@@ -533,11 +558,11 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param data <b>String[]</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public void update(String targetId, String[] data) throws IOException {
+	public boolean update(String targetId, String[] data) throws IOException {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", data));
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -549,7 +574,7 @@ public class QueryBuilder<T extends Initializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 			String[] classAttrs = this.getAttrs(false);
 
@@ -568,8 +593,9 @@ public class QueryBuilder<T extends Initializable>{
 			}
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
 		}
 	}
 
@@ -580,10 +606,14 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateMany(String[] targetIds, String[] data) throws IOException {
+	public boolean updateMany(String[] targetIds, String[] data) throws IOException {
 		for (String id : targetIds) {
-			this.update(id, data);
+			boolean res = this.update(id, data);
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -593,10 +623,14 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateMany(String[] targetIds, HashMap<String, String> targetChange) throws IOException {
+	public boolean updateMany(String[] targetIds, HashMap<String, String> targetChange) throws IOException {
 		for (String id : targetIds) {
-			this.update(id, targetChange);
+			boolean res = this.update(id, targetChange);
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -607,13 +641,17 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateManyParallelMap(String[] targetIds, ArrayList<HashMap<String, String>> targetChanges) throws IOException {
+	public boolean updateManyParallelMap(String[] targetIds, ArrayList<HashMap<String, String>> targetChanges) throws IOException {
 		if (targetIds.length != targetChanges.size()) {
 			throw new RuntimeException("Number of targets must be equal to number of data");
 		}
 		for (int i = 0; i < targetIds.length; i++) {
-			this.update(targetIds[i], targetChanges.get(i));
+			boolean res = this.update(targetIds[i], targetChanges.get(i));
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -624,13 +662,17 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateManyParallelArr(String[] targetIds, ArrayList<String[]> data) throws IOException {
+	public boolean updateManyParallelArr(String[] targetIds, ArrayList<String[]> data) throws IOException {
 		if (targetIds.length != data.size()) {
 			throw new RuntimeException("Number of targets must be equal to number of data");
 		}
 		for (int i = 0; i < targetIds.length; i++) {
-			this.update(targetIds[i], data.get(i));
+			boolean res = this.update(targetIds[i], data.get(i));
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -640,10 +682,10 @@ public class QueryBuilder<T extends Initializable>{
 	 * @throws FileNotFoundException will throw error if file does not exist
 	 * @see QueryBuilder#target()
 	 * */
-	public void delete(String targetId) throws FileNotFoundException {
+	public boolean delete(String targetId) throws FileNotFoundException {
 		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader("src/main/java/" + targetFile);
+		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
 			BufferedReader br = new BufferedReader(fr);
 
@@ -654,7 +696,7 @@ public class QueryBuilder<T extends Initializable>{
 				lines.add(line);
 			}
 
-			FileWriter fw = new FileWriter("src/main/java/" + targetFile, false);
+			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			for (String lineItem: lines) {
@@ -665,8 +707,9 @@ public class QueryBuilder<T extends Initializable>{
 			}
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
 		}
 	}
 
@@ -761,7 +804,7 @@ public class QueryBuilder<T extends Initializable>{
 	 *
 	 * @return An array of <b>String</b> with the class fields.
 	 * */
-	private String[] getAttrs(){
+	public String[] getAttrs(){
 		Field[] attrs = this.aClass.getClass().getDeclaredFields();
 
 		return Arrays.stream(attrs).map(Field::getName).toArray(String[]::new);
@@ -774,7 +817,7 @@ public class QueryBuilder<T extends Initializable>{
 	 * @param withId <b>Boolean</b> <br> If true, the id of the class will be included
 	 * @return An array of <b>String</b> with the class fields.
 	 * */
-	private String[] getAttrs(Boolean withId){
+	public String[] getAttrs(Boolean withId){
 		Field[] attrs = this.aClass.getClass().getDeclaredFields();
 
 		int n = Arrays.stream(attrs).map(Field::getName).toArray(String[]::new).length-1;
