@@ -463,8 +463,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @see QueryBuilder#values(String[] dataArr)
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
-	public void create() throws IOException {
-		System.out.println(Arrays.toString(this.classAttrs));
+	public boolean create() throws IOException {
 		HashMap<String, String> validatedData = this.validateData(this.createValues);
 		FileWriter fw = new FileWriter(FILE_ROOT + this.targetFile + ".txt", true);
 		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
@@ -483,8 +482,10 @@ public class QueryBuilder<T extends ModelInitializable>{
 			bw.newLine();
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
+//			throw new RuntimeException(e);
 		}
 	}
 
@@ -497,7 +498,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param targetChange <b>HashMap</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public void update(String targetId, HashMap<String, String> targetChange) throws IOException {
+	public boolean update(String targetId, HashMap<String, String> targetChange) throws IOException {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", targetChange.values()), true);
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
@@ -541,8 +542,11 @@ public class QueryBuilder<T extends ModelInitializable>{
 			}
 			bw.close();
 			fw.close();
+
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
+//			throw new RuntimeException(e);
 		}
 	}
 
@@ -554,7 +558,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param data <b>String[]</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public void update(String targetId, String[] data) throws IOException {
+	public boolean update(String targetId, String[] data) throws IOException {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", data));
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
 
@@ -589,8 +593,9 @@ public class QueryBuilder<T extends ModelInitializable>{
 			}
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
 		}
 	}
 
@@ -601,10 +606,14 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateMany(String[] targetIds, String[] data) throws IOException {
+	public boolean updateMany(String[] targetIds, String[] data) throws IOException {
 		for (String id : targetIds) {
-			this.update(id, data);
+			boolean res = this.update(id, data);
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -614,10 +623,14 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateMany(String[] targetIds, HashMap<String, String> targetChange) throws IOException {
+	public boolean updateMany(String[] targetIds, HashMap<String, String> targetChange) throws IOException {
 		for (String id : targetIds) {
-			this.update(id, targetChange);
+			boolean res = this.update(id, targetChange);
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -628,13 +641,17 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateManyParallelMap(String[] targetIds, ArrayList<HashMap<String, String>> targetChanges) throws IOException {
+	public boolean updateManyParallelMap(String[] targetIds, ArrayList<HashMap<String, String>> targetChanges) throws IOException {
 		if (targetIds.length != targetChanges.size()) {
 			throw new RuntimeException("Number of targets must be equal to number of data");
 		}
 		for (int i = 0; i < targetIds.length; i++) {
-			this.update(targetIds[i], targetChanges.get(i));
+			boolean res = this.update(targetIds[i], targetChanges.get(i));
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -645,13 +662,17 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be updated.
 	 * @throws IOException will throw error if file does not exist
 	 * */
-	public void updateManyParallelArr(String[] targetIds, ArrayList<String[]> data) throws IOException {
+	public boolean updateManyParallelArr(String[] targetIds, ArrayList<String[]> data) throws IOException {
 		if (targetIds.length != data.size()) {
 			throw new RuntimeException("Number of targets must be equal to number of data");
 		}
 		for (int i = 0; i < targetIds.length; i++) {
-			this.update(targetIds[i], data.get(i));
+			boolean res = this.update(targetIds[i], data.get(i));
+			if (!res) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -661,7 +682,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @throws FileNotFoundException will throw error if file does not exist
 	 * @see QueryBuilder#target()
 	 * */
-	public void delete(String targetId) throws FileNotFoundException {
+	public boolean delete(String targetId) throws FileNotFoundException {
 		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
 
 		FileReader fr = new FileReader(FILE_ROOT + targetFile);
@@ -686,8 +707,9 @@ public class QueryBuilder<T extends ModelInitializable>{
 			}
 			bw.close();
 			fw.close();
+			return true;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return false;
 		}
 	}
 
@@ -782,7 +804,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 *
 	 * @return An array of <b>String</b> with the class fields.
 	 * */
-	private String[] getAttrs(){
+	public String[] getAttrs(){
 		Field[] attrs = this.aClass.getClass().getDeclaredFields();
 
 		return Arrays.stream(attrs).map(Field::getName).toArray(String[]::new);
@@ -795,7 +817,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param withId <b>Boolean</b> <br> If true, the id of the class will be included
 	 * @return An array of <b>String</b> with the class fields.
 	 * */
-	private String[] getAttrs(Boolean withId){
+	public String[] getAttrs(Boolean withId){
 		Field[] attrs = this.aClass.getClass().getDeclaredFields();
 
 		int n = Arrays.stream(attrs).map(Field::getName).toArray(String[]::new).length-1;
