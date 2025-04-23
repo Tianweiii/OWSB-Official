@@ -1,4 +1,5 @@
-1,Models.User
-2,Admin
-3,Moderator
-4,Poopy
+1,Admin
+2,Sales Manager
+3,Purchase Manager
+4,Inventory Manager
+5,Finance Manager

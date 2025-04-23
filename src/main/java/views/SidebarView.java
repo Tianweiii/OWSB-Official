@@ -17,23 +17,13 @@ public class SidebarView implements View{
 	private AnchorPane sidebarController;
 	//Init sidebar on login
 
-	public SidebarView(String[] sidebarItems) throws IOException {
-		FXMLLoader sidebar = new FXMLLoader(getClass().getResource("/Components/Sidebar.fxml")
-		);
+	public SidebarView(String sidebarType, String[] sidebarItems) throws IOException {
+		FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
 		this.sidebarController = sidebar.load();
-		//Sidebar scaling to screen size
-		this.sidebarController.setMinHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-		this.sidebarController.setPrefWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.15);
-		this.sidebarController.setMaxWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.15);
 
-		ObservableList<Pane> list = this.sidebarController.getChildren().stream().map(x  -> {
-			Pane pane = (Pane) x;
-			pane.setPrefWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.15);
-			return pane;
-		}).collect(Collectors.toCollection(FXCollections::observableArrayList));
 
 		SidebarController ctrlPointer = sidebar.getController();
-		ctrlPointer.setSidebarItems(sidebarItems);
+		ctrlPointer.setSidebarItems(sidebarType, sidebarItems);
 		ctrlPointer.setText();
 	}
 

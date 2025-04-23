@@ -7,6 +7,7 @@ package controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -39,25 +40,27 @@ public class SpinnerController implements Initializable {
 //        Navigator navigator = Navigator.getInstance();
 //        SomeView someView = new SomeView();
 //        navigator.navigate(someView.load());
-        RotateTransition spinSpinner;
-        spinSpinner = new RotateTransition(Duration.millis(1000), spinnerPolygon);
-        double randomNum = angleToSpin();
-        angleTurned = (angleTurned + randomNum) % 360.0;
-        spinSpinner.setByAngle(randomNum);
-        spinSpinner.play();
-        int newLoc = landinglocation(angleTurned);
+//        RotateTransition spinSpinner;
+//        spinSpinner = new RotateTransition(Duration.millis(1000), spinnerPolygon);
+//        double randomNum = angleToSpin();
+//        angleTurned = (angleTurned + randomNum) % 360.0;
+//        spinSpinner.setByAngle(randomNum);
+//        spinSpinner.play();
+//        int newLoc = landinglocation(angleTurned);
+//
+//        System.out.println("newloc: " + newLoc);
+//        System.out.println("angleTurned " + angleTurned);
+//
+//        spinSpinner.setOnFinished(new EventHandler<ActionEvent>() {
+//
+//            @Override
+//            public void handle(ActionEvent event) {
+//                label.setText("you are on quartile: " + newLoc);
+//            }
+//        });
 
-        System.out.println("newloc: " + newLoc);
-        System.out.println("angleTurned " + angleTurned);
-
-        spinSpinner.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                label.setText("you are on quartile: " + newLoc);
-            }
-        });
-
+        Navigator navigator = Navigator.getInstance();
+        navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 
     }
 
