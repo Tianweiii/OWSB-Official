@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 import views.UserRegistrationView;
 
 import java.io.IOException;
@@ -18,27 +19,11 @@ import java.util.HashMap;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
-//        Scene scene = new Scene(parent);
-//        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
-//        stage.setTitle("OWSB");
-//
-//        stage.setScene(scene);
-//        stage.show();
-
-        // temp test
-//        FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
-//        sidebar.load();
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
-        //Set login page or initial landing page here
-        FXMLLoader home = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
-        UserRegistrationView userRegistrationView = new UserRegistrationView();
+        SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
-        navigator.navigate(home.load());
-
-        //Init sidebar code
-        layout.initSidebar("admin", new String[]{"Register"});
+        navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
         Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);
@@ -47,18 +32,7 @@ public class MainApplication extends Application {
         
     }
 
-    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) {
         launch();
-        //Test queryBuilder usage
-        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
-        String[] columns = new String[]{"email", "password"};
-        ArrayList<HashMap<String, String>> res = qb.select()
-                .from("db/User.txt")
-//                .where("user_id", ">", "2")
-                .sort("user_id", "desc")
-                .get();
-//        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
-//        String roleid = res.get(0).get("role_id");
-        System.out.println(res);
     }
 }

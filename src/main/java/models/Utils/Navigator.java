@@ -3,6 +3,7 @@ package models.Utils;
 import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
+import views.LoginView;
 import views.UserRegistrationView;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class Navigator {
 	private static HashMap<String, Router> roleRoutes = new HashMap<>();
 
 	private static void initRoutes() {
+		Router allRouter = new Router();
 		Router adminRouter =  new Router();
 		Router salesRouter =  new Router();
 		Router purchaseRouter =  new Router();
@@ -26,17 +28,18 @@ public class Navigator {
 //		adminRouter.addRoute("EEEE", SidebarView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
-		// Inventory manager
-
-		// Finance manage
-
 		// Sales manager
 
 		// Purchase manager
 
+		// Inventory manager
+
+		// Finance manage
+
 		// NON SIDEBAR ROUTES
+		allRouter.addRoute("login", LoginView.class);
 
-
+		roleRoutes.put("all", allRouter);
 		roleRoutes.put("admin", adminRouter);
 		roleRoutes.put("sales", salesRouter);
 		roleRoutes.put("purchase", purchaseRouter);

@@ -9,11 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import models.Datas.Role;
 import models.Users.User;
+import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class UserRegistrationController implements Initializable {
@@ -28,16 +30,26 @@ public class UserRegistrationController implements Initializable {
 
 	@FXML
 	public void handleRegisterButtonClick() {
+		//TODO hash password
 		try {
 			String[] dataToAdd = new String[]{
 					usernameField.getText(),
 					emailField.getText(),
-					passwordField.getText(),
+					Helper.SHA_Hashing(passwordField.getText()),
 					positionField.getValue().getName(),
 					ageField.getText(),
 					String.valueOf(positionField.getValue().getId())
 			};
 			QueryBuilder<User> qb = new QueryBuilder<>(User.class);
+			ArrayList<HashMap<String, String>> data = qb.select(new String[]{"username"}).from("db/User.txt").get();
+
+			for (HashMap<String, String> item: data) {
+				if (item.get("username").equals(usernameField.getText())) {
+					//TODO show error popup or error message
+					throw new Exception("Username already exists");
+				}
+			}
+
 			String[] attrs = qb.getAttrs(false);
 
 			for (String item: dataToAdd) {

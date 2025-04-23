@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginController">
+   <children>
+      <VBox layoutX="182.0" prefHeight="400.0" prefWidth="233.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="182.0" AnchorPane.rightAnchor="182.79999999999995" AnchorPane.topAnchor="0.0">
+         <children>
+            <Region prefHeight="111.0" prefWidth="220.0" />
+            <HBox alignment="CENTER" prefHeight="38.0" prefWidth="208.0">
+               <children>
+                  <BorderPane prefHeight="38.0" prefWidth="244.0" HBox.hgrow="ALWAYS">
+                     <center>
+                        <Label alignment="CENTER" prefHeight="38.0" prefWidth="236.0" text="Login" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER" maxWidth="300.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="252.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="237.0" text="Username">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="usernameField" alignment="CENTER" maxWidth="300.0" prefWidth="204.0" />
+                              <Region prefHeight="26.0" prefWidth="220.0" />
+                              <Label prefHeight="18.0" prefWidth="247.0" text="Password">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="passwordField" accessibleRole="PASSWORD_FIELD" alignment="CENTER" maxWidth="300.0" />
+                              <Region prefHeight="46.0" prefWidth="220.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="75.0" prefWidth="220.0">
+                     <children>
+                        <Region prefHeight="64.0" prefWidth="95.0" />
+                        <Button fx:id="loginButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLoginButtonClick" prefHeight="21.0" prefWidth="46.0" text="Login" textAlignment="CENTER" />
+                        <Region layoutX="62.0" layoutY="10.0" prefHeight="84.0" prefWidth="95.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
