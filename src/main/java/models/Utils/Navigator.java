@@ -23,19 +23,23 @@ public class Navigator {
 		Router inventoryRouter =  new Router();
 		Router financeRouter =  new Router();
 
+		// SIDEBAR ROUTES
 		// Ensure routes are the same order as labels in the sidebar
-		// Admin routes
+		// Admin
 		adminRouter.addRoute("register", UserRegistrationView.class);
 //		adminRouter.addRoute("EEEE", SidebarView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
-		// Inventory manager routes
+		// Inventory manager
 
-		// Finance manage routes
+		// Finance manage
 
-		// Sales manager routes
+		// Sales manager
 
-		// Purchase manager routes
+		// Purchase manager
+
+		// NON SIDEBAR ROUTES
+
 
 		roleRoutes.put("admin", adminRouter);
 		roleRoutes.put("sales", salesRouter);

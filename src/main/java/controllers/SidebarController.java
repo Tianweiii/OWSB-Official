@@ -28,11 +28,6 @@ public class SidebarController implements Initializable {
 		Navigator navigator = Navigator.getInstance();
 		Router router = navigator.getRouters(sidebarType);
 		String[] routerPaths = router.getRoutePaths();
-		System.out.println(Arrays.toString(routerPaths));
-
-		if (routerPaths.length != sidebarItems.length) {
-			throw new IllegalArgumentException("Number of sidebar items does not match number of routes");
-		}
 
 		for(int i = 0; i < sidebarItems.length; i++) {
 			Button button = new Button(sidebarItems[i]);
