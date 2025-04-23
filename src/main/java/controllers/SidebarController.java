@@ -9,7 +9,6 @@ import models.Utils.Navigator;
 import routes.Router;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {

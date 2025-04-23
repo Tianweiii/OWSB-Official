@@ -3,12 +3,8 @@ package models.Utils;
 import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
-import views.SidebarView;
 import views.UserRegistrationView;
-import views.View;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Navigator {
