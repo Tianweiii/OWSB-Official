@@ -4,8 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import models.Utils.Navigator;
+import org.start.owsb.Layout;
 import routes.Router;
 
 import java.net.URL;
@@ -17,6 +19,7 @@ public class SidebarController implements Initializable {
 	private String sidebarType;
 	@FXML
 	private GridPane sidebarGrid;
+	@FXML private Button logoutButton;
 
 	public void setSidebarItems(String sidebarType, String[] sidebarItems) {
 		this.sidebarType = sidebarType;
@@ -41,6 +44,18 @@ public class SidebarController implements Initializable {
 			sidebarGrid.add(button, 0, i);
 		}
 	}
+
+	@FXML
+	public void handleLogoutButtonClick() {
+		Navigator navigator = Navigator.getInstance();
+		Layout layout = Layout.getInstance();
+		BorderPane root = layout.getRoot();
+
+		navigator.navigate(navigator.getRouters("all").getRoute("login"));
+		root.setLeft(null);
+
+	}
+
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 	}
