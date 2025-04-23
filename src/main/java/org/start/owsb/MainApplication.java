@@ -7,9 +7,11 @@ import javafx.stage.Stage;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import views.UserRegistrationView;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,13 +32,13 @@ public class MainApplication extends Application {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
         //Set login page or initial landing page here
-        FXMLLoader home = new FXMLLoader(getClass().getResource("test.fxml"));
+        FXMLLoader home = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
+        UserRegistrationView userRegistrationView = new UserRegistrationView();
         navigator.setLayout(layout);
         navigator.navigate(home.load());
 
         //Init sidebar code
-        // Layout layout = Layout.getInstance();
-        // layout.initSidebar(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
+        layout.initSidebar("admin", new String[]{"Register", "Test", "Test2"});
 
         Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);

@@ -17,8 +17,8 @@ public class Layout {
 		return instance;
 	}
 
-	public void initSidebar(String[] options) throws IOException {
-		SidebarView sidebarView = new SidebarView(options);
+	public void initSidebar(String type, String[] options) throws IOException {
+		SidebarView sidebarView = new SidebarView(type, options);
 		root.setLeft(sidebarView.getView());
 	}
 

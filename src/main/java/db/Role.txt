@@ -1,4 +1,4 @@
-1,Models.User
+1,User
 2,Admin
 3,Moderator
 4,Poopy
