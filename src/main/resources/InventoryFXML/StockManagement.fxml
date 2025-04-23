@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -8,30 +9,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="stockManagementStage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="840.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.StockManagementController">
+<AnchorPane fx:id="stockManagementPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1300.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.StockManagementController">
    <children>
-      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="280.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Assets/icon/Box.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="362.0" layoutY="36.0" text="Stock Management">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <Label layoutX="280.0" layoutY="106.0" text="Filter by" textFill="#707070">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="filterSelection" layoutX="280.0" layoutY="137.0" prefWidth="150.0" promptText="All" />
-      <HBox layoutX="280.0" layoutY="185.0" prefHeight="627.0" prefWidth="1171.0">
+      <HBox layoutX="48.0" layoutY="213.0" prefHeight="627.0" prefWidth="1172.0">
          <children>
-            <TableView fx:id="itemTable" prefHeight="627.0" prefWidth="1173.0">
+            <TableView fx:id="itemTable" prefHeight="627.0" prefWidth="1184.0" style="-fx-background-color: #EDF0F5;">
                <columns>
                   <TableColumn fx:id="itemID" prefWidth="169.5" text="Item ID" />
                   <TableColumn fx:id="itemName" minWidth="0.0" prefWidth="199.0" text="Item Name" />
@@ -43,11 +29,49 @@
             </TableView>
          </children>
       </HBox>
-      <Label layoutX="475.0" layoutY="106.0" text="Search Bar" textFill="#707070">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txtSearchKeyword" layoutX="475.0" layoutY="137.0" prefHeight="28.0" prefWidth="387.0" promptText="Search for item or supplier name..." />
+      <FlowPane layoutX="49.0" layoutY="135.0" prefHeight="28.0" prefWidth="450.0">
+         <children>
+            <Label text="Filter by" textFill="#707070">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Search Bar" textFill="#707070">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets left="140.0" />
+               </FlowPane.margin>
+            </Label>
+         </children>
+      </FlowPane>
+      <FlowPane layoutX="48.0" layoutY="163.0" prefHeight="38.0" prefWidth="769.0">
+         <children>
+            <ComboBox fx:id="filterSelection" prefHeight="40.0" prefWidth="148.0" promptText="All" style="-fx-background-color: white; -fx-border-radius: 5; -fx-border-color: #707070;" />
+            <TextField fx:id="txtSearchKeyword" prefHeight="40.0" prefWidth="387.0" promptText="Search for item or supplier name..." style="-fx-border-color: #707070;">
+               <FlowPane.margin>
+                  <Insets left="48.0" />
+               </FlowPane.margin>
+            </TextField>
+         </children>
+      </FlowPane>
+      <FlowPane layoutX="48.0" layoutY="57.0" prefHeight="66.0" prefWidth="552.0">
+         <children>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Assets/icon/Box.png" />
+               </image>
+            </ImageView>
+            <Label text="Stock Management">
+               <font>
+                  <Font size="36.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets left="50.0" />
+               </FlowPane.margin>
+            </Label>
+         </children>
+      </FlowPane>
    </children>
 </AnchorPane>

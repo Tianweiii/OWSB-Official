@@ -1,13 +1,13 @@
 package models.Datas;
 
-import models.Initializable;
+import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Supplier implements Initializable {
+public class Supplier implements ModelInitializable {
 	private int supplierID;
 	private String companyName;
 	private String phoneNumber;

@@ -10,6 +10,9 @@ module org.start.owsb {
 	opens org.start.owsb to javafx.fxml;
     exports org.start.owsb;
 
+    opens views to javafx.fxml;
+    exports views;
+
     opens controllers to javafx.fxml;
     exports controllers;
 

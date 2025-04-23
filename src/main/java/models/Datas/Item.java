@@ -1,6 +1,6 @@
 package models.Datas;
 
-import models.Initializable;
+import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Item implements Initializable {
+public class Item implements ModelInitializable {
     private int itemID;
     private String itemName;
     private LocalDateTime createdAt;

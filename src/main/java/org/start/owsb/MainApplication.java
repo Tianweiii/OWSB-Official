@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import views.InventoryView;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -29,31 +30,33 @@ public class MainApplication extends Application {
 //        sidebar.load();
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
-        //Set login page or initial landing page here
-        FXMLLoader home = new FXMLLoader(getClass().getResource("test.fxml"));
         navigator.setLayout(layout);
-        navigator.navigate(home.load());
+        layout.initSidebar(new String[]{
+                "Home",
+                "Stock Management",
+                "Procurement Management",
+                "Sales Request"
+        });
+        //Set login page or initial landing page here
+//        FXMLLoader inventoryHome = new FXMLLoader(getClass().getResource("test.fxml"));
+        InventoryView stockView = new InventoryView();
+        navigator.navigate(stockView.getView());
+
+        Scene scene = new Scene(layout.getRoot());
+        scene.getStylesheets().add(getClass().getResource("/css/Inventory.css").toExternalForm());
+        stage.setTitle("OWSB Inventory System");
+        stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.show();
 
         //Init sidebar code
         // Layout layout = Layout.getInstance();
         // layout.initSidebar(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
 
-//        Scene scene = new Scene(layout.getRoot());
-//        FXMLLoader stockManagementLoader = new FXMLLoader(getClass().getResource("/InventoryFXML/StockManagement.fxml"));
-////        FXMLLoader stockReportGenerationLoader = new FXMLLoader(getClass().getResource("/InventoryFXML/StockReportGeneration.fxml"));
-//        Parent root = stockManagementLoader.load();
-//
-//        Scene scene = new Scene(root);
-//        stage.setFullScreen(true);
-////        stage.setFullScreenExitKeyCombination();
-//        stage.setScene(scene);
-//        stage.setFullScreen(true);
-//        stage.show();
-
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        launch();
+        launch(args);
         //Test queryBuilder usage
         QueryBuilder<User> qb = new QueryBuilder<>(User.class);
         String[] columns = new String[]{"email", "password"};

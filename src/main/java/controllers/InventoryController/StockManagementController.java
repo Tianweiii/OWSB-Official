@@ -5,26 +5,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import models.Datas.Item;
 import models.Datas.Supplier;
-import models.Utils.QueryBuilder;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static models.Datas.Item.stringifyDateTime;
@@ -59,7 +52,7 @@ public class StockManagementController implements Initializable {
     private TextField txtSearchKeyword;
 
     @FXML
-    private AnchorPane stockManagementStage;
+    private AnchorPane stockManagementPane;
 
     private final HashMap<Item, String> supplierMap = new HashMap<>();
 
@@ -204,20 +197,22 @@ public class StockManagementController implements Initializable {
 
         AnchorPane dimmedBackground = new AnchorPane();
         dimmedBackground.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
-        dimmedBackground.setPrefSize(stockManagementStage.getWidth(), stockManagementStage.getHeight());
+        dimmedBackground.setPrefSize(stockManagementPane.getWidth(), stockManagementPane.getHeight());
 
         // Center modal
-        AnchorPane.setTopAnchor(updatePane, (stockManagementStage.getHeight() - updatePane.prefHeight(-1)) / 2);
-        AnchorPane.setLeftAnchor(updatePane, (stockManagementStage.getWidth() - updatePane.prefWidth(-1)) / 2);
+        AnchorPane.setTopAnchor(updatePane, (stockManagementPane.getHeight() - updatePane.prefHeight(-1)) / 2);
+        AnchorPane.setLeftAnchor(updatePane, (stockManagementPane.getWidth() - updatePane.prefWidth(-1)) / 2);
 
         dimmedBackground.getChildren().add(updatePane);
         dimmedBackground.setOnMouseClicked(e -> {
             if (!updatePane.contains(e.getX() - updatePane.getLayoutX(), e.getY() - updatePane.getLayoutY())) {
-                stockManagementStage.getChildren().remove(dimmedBackground);
+                if (stockManagementPane.getChildren().contains(dimmedBackground)) {
+                    stockManagementPane.getChildren().remove(dimmedBackground);
+                }
             }
         });
 
-        stockManagementStage.getChildren().add(dimmedBackground);
+        stockManagementPane.getChildren().add(dimmedBackground);
 
     }
 

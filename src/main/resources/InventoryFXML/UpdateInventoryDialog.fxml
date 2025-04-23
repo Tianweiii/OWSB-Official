@@ -47,11 +47,11 @@
                                     <Font size="21.0" />
                                  </font>
                               </Button>
-                              <Label fx:id="txtNum" alignment="CENTER" prefHeight="45.0" prefWidth="85.0" text="Num" textAlignment="CENTER" textFill="#707070">
+                              <TextField fx:id="txtNum" alignment="CENTER" prefHeight="47.0" prefWidth="97.0" promptText="Num" style="-fx-background-color: white;">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
-                              </Label>
+                              </TextField>
                               <Button fx:id="btnIncrease" accessibleRole="INCREMENT_BUTTON" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: white; -fx-border-color: #BBBBBB; -fx-border-radius: 10;" text="+">
                                  <font>
                                     <Font size="21.0" />

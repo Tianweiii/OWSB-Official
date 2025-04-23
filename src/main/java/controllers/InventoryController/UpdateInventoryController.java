@@ -1,6 +1,8 @@
 package controllers.InventoryController;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,7 +40,7 @@ public class UpdateInventoryController {
     private Label txtItemName;
 
     @FXML
-    private Label txtNum;
+    private TextField txtNum;
 
     @FXML
     private StackPane updateItemPane;
@@ -49,6 +51,7 @@ public class UpdateInventoryController {
     private int stockNum;
     private Item item;
     private Consumer<Item> refreshCallback;
+    private AnchorPane overlay;
 
     @FXML
     public void initialize() {
@@ -79,14 +82,26 @@ public class UpdateInventoryController {
     }
 
     public void decrementStock() {
-        stockNum--;
-        txtNum.setText(String.valueOf(stockNum));
+        if(Integer.parseInt(txtNum.getText()) > 0) {
+            stockNum--;
+            txtNum.setText(String.valueOf(stockNum));
+        }
+    }
+
+    public void setOverlay(AnchorPane overlay) {
+        this.overlay = overlay;
     }
 
     public void closeDialog() {
         AnchorPane dimmedBackground = (AnchorPane) updateItemPane.getParent();
         if (dimmedBackground != null && dimmedBackground.getParent() instanceof Pane) {
-            ((Pane) dimmedBackground.getParent()).getChildren().remove(dimmedBackground);
+            Pane parentPane = (Pane) dimmedBackground.getParent();
+            parentPane.getChildren().remove(dimmedBackground);
+
+            Node stockPane = parentPane.lookup("#stockManagementPane");
+            if (stockPane != null) {
+                stockPane.toFront();
+            }
         }
     }
 
@@ -96,6 +111,7 @@ public class UpdateInventoryController {
 
     public void updateInventoryItem() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
+        stockNum = Integer.parseInt(txtNum.getText());
 
         QueryBuilder<Item> qb = new QueryBuilder(Item.class);
         ArrayList<HashMap<String, String>> itemResult = qb.select().from("db/Item").where("itemID", "=", String.valueOf(item.getItemID())).get();
@@ -115,26 +131,25 @@ public class UpdateInventoryController {
                 String.valueOf(supplierID),
         };
 
-/* *************Use this temp firstt ****************** */
-//        boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
-        qb.update(String.valueOf(item.getItemID()), values);
+        boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
 
-//        if(updateSuccess) {
-//            showNotification("Success", "Inventory updated successfully.", "success");
-//            if (refreshCallback != null) {
-//                refreshCallback.accept(item);
-//            }
-//        } else {
-//            showNotification("Failure", "Failed to update inventory. Please try again.", "error");
-//        }
 
         if (refreshCallback != null) {
             refreshCallback.accept(item);
         }
-
         closeDialog();
+        updateItemPane.getScene().lookup("#stockManagementPane").toFront();
 
+// Notification not shown issue
+        Platform.runLater(() -> {
+            if (updateSuccess) {
+                showNotification("Success", "Inventory updated successfully.", "success");
+            } else {
+                showNotification("Failure", "Failed to update inventory. Please try again.", "error");
+            }
+        });
     }
+
 
     private void showNotification(String title, String message, String type) {
         Alert alert = new Alert(type.equals("success") ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR);
