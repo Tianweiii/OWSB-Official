@@ -38,7 +38,7 @@ public class MainApplication extends Application {
         navigator.navigate(home.load());
 
         //Init sidebar code
-        layout.initSidebar("admin", new String[]{"Register", "Test", "Test2"});
+        layout.initSidebar("admin", new String[]{"Register"});
 
         Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);
