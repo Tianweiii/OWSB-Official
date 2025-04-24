@@ -233,13 +233,16 @@ public class QueryBuilder<T extends ModelInitializable>{
 					}
 
 					try {
+						//Create the join query builder
 						QueryBuilder<?> joinQb = new QueryBuilder<>(join);
 						ArrayList<HashMap<String, String>> joinData = joinQb
 								.select()
 								.from("db/" + joinTextFileName)
 								.get();
 
+						// Key to join by
 						String key = this.joinKey.get(this.joins.indexOf(join));
+						// Lookup map
 						Map<String, HashMap<String, String>> modelLookup = new HashMap<>();
 						for (HashMap<String, String> model : joinData) {
 							if (model.containsKey(key)) {
@@ -247,6 +250,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 							}
 						}
 
+						// Merging the data
 						allData = allData.stream().map(item -> {
 							String valueToMerge = item.get(key);
 							HashMap<String, String> mergedItem = new HashMap<>(item);
@@ -259,8 +263,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 											.forEach(field ->
 												mergedItem.put(field, matchingModel.get(field))
 											)
-
-
 									);
 
 							return mergedItem;
