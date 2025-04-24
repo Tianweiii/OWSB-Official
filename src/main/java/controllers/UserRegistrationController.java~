@@ -46,7 +46,8 @@ public class UserRegistrationController implements Initializable {
 
 			for (HashMap<String, String> item: data) {
 				if (item.get("username").equals(usernameField.getText())) {
-					NotificationView notificationView = new NotificationView("Username already exists", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+					NotificationView notificationView = new NotificationView("Username already exists", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+//					throw new Exception("Username already exists");
 					notificationView.show();
 					return;
 				}

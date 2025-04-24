@@ -10,6 +10,7 @@ import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import org.start.owsb.Layout;
+import views.NotificationView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,19 +32,19 @@ public class LoginController implements Initializable {
 			ArrayList<HashMap<String, String>> data = qb.select()
 					.from("db/User.txt")
 					.where("username", "=", usernameField.getText())
-					//TODO hash password first
 					.and("password", "=", hashedPassword)
 					.get();
 
 			String SUPERUSER_USERNAME = "admin";
 			String SUPERUSER_PASSWORD = "admin";
-			System.out.println(usernameField.getText() + " " + passwordField.getText());
 			if (usernameField.getText().equals(SUPERUSER_USERNAME) && passwordField.getText().equals(SUPERUSER_PASSWORD)) {
 				layout.initSidebar("admin", new String[]{"Register"});
 				// Navigate to dashboard
 				FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
 				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
-				System.out.println("superuser");
+
+				NotificationView notificationView = new NotificationView("Login successful", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+				notificationView.show();
 				return;
 			}
 
@@ -75,11 +76,13 @@ public class LoginController implements Initializable {
 						//Navigate to dashboard
 //						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
 						break;
-
 				}
+
+				NotificationView notificationView = new NotificationView("Login successful", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+				notificationView.show();
 			} else {
-				// To show error popup
-				throw new Exception("Invalid username or password");
+				NotificationView notificationView = new NotificationView("Invalid username or password", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+				notificationView.show();
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

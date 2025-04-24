@@ -8,3 +8,4 @@
 8,Gamer,man@mail.com,abcde,addy,32,2
 9,Yasuo,man@mail.com,abcde,addy,22,3
 10,Poppy,man@mail.com,abcde,addy,320,1
+11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
