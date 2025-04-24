@@ -56,8 +56,8 @@
                <Label prefHeight="48.0" prefWidth="41.0" text="img2" />
                <VBox prefHeight="48.0" prefWidth="157.0">
                    <children>
-                       <Label prefHeight="24.0" prefWidth="162.0" text="Name" />
-                       <Label prefHeight="24.0" prefWidth="157.0" text="Position" />
+                       <Label fx:id="usernameLabel" prefHeight="24.0" prefWidth="162.0" />
+                       <Label fx:id="positionLabel" prefHeight="24.0" prefWidth="157.0" />
                    </children>
                </VBox>
            </children>

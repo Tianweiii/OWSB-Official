@@ -5,10 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import models.Datas.Role;
 import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 import org.start.owsb.Layout;
 import views.NotificationView;
 
@@ -26,6 +28,31 @@ public class LoginController implements Initializable {
 	public void handleLoginButtonClick() {
 		Navigator navigator = Navigator.getInstance();
 		Layout layout = Layout.getInstance();
+		SessionManager session = SessionManager.getInstance();
+
+		String SUPERUSER_USERNAME = "admin";
+		String SUPERUSER_PASSWORD = "admin";
+		HashMap<String, String> superUser = new HashMap<>();
+
+		if (usernameField.getText().equals(SUPERUSER_USERNAME) && passwordField.getText().equals(SUPERUSER_PASSWORD)) {
+			try {
+				superUser.put("role_id", "1");
+				superUser.put("username", SUPERUSER_USERNAME);
+				superUser.put("password", SUPERUSER_PASSWORD);
+				superUser.put("role_name", "Admin");
+				session.setUserData(superUser);
+				layout.initSidebar("admin", new String[]{"Register"});
+				// Navigate to dashboard
+				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
+
+				NotificationView notificationView = new NotificationView("Login successful", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+				notificationView.show();
+				return;
+			} catch (Exception e) {
+				System.out.println("error"+ e.getMessage());
+			}
+		}
+
 		String hashedPassword = Helper.SHA_Hashing(passwordField.getText());
 		try {
 			QueryBuilder<User> qb = new QueryBuilder<>(User.class);
@@ -33,22 +60,12 @@ public class LoginController implements Initializable {
 					.from("db/User.txt")
 					.where("username", "=", usernameField.getText())
 					.and("password", "=", hashedPassword)
+					.joins(Role.class, "role_id")
 					.get();
 
-			String SUPERUSER_USERNAME = "admin";
-			String SUPERUSER_PASSWORD = "admin";
-			if (usernameField.getText().equals(SUPERUSER_USERNAME) && passwordField.getText().equals(SUPERUSER_PASSWORD)) {
-				layout.initSidebar("admin", new String[]{"Register"});
-				// Navigate to dashboard
-				FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
-				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
-
-				NotificationView notificationView = new NotificationView("Login successful", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
-				notificationView.show();
-				return;
-			}
-
 			if (!data.isEmpty()) {
+				session.setUserData(data.get(0));
+
 				switch (data.get(0).get("role_id")) {
 					case "1":
 						layout.initSidebar("admin", new String[]{"Register"});
