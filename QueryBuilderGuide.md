@@ -14,6 +14,13 @@ ArrayList<HashMap<String, String>> res = qb.select().from("db/fileName").get();
 ArrayList<YourModel> res = qb.select().from("db/fileName").getAsObjects();
 ```
 
+### Joins
+You can join tables by using the `.join()` method.
+```java
+QueryBuilder<YourModel> qb = new QueryBuilder(YourModel.class);
+ArrayList<HashMap<String, String>> res = qb.select().from("db/fileName").join(ClassToJoin.class, "columnToJoin").get();
+```
+
 
 ## Selecting columns
 You select columns by using the `.select()` method. 

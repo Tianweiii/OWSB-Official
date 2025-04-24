@@ -1,23 +1,25 @@
 package models.Datas;
 
+import models.ModelInitializable;
 import models.Utils.Helper;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
-public class Payment {
+public class Payment implements ModelInitializable {
 
 	public enum PaymentMethod {
 		Bank, TnG
 	};
 
-	private final String paymentID;
-	private final PaymentMethod paymentMethod;
+	private String paymentID;
+	private PaymentMethod paymentMethod;
 	private double amount;
-	private final String createdAt;
-	private final String PO_ID;
-	private final String userID;
-	private final String paymentReference;
+	private String createdAt;
+	private String PO_ID;
+	private String userID;
+	private String paymentReference;
 
 	public Payment(PaymentMethod method, double amount, String PO_ID, String userID) {
 		this.paymentMethod = method;
@@ -69,5 +71,14 @@ public class Payment {
 		return paymentReference;
 	}
 
-
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.paymentID = data.get("payment_id");
+		this.paymentMethod = PaymentMethod.valueOf(data.get("payment_method"));
+		this.amount = Double.parseDouble(data.get("amount"));
+		this.createdAt = data.get("created_at");
+		this.PO_ID = data.get("po_id");
+		this.userID = data.get("user_id");
+		this.paymentReference = data.get("payment_reference");
+	}
 }
