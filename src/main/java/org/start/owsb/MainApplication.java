@@ -34,18 +34,6 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
-//        launch();
-        try {
-            QueryBuilder<User> qb = new QueryBuilder<>(User.class);
-            ArrayList<HashMap<String, String>> data = qb
-                    .select()
-                    .from("db/User.txt")
-                    .joins(Role.class, "role_id")
-                    .get();
-
-            System.out.println(data.get(5));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        launch();
     }
 }
