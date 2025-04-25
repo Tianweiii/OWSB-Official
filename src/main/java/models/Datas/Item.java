@@ -23,4 +23,8 @@ public class Item implements ModelInitializable {
 		this.quantity = Integer.parseInt(data.get("quantity"));
 		this.supplier_id = Integer.parseInt(data.get("supplier_id"));
 	}
+
+	public String getItemName() {
+		return this.item_name;
+	}
 }

@@ -74,9 +74,9 @@ public class LoginController implements Initializable {
 						navigator.navigate(test.load());
 						break;
 					case "2":
-						layout.initSidebar("sales", new String[]{"Test"});
+						layout.initSidebar("sales", new String[]{"Home", "Manage Item List"});
 						//Navigate to dashboard
-						navigator.navigate(navigator.getRouters("sales").getRoute("register"));
+						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
 						break;
 					case "3":
 						layout.initSidebar("purchase", new String[]{"Register"});

@@ -23,15 +23,16 @@ public class NotificationController implements Initializable {
 		CENTER, TOP, BOTTOM_RIGHT
 	}
 	public void setType(popUpType type) {
-//		notifactionImage.setImage(new Image("icons/" + type.toString() + ".png"));
 		switch (type) {
 			case error:
+//		        notifactionImage.setImage(new Image("icons/" + type.toString() + ".png"));
 				notificationContainer.setStyle("-fx-border-color: red; " +
 						"-fx-border-radius: 5; " +
 						"-fx-background-radius: 5; " +
 						"-fx-background-color: rgba(248, 207, 207, 1)");
 				break;
 			case success:
+//		        notifactionImage.setImage(new Image("icons/" + type.toString() + ".png"));
 				notificationContainer.setStyle("-fx-border-color: green; " +
 						"-fx-border-radius: 5; " +
 						"-fx-background-radius: 5; " +
