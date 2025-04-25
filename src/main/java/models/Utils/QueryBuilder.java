@@ -285,9 +285,8 @@ public class QueryBuilder<T extends ModelInitializable>{
 						}
 						break;
 					case "desc":
-						//TODO reverse sort for integers
 						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
-							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+							allData.sort(Comparator.<HashMap<String, String>>comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))).reversed());
 						} else {
 							allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
 						}
