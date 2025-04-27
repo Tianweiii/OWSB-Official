@@ -5,13 +5,16 @@ module org.start.owsb {
     requires java.sql;
     requires javafx.swing;
 	requires java.desktop;
+    requires java.management;
 
 
-	opens org.start.owsb to javafx.fxml;
+    opens org.start.owsb to javafx.fxml;
     exports org.start.owsb;
 
     opens views to javafx.fxml;
     exports views;
+
+    opens models.DTO to javafx.base;
 
     opens controllers to javafx.fxml;
     exports controllers;
@@ -20,4 +23,6 @@ module org.start.owsb {
     exports controllers.InventoryController;
 
     opens models.Datas to javafx.base;
+    exports views.Inventory;
+    opens views.Inventory to javafx.fxml;
 }

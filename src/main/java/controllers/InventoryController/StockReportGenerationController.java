@@ -64,7 +64,7 @@ public class StockReportGenerationController implements Initializable {
             List<Map<String, Object>> reportData = new ArrayList<>();
 
             for (HashMap<String, String> item : items) {
-                int itemID = Integer.parseInt(item.get("itemID"));
+                String itemID = item.get("itemID");
                 int currentQty = Integer.parseInt(item.get("quantity"));
                 int alertSetting = Integer.parseInt(item.get("alertSetting"));
                 Double unitPrice = Double.parseDouble(item.get("unitPrice"));
@@ -73,7 +73,7 @@ public class StockReportGenerationController implements Initializable {
                 int stockOut = 0;
 
                 for (HashMap<String, String> log : inventoryUpdateLog) {
-                    if (Integer.parseInt(log.get("itemID")) == itemID) {
+                    if (Objects.equals(log.get("itemID"), itemID)) {
                         int prev = Integer.parseInt(log.get("prevQuantity"));
                         int now = Integer.parseInt(log.get("newQuantity"));
                         int diff = now - prev;

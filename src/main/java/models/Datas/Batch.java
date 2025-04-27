@@ -1,23 +1,35 @@
 package models.Datas;
 
-import java.util.Date;
+import models.ModelInitializable;
+import models.Utils.QueryBuilder;
 
-public class Batch {
-    private int batchID;
-    private Date updatedDatetime;
+import javax.management.Query;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+
+public class Batch implements ModelInitializable {
+    private String batchID;
+    private LocalDateTime updatedDatetime;
     private boolean verified;
 
-    public Batch(int batchID, Date updatedDatetime, boolean verified) {
-        this.batchID = batchID;
+    public Batch() {
+
+    }
+
+    public Batch(String batchID, LocalDateTime updatedDatetime, boolean verified) {
+        this.batchID = "Batch-" + System.currentTimeMillis();
         this.updatedDatetime = updatedDatetime;
         this.verified = verified;
     }
 
-    public int getBatchID() {
-        return batchID;
+    public String getBatchID() {
+        return "Batch-" + System.currentTimeMillis();
     }
 
-    public Date getUpdatedDatetime() {
+    public LocalDateTime getUpdatedDatetime() {
         return updatedDatetime;
     }
 
@@ -25,15 +37,35 @@ public class Batch {
         return verified;
     }
 
-    public void setBatchID(int batchID) {
+    public void setBatchID(String batchID) {
         this.batchID = batchID;
     }
 
-    public void setUpdatedDatetime(Date updatedDatetime) {
+    public void setUpdatedDatetime(LocalDateTime updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
     }
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public void createBatch() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
+        QueryBuilder<Batch> qb = new QueryBuilder<Batch>(Batch.class);
+        String[] values = new String[] {
+                this.batchID,
+                String.valueOf(this.updatedDatetime),
+                String.valueOf(this.verified)
+        };
+        qb.target("db/Batch").values(values).create();
+    }
+
+    public static void logBatch(String batchID, LocalDateTime updatedDatetime, boolean verified) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
+        Batch batch = new Batch(batchID, updatedDatetime, verified);
+        batch.createBatch();
+    }
+
+    @Override
+    public void initialize(HashMap<String, String> data) {
+
     }
 }

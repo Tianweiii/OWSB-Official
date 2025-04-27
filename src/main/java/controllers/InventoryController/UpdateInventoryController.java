@@ -68,7 +68,7 @@ public class UpdateInventoryController {
         });
     }
 
-    public void setItemData(int itemID, Item item) {
+    public void setItemData(String itemID, Item item) {
         this.item = item;
         this.stockNum = item.getQuantity();
         txtItemName.setText(item.getItemName());

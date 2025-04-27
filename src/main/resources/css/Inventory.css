@@ -8,6 +8,9 @@
     -fx-background-color: #EDF0F5;
     -fx-border-color: transparent transparent #707070 transparent;
     -fx-border-width: 0 0 1 0;
+    -fx-padding: 2px 0;
+    -fx-cell-size: 60px;
+    -fx-pref-height: 60px;
 }
 
 .table-view .column-header .label {

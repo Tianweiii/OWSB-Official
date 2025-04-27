@@ -1,21 +1,20 @@
-package views;
+package views.Inventory;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import views.View;
 
 import java.io.IOException;
 
-public class InventoryView implements View{
-
+public class StockManagementView implements View {
     private AnchorPane stockPane;
 
-    public InventoryView() throws IOException {
+    public StockManagementView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/InventoryFXML/StockManagement.fxml"));
         this.stockPane = loader.load();
     }
 
-    @Override
     public Parent getView() {
         return this.stockPane;
     }

@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +24,12 @@ import java.util.*;
 import static models.Datas.Item.stringifyDateTime;
 
 public class StockManagementController implements Initializable {
+
+    @FXML
+    private Button btnSearch;
+
+    @FXML
+    private Button btnClear;
 
     @FXML
     private TableColumn<Item, Integer> quantity;
@@ -53,6 +60,16 @@ public class StockManagementController implements Initializable {
 
     @FXML
     private AnchorPane stockManagementPane;
+
+    @FXML
+    void onClearButtonClicked(ActionEvent event) {
+        clearSearchResult();
+    }
+
+    @FXML
+    void onSearchButtonClicked(ActionEvent event) {
+        searchItems();
+    }
 
     private final HashMap<Item, String> supplierMap = new HashMap<>();
 
@@ -109,7 +126,7 @@ public class StockManagementController implements Initializable {
         itemTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !itemTable.getSelectionModel().isEmpty()) {
                 Item selectedItem = itemTable.getSelectionModel().getSelectedItem();
-                int selectedItemID = selectedItem.getItemID();
+                String selectedItemID = selectedItem.getItemID();
                 try {
                     loadUpdateDialog(selectedItemID, selectedItem);
                 } catch (IOException e) {
@@ -127,9 +144,6 @@ public class StockManagementController implements Initializable {
             itemTable.getSortOrder().add(itemID);
             itemID.setSortType(TableColumn.SortType.ASCENDING);
             itemTable.sort();
-
-//        Searching Function
-            searchItems();
 
 //        Filtering Function
             filterItems();
@@ -161,30 +175,54 @@ public class StockManagementController implements Initializable {
     }
 
     public void searchItems() {
-        FilteredList<Item> searchData = new FilteredList<>(itemList, b -> true);
+        String searchKeyword = txtSearchKeyword.getText().toLowerCase();
 
-        txtSearchKeyword.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            searchData.setPredicate(item -> {
+        FilteredList<Item> searchData = new FilteredList<>(itemList, item -> {
+            if (searchKeyword.isEmpty()) return true;
 
-                if (oldValue.isEmpty() || newValue.isBlank()) return true;
-
-                String searchKeyword = newValue.toLowerCase();
-
-                return String.valueOf(item.getItemID()).contains(searchKeyword) ||
-                        item.getItemName().toLowerCase().contains(searchKeyword) ||
-                        item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
-                        item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
-                        String.valueOf(item.getAlertSetting()).contains(searchKeyword) ||
-                        (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
-            });
+            return String.valueOf(item.getItemID()).contains(searchKeyword) ||
+                    item.getItemName().toLowerCase().contains(searchKeyword) ||
+                    item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
+                    item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
+                    String.valueOf(item.getAlertSetting()).contains(searchKeyword) ||
+                    (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
         });
 
         SortedList<Item> findData = new SortedList<>(searchData);
         findData.comparatorProperty().bind(itemTable.comparatorProperty());
         itemTable.setItems(findData);
+
+
+//        FilteredList<Item> searchData = new FilteredList<>(itemList, b -> true);
+//        String searchKeyword = txtSearchKeyword.getText().toLowerCase();
+//
+//        txtSearchKeyword.textProperty().addListener((observableValue, oldValue, newValue) -> {
+//            searchData.setPredicate(item -> {
+//
+//                if (oldValue.isEmpty() || newValue.isBlank()) return true;
+//
+//                String searchKeyword = newValue.toLowerCase();
+//
+//                return String.valueOf(item.getItemID()).contains(searchKeyword) ||
+//                        item.getItemName().toLowerCase().contains(searchKeyword) ||
+//                        item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
+//                        item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
+//                        String.valueOf(item.getAlertSetting()).contains(searchKeyword) ||
+//                        (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
+//            });
+//        });
+//
+//        SortedList<Item> findData = new SortedList<>(searchData);
+//        findData.comparatorProperty().bind(itemTable.comparatorProperty());
+//        itemTable.setItems(findData);
     }
 
-    public void loadUpdateDialog(int itemID, Item selectedItem) throws IOException {
+    public void clearSearchResult() {
+        itemTable.setItems(itemList);
+        txtSearchKeyword.setText("");
+    }
+
+    public void loadUpdateDialog(String itemID, Item selectedItem) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/InventoryFXML/UpdateInventoryDialog.fxml"));
 
         Parent updatePane = loader.load();

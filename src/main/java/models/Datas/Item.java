@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Item implements ModelInitializable {
-    private int itemID;
+    private String itemID;
     private String itemName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -23,7 +23,7 @@ public class Item implements ModelInitializable {
     public Item() {
     }
 
-    public Item(int itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
+    public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
         this.itemID = itemID;
         this.itemName = itemName;
         this.createdAt = createdAt;
@@ -32,7 +32,7 @@ public class Item implements ModelInitializable {
         this.quantity = quantity;
     }
 
-    public Item(int itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity, double unitPrice, int supplierID) {
+    public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity, double unitPrice, int supplierID) {
         this.itemID = itemID;
         this.itemName = itemName;
         this.createdAt = createdAt;
@@ -43,7 +43,7 @@ public class Item implements ModelInitializable {
         this.supplierID = supplierID;
     }
 
-    public int getItemID() {
+    public String getItemID() {
         return itemID;
     }
 
@@ -75,7 +75,7 @@ public class Item implements ModelInitializable {
         return supplierID;
     }
 
-    public void setItemID(int itemID) {
+    public void setItemID(String itemID) {
         this.itemID = itemID;
     }
 
@@ -123,7 +123,19 @@ public class Item implements ModelInitializable {
 
     @Override
     public void initialize(HashMap<String, String> data) {
+        this.itemID = data.get("itemID");
+        this.itemName = data.get("itemName");
+        this.createdAt = formatDateTime(data.get("createdAt"));
+        this.updatedAt = formatDateTime(data.get("updatedAt"));
+        this.alertSetting = Integer.parseInt(data.get("alertSetting"));
+        this.quantity = Integer.parseInt(data.get("quantity"));
 
+        if (data.get("unitPrice") != null) {
+            this.unitPrice = Double.parseDouble(data.get("unitPrice"));
+        }
+        if (data.get("supplierID") != null) {
+            this.supplierID = Integer.parseInt(data.get("supplierID"));
+        }
     }
 
     public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -149,7 +161,7 @@ public class Item implements ModelInitializable {
             }
 
             Item item = new Item(
-                    Integer.parseInt(itemData.get("itemID")),
+                    itemData.get("itemID"),
                     itemData.get("itemName"),
                     formatDateTime(itemData.get("createdAt")),
                     formatDateTime(itemData.get("updatedAt")),

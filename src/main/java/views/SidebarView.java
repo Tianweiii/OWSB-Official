@@ -18,9 +18,9 @@ public class SidebarView implements View{
 	//Init sidebar on login
 
 	public SidebarView(String sidebarType, String[] sidebarItems) throws IOException {
-		FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
+		FXMLLoader sidebar = new FXMLLoader(getClass().getResource("/Components/Sidebar.fxml"));
+//				new URL("file:src/main/resources/Components/Sidebar.fxml"));
 		this.sidebarController = sidebar.load();
-
 
 		SidebarController ctrlPointer = sidebar.getController();
 		ctrlPointer.setSidebarItems(sidebarType, sidebarItems);
