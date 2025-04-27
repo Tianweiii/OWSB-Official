@@ -12,6 +12,7 @@ import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import views.NotificationView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,8 +46,9 @@ public class UserRegistrationController implements Initializable {
 
 			for (HashMap<String, String> item: data) {
 				if (item.get("username").equals(usernameField.getText())) {
-					//TODO show error popup or error message
-					throw new Exception("Username already exists");
+					NotificationView notificationView = new NotificationView("Username already exists", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+					notificationView.show();
+					return;
 				}
 			}
 

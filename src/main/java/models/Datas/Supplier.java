@@ -56,11 +56,6 @@ public class Supplier implements ModelInitializable {
 		this.address = address;
 	}
 
-	@Override
-	public void initialize(HashMap<String, String> data) {
-
-	}
-
 	public static ArrayList<HashMap<String, String>> getSupplierNameById(int supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
 		ArrayList<HashMap<String, String>> suppliers = qb.select(new String[]{"companyName"})
@@ -70,5 +65,11 @@ public class Supplier implements ModelInitializable {
 		return suppliers;
 	}
 
-
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.supplierID = Integer.parseInt(data.get("supplierID"));
+		this.companyName = data.get("companyName");
+		this.phoneNumber = data.get("phoneNumber");
+		this.address = data.get("address");
+	}
 }

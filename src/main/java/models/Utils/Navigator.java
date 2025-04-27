@@ -9,6 +9,7 @@ import views.Inventory.InventoryUpdateRequestView;
 import views.Inventory.StockManagementView;
 import views.LoginView;
 import views.UserRegistrationView;
+import views.salesViews.ItemListView;
 
 import java.util.HashMap;
 
@@ -33,6 +34,8 @@ public class Navigator {
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager
+		salesRouter.addRoute("home", UserRegistrationView.class);
+		salesRouter.addRoute("item-list", ItemListView.class);
 
 		// Purchase manager
 

@@ -80,4 +80,18 @@ public class Helper {
         }
         return "";
     }
+
+    public static String toAttrString(String input) {
+        return input.toLowerCase().replace(" ", "_");
+    }
+
+    public static String toTableString(String input) {
+
+        String[] split = input.replace("_", " ").split(" ");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1).toLowerCase();
+        }
+
+        return split.length == 1 ? split[0] : String.join(" ", split);
+    }
 }

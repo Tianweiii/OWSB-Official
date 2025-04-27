@@ -9,3 +9,5 @@
 9,Yasuo,man@mail.com,abcde,addy,22,3
 10,Poppy,man@mail.com,abcde,addy,320,1
 11,inventory_JY,inventory@gmail.com,zWPvJx+fXIHDrJ4k5UT36YI2DrwCe/TmtpYEhbE/iec=,Inventory Manager,20,4
+11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
+12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2

@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A class used to query from a target db file.
@@ -42,6 +43,9 @@ public class QueryBuilder<T extends ModelInitializable>{
 	private String targetFile;
 	private String createValues;
 
+	private ArrayList<Class<? extends ModelInitializable>> joins;
+	private ArrayList<String> joinKey;
+
 	public QueryBuilder(Class<T> someClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 		this.aClassType = someClass;
 		this.aClass = someClass.getDeclaredConstructor().newInstance();
@@ -49,6 +53,8 @@ public class QueryBuilder<T extends ModelInitializable>{
 		this.andOperatorStack = new ArrayDeque<>();
 		this.queue = new ArrayDeque<>();
 		this.orOperatorStack = new ArrayDeque<>();
+		this.joins = new ArrayList<>();
+		this.joinKey = new ArrayList<>();
 		String className = getClassName();
 		setClassName(className);
 	}
@@ -142,6 +148,19 @@ public class QueryBuilder<T extends ModelInitializable>{
 	}
 
 	/**
+	 * Sets the joins to be used when querying data.
+	 *
+	 * @param joins <b>Class</b> <br> The class to be joined.
+	 * @param joinKey <b>String</b> <br> The join key.
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> joins(Class<? extends ModelInitializable> joins, String joinKey) {
+		this.joins.add(joins);
+		this.joinKey.add(joinKey);
+		return this;
+	}
+
+	/**
 	 * Sets the sort by clause to be used when querying data.
 	 * Defaults to sorting by the ID field.
 	 *
@@ -196,10 +215,63 @@ public class QueryBuilder<T extends ModelInitializable>{
 			BufferedReader br = new BufferedReader(new FileReader(FILE_ROOT + textFileName));
 			String line = br.readLine();
 
+			// Where filtering
 			while (line != null) {
 				ArrayList<HashMap<String, String>> dataHolder = getHashMaps(line.split(","), this.classAttrs);
 				allData.addAll(dataHolder);
 				line = br.readLine();
+			}
+
+			//Joins
+			if (!this.joins.isEmpty() && !allData.isEmpty()) {
+				for (Class<? extends ModelInitializable> join: this.joins) {
+					String joinName = join.getSimpleName().toLowerCase();
+					String joinTextFileName = joinName + ".txt";
+
+					if (allData.get(0).get(joinName+"_id") == null) {
+						throw new RuntimeException("No " + joinName + " ID found");
+					}
+
+					try {
+						//Create the join query builder
+						QueryBuilder<?> joinQb = new QueryBuilder<>(join);
+						ArrayList<HashMap<String, String>> joinData = joinQb
+								.select()
+								.from("db/" + joinTextFileName)
+								.get();
+
+						// Key to join by
+						String key = this.joinKey.get(this.joins.indexOf(join));
+						// Lookup map
+						Map<String, HashMap<String, String>> modelLookup = new HashMap<>();
+						for (HashMap<String, String> model : joinData) {
+							if (model.containsKey(key)) {
+								modelLookup.put(model.get(key), model);
+							}
+						}
+
+						// Merging the data
+						allData = allData.stream().map(item -> {
+							String valueToMerge = item.get(key);
+							HashMap<String, String> mergedItem = new HashMap<>(item);
+							Set<String> fieldsToMerge = new HashSet<>(List.of(joinQb.getAttrs(true)));
+
+							Optional.ofNullable(modelLookup.get(valueToMerge))
+									.ifPresent(matchingModel ->
+										fieldsToMerge.stream()
+											.filter(matchingModel::containsKey)
+											.forEach(field ->
+												mergedItem.put(field, matchingModel.get(field))
+											)
+									);
+
+							return mergedItem;
+						}).collect(Collectors.toCollection(ArrayList::new));
+
+					}catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+				}
 			}
 
 			//Sort By Statement
@@ -213,9 +285,8 @@ public class QueryBuilder<T extends ModelInitializable>{
 						}
 						break;
 					case "desc":
-						//TODO reverse sort for integers
 						if (allData.get(0).get(this.sortByClause[0]).matches("[0-9]+")) {
-							allData.sort(Comparator.comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))));
+							allData.sort(Comparator.<HashMap<String, String>>comparingInt(o -> Integer.parseInt(o.get(this.sortByClause[0]))).reversed());
 						} else {
 							allData.sort((o1, o2) -> o2.get(this.sortByClause[0]).compareTo(o1.get(this.sortByClause[0])));
 						}

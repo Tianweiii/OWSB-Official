@@ -1,10 +1,24 @@
 package models.Datas;
 
-public class Transaction {
+import models.ModelInitializable;
+
+import java.util.HashMap;
+
+public class Transaction implements ModelInitializable {
 	private int transaction_id;
 	private String created_at;
 	private String updated_at;
 	private int sold_quantity;
 	private int item_id;
 	private int sales_id;
+
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.transaction_id = Integer.parseInt(data.get("transaction_id"));
+		this.created_at = data.get("created_at");
+		this.updated_at = data.get("updated_at");
+		this.sold_quantity = Integer.parseInt(data.get("sold_quantity"));
+		this.item_id = Integer.parseInt(data.get("item_id"));
+		this.sales_id = Integer.parseInt(data.get("sales_id"));
+	}
 }
