@@ -5,6 +5,11 @@ import models.ModelInitializable;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +46,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	private String[] sortByClause;
 
 	private String targetFile;
+	private boolean customIdFlag;
 	private String createValues;
 
 	private ArrayList<Class<? extends ModelInitializable>> joins;
@@ -210,16 +216,15 @@ public class QueryBuilder<T extends ModelInitializable>{
 	public ArrayList<HashMap<String, String>> get(){
 		ArrayList<HashMap<String, String>> allData = new ArrayList<>();
 		String textFileName = this.fileName + ".txt";
+		Path filePath = Paths.get(FILE_ROOT + textFileName);
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(FILE_ROOT + textFileName));
-			String line = br.readLine();
+			List<String> lines = Files.readAllLines(filePath);
 
 			// Where filtering
-			while (line != null) {
+			for (String line: lines) {
 				ArrayList<HashMap<String, String>> dataHolder = getHashMaps(line.split(","), this.classAttrs);
 				allData.addAll(dataHolder);
-				line = br.readLine();
 			}
 
 			//Joins
@@ -526,33 +531,53 @@ public class QueryBuilder<T extends ModelInitializable>{
 	}
 
 	/**
+	 * Sets the customId flag
+	 *
+	 * @param flag <b>boolean</b> The flag
+	 * @return a QueryBuilder of the type you passed in for method chaining.
+	 * */
+	public QueryBuilder<T> withCustomId(boolean flag) {
+		this.customIdFlag = flag;
+		return this;
+	}
+
+	/**
 	 * Inserts the new data into the target file.
 	 *
-	 * @see QueryBuilder#validateData(String values)
+	 * @see QueryBuilder#validateData(String values, String... flag)
 	 * @see QueryBuilder#validateData(String values, Boolean isTargeted)
 	 * @see QueryBuilder#target()
 	 * @see QueryBuilder#values(String[] dataArr)
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
 	public boolean create() throws IOException {
-		HashMap<String, String> validatedData = this.validateData(this.createValues);
-		FileWriter fw = new FileWriter(FILE_ROOT + this.targetFile + ".txt", true);
-		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
-				.from(this.targetFile)
-				.get();
-		int latestId = Integer.parseInt(data.get(data.size()-1)
-				.get(this.getClassName().toLowerCase()+"_id"))+1;
+		HashMap<String, String> validatedData;
+		if (this.customIdFlag) {
+			validatedData = this.validateData(this.createValues, "withCustom");
+		}else {
+			validatedData = this.validateData(this.createValues);
+		}
+		Path filePath = Paths.get(FILE_ROOT + this.targetFile + ".txt");
+
 		try {
-			BufferedWriter bw = new BufferedWriter(fw);
+			// Get class name
+			String className = this.getClassName();
+			// Get latest ID
+			List<String> allLines = Files.readAllLines(filePath);
+			int latestId = allLines.isEmpty() ? 1 :
+					Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
+
+			// Build new line
 			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
-			for (String item: this.getAttrs(false)) {
+			for (String item : this.getAttrs(false)) {
 				lineToWrite.append(validatedData.get(item)).append(",");
 			}
-			//Remove last comma
-			bw.write(lineToWrite.substring(0, lineToWrite.length()-1));
-			bw.newLine();
-			bw.close();
-			fw.close();
+			String newLine = lineToWrite.substring(0, lineToWrite.length()-1);
+
+			// Append new line
+			Files.write(filePath, (newLine + System.lineSeparator()).getBytes(),
+					StandardOpenOption.APPEND);
+
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -564,55 +589,42 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * Updates a specific part of an item inside the database.
 	 * <b>.target()</b> should be used to set the target file.
 	 *
-	 * @throws IOException will throw error if file does not exist
 	 * @param targetId <b>String</b> <br> The id of the data that will be updated.
 	 * @param targetChange <b>HashMap</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public boolean update(String targetId, HashMap<String, String> targetChange) throws IOException {
+	public boolean update(String targetId, HashMap<String, String> targetChange) {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", targetChange.values()), true);
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
+		Path filePath = Paths.get(FILE_ROOT + targetFile);
 
-		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
-			BufferedReader br = new BufferedReader(fr);
-
-			ArrayList<String> lines = new ArrayList<>();
-			ArrayList<String> dataToWrite = new ArrayList<>();
-
-			String line;
-			while ((line = br.readLine()) != null) {
-				lines.add(line);
-			}
-
-			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
-			BufferedWriter bw = new BufferedWriter(fw);
+			List<String> lines = Files.readAllLines(filePath);
 			String[] classAttrs = this.getAttrs();
 
-			for (String s : lines) {
-				HashMap<String, String> lineData = new HashMap<>();
-
-				for (int j = 0; j < classAttrs.length; j++) {
-					lineData.put(classAttrs[j], s.split(",")[j]);
-				}
-
-				if (s.split(",")[0].equals(targetId)) {
-					for (String attr : classAttrs) {
-						if (attr.equals(targetChange.keySet().toArray()[0])) {
-							dataToWrite.add(targetChange.get(attr));
-						} else {
-							dataToWrite.add(lineData.get(attr));
+			// Process updates
+			List<String> updatedLines = lines.stream()
+					.map(line -> {
+						String[] parts = line.split(",");
+						if (parts[0].equals(targetId)) {
+							// Build updated line
+							String[] updatedParts = new String[parts.length];
+							for (int i = 0; i < classAttrs.length; i++) {
+								String attr = classAttrs[i];
+								updatedParts[i] = targetChange.containsKey(attr) ?
+										targetChange.get(attr) : parts[i];
+							}
+							return String.join(",", updatedParts);
 						}
-					}
-					bw.write(String.join(",", dataToWrite));
-					bw.newLine();
-				} else {
-					bw.write(s);
-					bw.newLine();
-				}
-			}
-			bw.close();
-			fw.close();
+						return line;
+					})
+					.collect(Collectors.toList());
+
+			Files.write(filePath, updatedLines,
+					StandardCharsets.UTF_8,
+					StandardOpenOption.WRITE,
+					StandardOpenOption.TRUNCATE_EXISTING,
+					StandardOpenOption.CREATE);
 
 			return true;
 		} catch (IOException e) {
@@ -624,46 +636,41 @@ public class QueryBuilder<T extends ModelInitializable>{
 	/**
 	 * Updates all parts of a specific item inside the database.
 	 *
-	 * @throws IOException will throw error if file does not exist
 	 * @param targetId <b>String</b> <br> The id of the data that will be updated.
 	 * @param data <b>String[]</b> <br> The data that will be updated.
 	 * @see QueryBuilder#target()
 	 * */
-	public boolean update(String targetId, String[] data) throws IOException {
+	public boolean update(String targetId, String[] data) {
 		HashMap<String, String> validatedData = this.validateData(String.join(",", data));
 		String targetFile = (this.targetFile != null ? this.targetFile : "db/" +this.getClassName().toLowerCase()) + ".txt";
+		Path filePath = Paths.get(FILE_ROOT + targetFile);
 
-		FileReader fr = new FileReader(FILE_ROOT + targetFile);
 		try {
-			BufferedReader br = new BufferedReader(fr);
-
-			ArrayList<String> lines = new ArrayList<>();
-			ArrayList<String> dataToWrite = new ArrayList<>();
-
-			String line;
-			while ((line = br.readLine()) != null) {
-				lines.add(line);
-			}
-
-			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
-			BufferedWriter bw = new BufferedWriter(fw);
+			// Read all lines
+			List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
 			String[] classAttrs = this.getAttrs(false);
 
-			for (String lineItem: lines) {
-				if (lineItem.split(",")[0].equals(targetId)) {
-					dataToWrite.add(targetId);
-					for (String attr: classAttrs) {
-						dataToWrite.add(validatedData.get(attr));
+			// Process updates
+			List<String> updatedLines = new ArrayList<>();
+			for (String line : lines) {
+				if (line.split(",")[0].equals(targetId)) {
+					// Build updated line
+					List<String> updatedParts = new ArrayList<>();
+					updatedParts.add(targetId);
+					for (String attr : classAttrs) {
+						updatedParts.add(validatedData.get(attr));
 					}
-					bw.write(String.join(",", dataToWrite));
-					bw.newLine();
-				}else {
-					bw.write(lineItem);
-					bw.newLine();
+					updatedLines.add(String.join(",", updatedParts));
+				} else {
+					updatedLines.add(line);
 				}
 			}
-			bw.close();
-			fw.close();
+
+			Files.write(filePath, updatedLines,
+					StandardCharsets.UTF_8,
+					StandardOpenOption.WRITE,
+					StandardOpenOption.TRUNCATE_EXISTING);
+
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -756,28 +763,21 @@ public class QueryBuilder<T extends ModelInitializable>{
 	public boolean delete(String targetId) throws FileNotFoundException {
 		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
 
-		FileReader fr = new FileReader(FILE_ROOT + targetFile);
+		Path filePath = Paths.get(FILE_ROOT + targetFile);
 		try {
-			BufferedReader br = new BufferedReader(fr);
+			// Read all lines
+			List<String> lines = Files.readAllLines(filePath);
 
-			ArrayList<String> lines = new ArrayList<>();
+			// Filter out the line to delete
+			List<String> updatedLines = lines.stream()
+					.filter(line -> !line.split(",")[0].equals(targetId))
+					.collect(Collectors.toList());
 
-			String line;
-			while ((line = br.readLine()) != null) {
-				lines.add(line);
-			}
+			Files.write(filePath, updatedLines,
+					StandardOpenOption.WRITE,
+					StandardOpenOption.TRUNCATE_EXISTING,
+					StandardOpenOption.CREATE);
 
-			FileWriter fw = new FileWriter(FILE_ROOT + targetFile, false);
-			BufferedWriter bw = new BufferedWriter(fw);
-
-			for (String lineItem: lines) {
-				if (!lineItem.split(",")[0].equals(targetId)) {
-					bw.write(String.join(",", lineItem));
-					bw.newLine();
-				}
-			}
-			bw.close();
-			fw.close();
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -791,10 +791,15 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @throws RuntimeException will throw error if validation fails.
 	 * @return HashMap that contains the validated data.
 	 * */
-	public HashMap<String, String> validateData(String values){
+	public HashMap<String, String> validateData(String values, String... flag){
 		HashMap<String, String> dataMap = new HashMap<>();
 
-		String[] classAttrs = this.getAttrs(false);
+		String[] classAttrs;
+		if (flag != null) {
+			classAttrs = this.getAttrs(true);
+		}else {
+			classAttrs = this.getAttrs(false);
+		}
 		String[] dataToValidate = values.split(",");
 
 		if (dataToValidate.length != classAttrs.length) {
