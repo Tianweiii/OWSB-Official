@@ -9,14 +9,17 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import models.DTO.InventoryUpdateRequestDTO;
+import models.Datas.InventoryUpdateLog;
 import models.Datas.InventoryUpdateRequest;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -76,7 +79,12 @@ public class InventoryUpdateRequestController implements Initializable {
 
                 updateButton.setOnAction(event -> {
                     InventoryUpdateRequestDTO request = getTableView().getItems().get(getIndex());
-                    handleUpdate(request);
+                    try {
+                        handleUpdate(request);
+                    } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                             IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
 
                 declineButton.setOnAction(event -> {
@@ -111,14 +119,16 @@ public class InventoryUpdateRequestController implements Initializable {
         }
     }
 
-    public void handleUpdate(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) {
-        try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Update");
-            alert.setHeaderText("Are you sure you want to approve this update?");
-            alert.setContentText("This action will subtract the requested quantity from the inventory.");
+    public void handleUpdate(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Update");
+        alert.setHeaderText("Are you sure you want to approve this update?");
+        alert.setContentText("This action will subtract the requested quantity from the inventory.");
 
-            if (alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent()) {
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
                 String itemID = inventoryUpdateRequestDTO.getItemID();
                 int quantity = inventoryUpdateRequestDTO.getQuantity();
                 int userID = inventoryUpdateRequestDTO.getUserID();
@@ -129,10 +139,14 @@ public class InventoryUpdateRequestController implements Initializable {
                         .findFirst()
                         .orElseThrow(() -> new Exception("Item not found"));
 
-                if (item.getQuantity() > quantity && (item.getQuantity() - quantity) > item.getAlertSetting()) {
-                    item.setQuantity(item.getQuantity() - quantity);
+                if (item.getQuantity() >= quantity && (item.getQuantity() - quantity) >= item.getAlertSetting()) {
+                    int leftoverQty = item.getQuantity() - quantity;
+//                    NEED TO CHANGE USER ID TO CURRENT LOGIN USER
+//                    InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), leftoverQty, 12, "Update Sales Request", true);
 
-                    qbItem.update(item.getItemID(), new String[]{
+                    item.setQuantity(leftoverQty);
+
+                    String[] updateValues = new String[]{
                             item.getItemName(),
                             item.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
@@ -140,7 +154,10 @@ public class InventoryUpdateRequestController implements Initializable {
                             String.valueOf(item.getQuantity()),
                             String.valueOf(item.getUnitPrice()),
                             String.valueOf(item.getSupplierID()),
-                    });
+                    };
+
+                    qbItem.update(item.getItemID(), updateValues);
+
 
                     QueryBuilder<InventoryUpdateRequest> qbRequest = new QueryBuilder<>(InventoryUpdateRequest.class);
                     List<InventoryUpdateRequest> requests = qbRequest.select().from("db/InventoryUpdateRequest.txt").getAsObjects();
@@ -163,15 +180,16 @@ public class InventoryUpdateRequestController implements Initializable {
                 } else {
                     showNotification("Error Updating", "Out of stock", "error");
                 }
-            } else {
-                showNotification("Update Cancelled", "The update has been cancelled", "info");
+
+            } catch (Exception e) {
+                showNotification("Error Updating", "Error" + e, "error");
+                throw new RuntimeException(e);
+            } finally {
+                populateTable();
             }
 
-        } catch (Exception e) {
-            showNotification("Error Updating", "Error" + e, "error");
-            throw new RuntimeException(e);
-        } finally {
-            populateTable();
+        } else {
+            showNotification("Update Cancelled", "The update has been cancelled", "info");
         }
     }
 

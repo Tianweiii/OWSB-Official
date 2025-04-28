@@ -1,6 +1,7 @@
 package org.start.owsb;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.Datas.Role;
@@ -9,6 +10,7 @@ import models.Utils.Navigator;
 import models.Utils.SessionManager;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
@@ -17,6 +19,14 @@ public class MainApplication extends Application {
         Navigator navigator = Navigator.getInstance();
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
+
+
+        // Add dummy user for testing
+        HashMap<String, String> dummyUser = new HashMap<>();
+        dummyUser.put("username", "inventory_JY");
+        dummyUser.put("role_name", "4");
+        session.setUserData(dummyUser);
+
 
         layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Generate Stock Report", "Sales Purchase Request List"});
 

@@ -7,6 +7,8 @@ import javax.management.Query;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -20,13 +22,13 @@ public class Batch implements ModelInitializable {
     }
 
     public Batch(String batchID, LocalDateTime updatedDatetime, boolean verified) {
-        this.batchID = "Batch-" + System.currentTimeMillis();
+        this.batchID = batchID;
         this.updatedDatetime = updatedDatetime;
         this.verified = verified;
     }
 
     public String getBatchID() {
-        return "Batch-" + System.currentTimeMillis();
+        return batchID;
     }
 
     public LocalDateTime getUpdatedDatetime() {
@@ -50,18 +52,24 @@ public class Batch implements ModelInitializable {
     }
 
     public void createBatch() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
-        QueryBuilder<Batch> qb = new QueryBuilder<Batch>(Batch.class);
-        String[] values = new String[] {
-                this.batchID,
-                String.valueOf(this.updatedDatetime),
-                String.valueOf(this.verified)
-        };
-        qb.target("db/Batch").values(values).create();
-    }
+        QueryBuilder<Batch> qb = new QueryBuilder<>(Batch.class);
 
-    public static void logBatch(String batchID, LocalDateTime updatedDatetime, boolean verified) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
-        Batch batch = new Batch(batchID, updatedDatetime, verified);
-        batch.createBatch();
+        System.out.println("Batch Attributes: ");
+        System.out.println("batchID: " + this.batchID);
+        System.out.println("updatedDatetime: " + this.updatedDatetime);
+        System.out.println("verified: " + (this.verified ? "Verified" : "Not verified"));
+
+        String[] values = new String[]{
+                this.batchID,
+                this.updatedDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                this.verified ? "Verified" : "Not verified"
+        };
+        System.out.println(Arrays.toString(values));
+
+        for (String value : values) {
+            System.out.println(value);
+        }
+        qb.target("db/Batch").values(values).create();
     }
 
     @Override

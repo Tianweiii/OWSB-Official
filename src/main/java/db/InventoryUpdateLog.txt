@@ -1,30 +1,15 @@
-1,201,34,29,1,500,Updated by user 1
-2,202,12,15,2,501,Updated by user 2
-3,203,56,60,3,502,Updated by user 3
-4,204,78,75,4,503,Updated by user 4
-5,205,45,50,5,504,Updated by user 5
-6,206,23,20,6,505,Updated by user 6
-7,207,67,70,7,506,Updated by user 7
-8,208,10,15,8,507,Updated by user 8
-9,209,90,85,9,508,Updated by user 9
-10,210,55,60,10,509,Updated by user 10
-11,211,30,35,11,510,Updated by user 11
-12,212,40,38,12,511,Updated by user 12
-13,213,22,25,13,512,Updated by user 13
-14,214,15,10,14,513,Updated by user 14
-15,215,60,62,15,514,Updated by user 15
-16,201,50,48,1,515,Updated by user 1
-17,202,35,30,2,516,Updated by user 2
-18,203,80,82,3,517,Updated by user 3
-19,204,25,20,4,518,Updated by user 4
-20,205,10,12,5,519,Updated by user 5
-21,206,45,50,6,520,Updated by user 6
-22,207,70,68,7,521,Updated by user 7
-23,208,20,22,8,522,Updated by user 8
-24,209,90,95,9,523,Updated by user 9
-25,210,60,58,10,524,Updated by user 10
-26,211,30,32,11,525,Updated by user 11
-27,212,40,42,12,526,Updated by user 12
-28,213,15,18,13,527,Updated by user 13
-29,214,25,20,14,528,Updated by user 14
-30,215,50,35,15,529,Updated by user 15
+LOG-1714300030000, IT001, 100, 120, 5, Batch-1714300010000, Added new stock
+LOG-1714300031000, IT002, 200, 195, 3, Batch-1714300011000, Sold 5 units
+LOG-1714300032000, IT003, 50, 70, 8, Batch-1714300012000, Added new stock
+LOG-1714300033000, IT004, 80, 80, 11, Batch-1714300013000, No changes after stock check
+LOG-1714300034000, IT005, 60, 55, 2, Batch-1714300014000, Sold 5 units
+LOG-1714300035000, IT006, 150, 170, 6, Batch-1714300015000, Added 20 units
+LOG-1714300036000, IT007, 300, 290, 7, Batch-1714300016000, Sold 10 units
+LOG-1714300037000, IT008, 500, 510, 10, Batch-1714300017000, Restocked 10 units
+LOG-1714300038000, IT009, 90, 85, 1, Batch-1714300018000, Minor adjustment
+LOG-1714300039000, IT010, 400, 400, 9, Batch-1714300019000, Inventory checked, no change
+LOG-1714300040000, IT011, 120, 130, 4, Batch-1714300020000, Added 10 units
+LOG-1714300041000, IT012, 70, 60, 12, Batch-1714300021000, Sold 10 units
+LOG-1714300042000, IT013, 600, 590, 11, Batch-1714300022000, Stock adjustment
+LOG-1714300043000, IT014, 350, 370, 3, Batch-1714300023000, Restocked 20 units
+LOG-1714300044000, IT015, 250, 250, 2, Batch-1714300024000, Inventory checked - no change

@@ -82,7 +82,7 @@ public class UpdateInventoryController {
     }
 
     public void decrementStock() {
-        if(Integer.parseInt(txtNum.getText()) > 0) {
+        if (Integer.parseInt(txtNum.getText()) > 0) {
             stockNum--;
             txtNum.setText(String.valueOf(stockNum));
         }
@@ -132,6 +132,10 @@ public class UpdateInventoryController {
         };
 
         boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
+
+//        if (updateSuccess) {
+//
+//        }
 
 
         if (refreshCallback != null) {
