@@ -1,17 +1,15 @@
 package org.start.owsb;
 
+import controllers.FinanceController.FinanceMainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Users.User;
+import models.Users.FinanceManager;
 import models.Utils.Navigator;
-import models.Utils.QueryBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
@@ -30,7 +28,7 @@ public class MainApplication extends Application {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
         //Set login page or initial landing page here
-        FXMLLoader home = new FXMLLoader(getClass().getResource("test.fxml"));
+        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
         navigator.setLayout(layout);
         navigator.navigate(home.load());
 
@@ -39,24 +37,25 @@ public class MainApplication extends Application {
         // layout.initSidebar(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
 
         Scene scene = new Scene(layout.getRoot());
+        scene.getStylesheets().getClass().getResource("/css/general.css");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
-        
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        launch();
+//        launch();
         //Test queryBuilder usage
-        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
-        String[] columns = new String[]{"email", "password"};
-        ArrayList<HashMap<String, String>> res = qb.select()
-                .from("db/User.txt")
-//                .where("user_id", ">", "2")
-                .sort("user_id", "desc")
-                .get();
-//        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
-//        String roleid = res.get(0).get("role_id");
-        System.out.println(res);
+//        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
+//        String[] columns = new String[]{"email", "password"};
+//        ArrayList<HashMap<String, String>> res = qb.select()
+//                .from("db/User.txt")
+////                .where("user_id", ">", "2")
+//                .sort("user_id", "desc")
+//                .get();
+////        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
+////        String roleid = res.get(0).get("role_id");
+//        System.out.println(res);
+        FinanceManager.sendReceipt("isaacchong0913@gmail.com", "Hi", "payment_report.pdf");
     }
 }

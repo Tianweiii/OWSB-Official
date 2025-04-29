@@ -1,38 +1,39 @@
 package models.Datas;
 
+import models.ModelInitializable;
 import models.Utils.Helper;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
+import javax.security.auth.Subject;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.reflect.Field;
 
-public class Payment {
+public class Payment implements ModelInitializable {
 
 	public enum PaymentMethod {
 		Bank, TnG
 	};
 
-	private final String paymentID;
-	private final PaymentMethod paymentMethod;
+	private String paymentID;
+	private String PO_ID;
+	private String userID;
+	private String paymentMethod;
 	private double amount;
-	private final String createdAt;
-	private final String PO_ID;
-	private final String userID;
-	private final String paymentReference;
+	private String createdAt;
+	private String paymentReference;
 
-	public Payment(PaymentMethod method, double amount, String PO_ID, String userID) {
+	public Payment(String method, double amount, String PO_ID, String userID) {
 		this.paymentMethod = method;
 		this.amount = amount;
 		this.PO_ID = PO_ID;
@@ -44,6 +45,19 @@ public class Payment {
 		this.paymentID = MessageFormat.format("PY{0}", count); // TODO: change to fetch row count
 		this.createdAt = LocalDateTime.now().toString();
 		this.paymentReference = generatePaymentReference(count);
+	}
+
+	public Payment() {}
+
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		paymentID = data.get("paymentID") != null ? data.get("paymentID") : "";
+		PO_ID = data.get("PO_ID");
+		userID = data.get("userID");
+		paymentMethod = data.get("paymentMethod");
+		amount = Integer.parseInt(data.get("amount"));
+		createdAt = data.get("createdAt");
+		paymentReference = data.get("paymentReference");
 	}
 
 	private String generatePaymentReference(int hashKey) {
@@ -58,7 +72,7 @@ public class Payment {
 		return paymentID;
 	}
 
-	public PaymentMethod getPaymentMethod() {
+	public String getPaymentMethod() {
 		return paymentMethod;
 	}
 
@@ -80,6 +94,19 @@ public class Payment {
 
 	public String getPaymentReference() {
 		return paymentReference;
+	}
+
+	public String[] convertToArr() throws IllegalAccessException {
+		Field[] fields = Subject.class.getDeclaredFields();
+		ArrayList<String> result = new ArrayList<>();
+
+		for (Field field : fields) {
+			field.setAccessible(true);
+			Object val = field.get(this);
+			result.add(String.valueOf(val));
+		}
+
+		return result.toArray(new String[0]);
 	}
 
 	public static void generatePaymentReportPDF() {

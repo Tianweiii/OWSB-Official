@@ -469,8 +469,16 @@ public class QueryBuilder<T extends ModelInitializable>{
 		ArrayList<HashMap<String, String>> data = this.select(new String[]{this.getClassName().toLowerCase()+"_id"})
 				.from(this.targetFile)
 				.get();
-		int latestId = Integer.parseInt(data.get(data.size()-1)
-				.get(this.getClassName().toLowerCase()+"_id"))+1;
+//		int latestId = Integer.parseInt(data.get(data.size()-1)
+//				.get(this.getClassName().toLowerCase()+"_id"))+1;
+		int latestId = 0;
+		System.out.println(data);
+		if (!data.isEmpty()) {
+			try {
+				latestId = Integer.parseInt(data.get(data.size() - 1).getOrDefault(this.getClassName().toLowerCase() + "_id", "0")) + 1;
+			} catch (NumberFormatException ignored) {}
+		}
+
 		try {
 			BufferedWriter bw = new BufferedWriter(fw);
 			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
