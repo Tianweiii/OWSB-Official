@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="deleteItemPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.ItemListController">
+   <children>
+      <HBox alignment="CENTER" layoutY="81.0" prefHeight="238.0" prefWidth="600.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="238.0" prefWidth="286.0">
+               <children>
+                  <HBox prefHeight="129.0" prefWidth="286.0" style="-fx-border-radius: 10; -fx-background-color: white; -fx-background-radius: 10;">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="217.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="18.0" prefWidth="242.0" text="Are you sure you want to delete this item?" />
+                              <Label fx:id="itemToBeDeleted" alignment="CENTER" prefHeight="18.0" prefWidth="196.0">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Region prefHeight="19.0" prefWidth="192.0" />
+                              <HBox alignment="CENTER" prefHeight="43.0" prefWidth="286.0">
+                                 <children>
+                                    <Button onAction="#onDeleteItemButtonClick" fx:id="deleteButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" style="-fx-background-color: #F87474;" text="Delete" textFill="#663030" />
+                                    <Region prefHeight="36.0" prefWidth="36.0" />
+                                    <Button fx:id="cancelDeleteItemButton" mnemonicParsing="false" onAction="#onCancelDeleteItemButtonClick" prefHeight="26.0" prefWidth="115.0" text="Cancel" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </HBox>
+               </children></VBox>
+         </children>
+      </HBox>
+   </children>
+</Pane>

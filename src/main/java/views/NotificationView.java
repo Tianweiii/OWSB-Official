@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import models.Utils.Helper;
 import org.start.owsb.Layout;
 
 import java.io.IOException;
@@ -40,29 +41,7 @@ public class NotificationView implements View{
 		BorderPane root = layout.getRoot();
 
 		root.getChildren().add(this.notificationPane);
-		this.notificationPane.boundsInLocalProperty().addListener((obs, oldValue, newValue) -> {
-			if (newValue.getWidth() > 0 && newValue.getHeight() > 0) {
-				if (this.pos == NotificationController.popUpPos.CENTER) {
-					double centerX = (root.getWidth() - newValue.getWidth()) / 2;
-					double centerY = (root.getHeight() - newValue.getHeight()) / 2;
-					this.notificationPane.setLayoutX(centerX);
-					this.notificationPane.setLayoutY(centerY);
-
-				} else if (this.pos == NotificationController.popUpPos.TOP) {
-					double centerX = (root.getWidth() - newValue.getWidth()) / 2;
-					double topY = newValue.getHeight() - 20;
-					this.notificationPane.setLayoutX(centerX);
-					this.notificationPane.setLayoutY(topY);
-
-				} else if (this.pos == NotificationController.popUpPos.BOTTOM_RIGHT) {
-					double rightX = root.getWidth() - newValue.getWidth() - 20;
-					double bottomY = root.getHeight() - newValue.getHeight() - 20;
-					this.notificationPane.setLayoutX(rightX);
-					this.notificationPane.setLayoutY(bottomY);
-
-				}
-			}
-		});
+		Helper.adjustPanePosition(this.pos, root, this.notificationPane);
 
 		fade.setNode(this.notificationPane);
 		fade.setFromValue(1.0);

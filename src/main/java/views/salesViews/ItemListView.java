@@ -1,6 +1,5 @@
 package views.salesViews;
 
-import controllers.salesController.ItemListController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
