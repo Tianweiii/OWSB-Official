@@ -12,6 +12,8 @@ module org.start.owsb {
 
 	opens controllers.salesController to javafx.fxml;
     exports controllers.salesController;
+
 	exports views.salesViews;
 	opens views.salesViews to javafx.fxml;
+
 }
