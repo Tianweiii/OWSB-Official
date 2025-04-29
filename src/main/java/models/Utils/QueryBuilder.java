@@ -531,17 +531,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 	}
 
 	/**
-	 * Sets the customId flag
-	 *
-	 * @param flag <b>boolean</b> The flag
-	 * @return a QueryBuilder of the type you passed in for method chaining.
-	 * */
-	public QueryBuilder<T> withCustomId(boolean flag) {
-		this.customIdFlag = flag;
-		return this;
-	}
-
-	/**
 	 * Inserts the new data into the target file.
 	 *
 	 * @see QueryBuilder#validateData(String values, String... flag)
@@ -550,25 +539,67 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @see QueryBuilder#values(String[] dataArr)
 	 * @throws IOException will throw error if file does not exist or validation fails
 	 * */
-	public boolean create() throws IOException {
+	public boolean create() {
 		HashMap<String, String> validatedData;
-		if (this.customIdFlag) {
-			validatedData = this.validateData(this.createValues, "withCustom");
-		}else {
-			validatedData = this.validateData(this.createValues);
-		}
+		validatedData = this.validateData(this.createValues);
 		Path filePath = Paths.get(FILE_ROOT + this.targetFile + ".txt");
 
 		try {
 			// Get class name
 			String className = this.getClassName();
+			String idPrefix = Helper.getCapitalLetters(className);
 			// Get latest ID
 			List<String> allLines = Files.readAllLines(filePath);
-			int latestId = allLines.isEmpty() ? 1 :
-					Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
+			int latestId;
+			String latestIdString = allLines.isEmpty() ? "" : allLines.get(allLines.size()-1).split(",")[0];
+			if (latestIdString.matches("[0-9]+")) {
+				latestId = allLines.isEmpty() ? 1 : Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
+			} else {
+				latestId = Integer.parseInt(Helper.extractNumber(latestIdString))+1;
+			}
 
 			// Build new line
-			StringBuilder lineToWrite = new StringBuilder(latestId + ",");
+			StringBuilder lineToWrite = new StringBuilder(idPrefix + latestId + ",");
+			for (String item : this.getAttrs(false)) {
+				lineToWrite.append(validatedData.get(item)).append(",");
+			}
+			String newLine = lineToWrite.substring(0, lineToWrite.length()-1);
+
+			// Append new line
+			Files.write(filePath, (newLine + System.lineSeparator()).getBytes(),
+					StandardOpenOption.APPEND);
+
+			return true;
+		} catch (IOException e) {
+			return false;
+//			throw new RuntimeException(e);
+		}
+	}
+
+	public boolean create(String customId) {
+		HashMap<String, String> validatedData;
+		validatedData = this.validateData(this.createValues);
+		Path filePath = Paths.get(FILE_ROOT + this.targetFile + ".txt");
+
+		try {
+			String idToUse;
+
+			if (Helper.extractNumber(customId).isEmpty()) {
+				List<String> allLines = Files.readAllLines(filePath);
+				int latestId;
+				String latestIdString = allLines.isEmpty() ? "" : allLines.get(allLines.size()-1).split(",")[0];
+				if (latestIdString.matches("[0-9]+")) {
+					latestId = allLines.isEmpty() ? 1 : Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
+				} else {
+					latestId = Integer.parseInt(Helper.extractNumber(latestIdString)+1);
+				}
+				idToUse = customId + latestId;
+			} else {
+				idToUse = customId;
+			}
+
+			// Build new line
+			StringBuilder lineToWrite = new StringBuilder(idToUse + ",");
 			for (String item : this.getAttrs(false)) {
 				lineToWrite.append(validatedData.get(item)).append(",");
 			}
@@ -794,12 +825,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 	public HashMap<String, String> validateData(String values, String... flag){
 		HashMap<String, String> dataMap = new HashMap<>();
 
-		String[] classAttrs;
-		if (flag != null) {
-			classAttrs = this.getAttrs(true);
-		}else {
-			classAttrs = this.getAttrs(false);
-		}
+		String[] classAttrs = this.getAttrs(false);
 		String[] dataToValidate = values.split(",");
 
 		if (dataToValidate.length != classAttrs.length) {

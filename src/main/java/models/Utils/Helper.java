@@ -123,6 +123,26 @@ public class Helper {
                 }
             }
         });
+    }
 
+    public static String extractNumber(String text) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String getCapitalLetters(String str) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isUpperCase(c)) {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 }
