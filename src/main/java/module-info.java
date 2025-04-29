@@ -17,4 +17,11 @@ module org.start.owsb {
     exports controllers.FinanceController;
 
     exports models.Datas;
+
+	opens controllers.salesController to javafx.fxml;
+    exports controllers.salesController;
+
+	exports views.salesViews;
+	opens views.salesViews to javafx.fxml;
+
 }

@@ -47,8 +47,8 @@
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
            <children>
-               <Label text="Notifications" GridPane.columnIndex="1" />
-               <Label text="Logout" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" style="-fx-background-color: none;" text="Notification" GridPane.columnIndex="1" />
+            <Button fx:id="logoutButton" onAction="#handleLogoutButtonClick" mnemonicParsing="false" style="-fx-background-color: none;" text="Logout" GridPane.columnIndex="1" GridPane.rowIndex="1" />
            </children>
        </GridPane>
        <HBox layoutY="352.0" prefHeight="47.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.7999999999999972">
@@ -56,8 +56,8 @@
                <Label prefHeight="48.0" prefWidth="41.0" text="img2" />
                <VBox prefHeight="48.0" prefWidth="157.0">
                    <children>
-                       <Label prefHeight="24.0" prefWidth="162.0" text="Name" />
-                       <Label prefHeight="24.0" prefWidth="157.0" text="Position" />
+                       <Label fx:id="usernameLabel" prefHeight="24.0" prefWidth="162.0" />
+                       <Label fx:id="positionLabel" prefHeight="24.0" prefWidth="157.0" />
                    </children>
                </VBox>
            </children>

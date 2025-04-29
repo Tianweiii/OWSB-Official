@@ -5,36 +5,29 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Users.FinanceManager;
+import models.Datas.Item;
+
+import models.Datas.Role;
+import models.Users.User;
 import models.Utils.Navigator;
+import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
+import views.UserRegistrationView;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
-//        Scene scene = new Scene(parent);
-//        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
-//        stage.setTitle("OWSB");
-//
-//        stage.setScene(scene);
-//        stage.show();
-
-        // temp test
-//        FXMLLoader sidebar = new FXMLLoader(new URL("file:src/main/resources/Components/Sidebar.fxml"));
-//        sidebar.load();
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
-        //Set login page or initial landing page here
-        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
+        SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
-        navigator.navigate(home.load());
-
-        //Init sidebar code
-        // Layout layout = Layout.getInstance();
-        // layout.initSidebar(new String[]{"Home", "Manage Supplier List", "Submit Daily Sales Entry", "Submit Daily Sales Entry", "Create Purchase Request"});
+        navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
         Scene scene = new Scene(layout.getRoot());
         scene.getStylesheets().getClass().getResource("/css/general.css");
@@ -43,19 +36,17 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        launch();
-        //Test queryBuilder usage
-//        QueryBuilder<User> qb = new QueryBuilder<>(User.class);
-//        String[] columns = new String[]{"email", "password"};
-//        ArrayList<HashMap<String, String>> res = qb.select()
-//                .from("db/User.txt")
-////                .where("user_id", ">", "2")
-//                .sort("user_id", "desc")
-//                .get();
-////        qb.target("db/User.txt").values(new String[]{"Bobby","moooo@mail.com","123456","lol","30","1"}).create();
-////        String roleid = res.get(0).get("role_id");
-//        System.out.println(res);
-        FinanceManager.sendReceipt("isaacchong0913@gmail.com", "Hi", "payment_report.pdf");
+    public static void main(String[] args) {
+        launch();
+//        try {
+//            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
+////            qb.target("db/Item.txt").delete("11");
+//            HashMap<String, String> newdata = new HashMap<>();
+//            newdata.put("item_name", "testingg");
+//            qb.target("db/Item.txt").update("1", newdata);
+//            qb.target("db/Item.txt").update("2", new String[]{"ddjadjasid","2025-04-27","2025-04-27","1","1099","1"});
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 }

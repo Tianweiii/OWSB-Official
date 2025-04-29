@@ -1,5 +1,9 @@
 package models.Utils;
 
+import controllers.NotificationController;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -79,5 +83,66 @@ public class Helper {
             System.out.println(e.getMessage());
         }
         return "";
+    }
+
+    public static String toAttrString(String input) {
+        return input.toLowerCase().replace(" ", "_");
+    }
+
+    public static String toTableString(String input) {
+
+        String[] split = input.replace("_", " ").split(" ");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1).toLowerCase();
+        }
+
+        return split.length == 1 ? split[0] : String.join(" ", split);
+    }
+
+    public static void adjustPanePosition(NotificationController.popUpPos pos, BorderPane root, Pane pane) {
+        pane.boundsInLocalProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.getWidth() > 0 && newValue.getHeight() > 0) {
+                if (pos == NotificationController.popUpPos.CENTER) {
+                    double centerX = (root.getWidth() - newValue.getWidth()) / 2;
+                    double centerY = (root.getHeight() - newValue.getHeight()) / 2;
+                    pane.setLayoutX(centerX);
+                    pane.setLayoutY(centerY);
+
+                } else if (pos == NotificationController.popUpPos.TOP) {
+                    double centerX = (root.getWidth() - newValue.getWidth()) / 2;
+                    double topY = newValue.getHeight() - 20;
+                    pane.setLayoutX(centerX);
+                    pane.setLayoutY(topY);
+
+                } else if (pos == NotificationController.popUpPos.BOTTOM_RIGHT) {
+                    double rightX = root.getWidth() - newValue.getWidth() - 20;
+                    double bottomY = root.getHeight() - newValue.getHeight() - 20;
+                    pane.setLayoutX(rightX);
+                    pane.setLayoutY(bottomY);
+
+                }
+            }
+        });
+    }
+
+    public static String extractNumber(String text) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String getCapitalLetters(String str) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isUpperCase(c)) {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 }
