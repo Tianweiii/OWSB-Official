@@ -43,7 +43,7 @@ public class Navigator {
 		inventoryRouter.addRoute("inventoryHome", InventoryView.class);
 		inventoryRouter.addRoute("stockManagement", StockManagementView.class);
 		inventoryRouter.addRoute("generateStockReport", GenerateStockReportView.class);
-		inventoryRouter.addRoute("salePurchaseRequestList", InventoryUpdateRequestView.class);
+		inventoryRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
 
 		// Finance manage
 

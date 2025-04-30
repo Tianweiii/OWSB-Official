@@ -9,16 +9,15 @@ import java.io.IOException;
 
 public class InventoryUpdateRequestView implements View {
 
-    private AnchorPane salesPRPane;
+    private AnchorPane inventoryURPane;
 
     public InventoryUpdateRequestView() throws IOException {
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/InventoryFXML/InventoryUpdateRequest.fxml"));
-        this.salesPRPane = loader.load();
+        this.inventoryURPane = loader.load();
     }
 
     @Override
     public Parent getView() {
-        return this.salesPRPane;
+        return this.inventoryURPane;
     }
 }

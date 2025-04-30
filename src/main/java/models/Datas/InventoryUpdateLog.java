@@ -90,10 +90,10 @@ public class InventoryUpdateLog implements ModelInitializable {
         this.note = data.get("note");
     }
 
-    public void saveLog() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void saveLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<InventoryUpdateLog> qb = new QueryBuilder<>(InventoryUpdateLog.class);
         String[] values = new String[]{
-                this.logID,
+//                this.logID,
                 this.itemID,
                 String.valueOf(this.prevQuantity),
                 String.valueOf(this.newQuantity),
@@ -101,7 +101,7 @@ public class InventoryUpdateLog implements ModelInitializable {
                 String.valueOf(this.batchId),
                 this.note
         };
-        qb.target("db/InventoryUpdateLog").values(values).create();
+        qb.target("db/InventoryUpdateLog").values(values).create(this.logID);
     }
 
     public static void logItemUpdate(String itemId, int prevQty, int newQty, int userId, String note, boolean verified) throws Exception {

@@ -1,3 +1,4 @@
+/* Table */
 .table-view {
     -fx-background-color: #EDF0F5;
     -fx-table-cell-border-color: transparent;
@@ -34,7 +35,6 @@
 
 
 /*Bar chart*/
-/* styles.css */
 
 .default-color0.chart-bar {
     -fx-bar-fill: lightblue;

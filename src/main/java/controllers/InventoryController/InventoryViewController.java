@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import models.Datas.InventoryUpdateLog;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -51,7 +52,9 @@ public class InventoryViewController implements Initializable {
     @FXML
     private Label txtUser;
 
-    private String username = "TestingUser";
+    SessionManager session = SessionManager.getInstance();
+    HashMap<String, String> userData = session.getUserData();
+    private String username = userData.get("username");
 
     @FXML
 
@@ -121,9 +124,6 @@ public class InventoryViewController implements Initializable {
 
                 tile.getChildren().addAll(nameLabel, qtyLabel);
                 lowStockItems.getChildren().add(tile);
-//                Label lowStockItem = new Label(item.get("itemID") + item.get("itemName") + " - Qty: " + item.get("quantity"));
-//                lowStockItem.setStyle("-fx-font-size: 14; -fx-padding: 5;");
-//                lowStockItems.getChildren().add(lowStockItem);
             }
         }
 
@@ -156,7 +156,6 @@ public class InventoryViewController implements Initializable {
             String itemLabel = item.get("itemName");
             int quantity = Integer.parseInt(item.get("quantity"));
             XYChart.Data<String, Number> data = new XYChart.Data<>(itemLabel, quantity);
-//            series.getData().add(new XYChart.Data<>(itemLabel, quantity));
 
             data.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if(newNode != null) {
@@ -243,9 +242,6 @@ public class InventoryViewController implements Initializable {
             Path pdfPath = tmpDir.resolve("Stock_Report.pdf");
             Files.createDirectories(pdfPath.getParent());
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath.toString());
-
-            System.out.println("File path" + pdfPath);
-            System.out.println("Report generated successfully!");
 
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(pdfPath.toFile());

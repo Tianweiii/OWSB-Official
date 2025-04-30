@@ -8,11 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import models.Datas.InventoryUpdateLog;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,14 +53,17 @@ public class UpdateInventoryController {
 
     @FXML
     public void initialize() {
+        SessionManager session = SessionManager.getInstance();
+        HashMap<String, String> userData = session.getUserData();
+        int currentUserID = Integer.parseInt(userData.get("user_id"));
+
         btnIncrease.setOnMouseClicked(e -> incrementStock());
         btnDecrease.setOnMouseClicked(e -> decrementStock());
         btnClose.setOnMouseClicked(e -> closeDialog());
         btnUpdateInventory.setOnMouseClicked(e -> {
             try {
-                updateInventoryItem();
-            } catch (IOException | InvocationTargetException | NoSuchMethodException | InstantiationException |
-                     IllegalAccessException ex) {
+                updateInventoryItem(currentUserID);
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -107,7 +110,7 @@ public class UpdateInventoryController {
         this.refreshCallback = callback;
     }
 
-    public void updateInventoryItem() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void updateInventoryItem(int currentUserID) throws Exception {
         int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
         stockNum = Integer.parseInt(txtNum.getText());
 
@@ -118,6 +121,8 @@ public class UpdateInventoryController {
 
         double unitPrice = Double.parseDouble(fullItemMap.get("unitPrice"));
         int supplierID = Integer.parseInt(fullItemMap.get("supplierID"));
+
+        InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), stockNum, currentUserID, "Update Inventory Item", true);
 
         String[] values = new String[]{
                 item.getItemName(),

@@ -199,29 +199,6 @@ public class StockManagementController implements Initializable {
         findData.comparatorProperty().bind(itemTable.comparatorProperty());
         itemTable.setItems(findData);
 
-
-//        FilteredList<Item> searchData = new FilteredList<>(itemList, b -> true);
-//        String searchKeyword = txtSearchKeyword.getText().toLowerCase();
-//
-//        txtSearchKeyword.textProperty().addListener((observableValue, oldValue, newValue) -> {
-//            searchData.setPredicate(item -> {
-//
-//                if (oldValue.isEmpty() || newValue.isBlank()) return true;
-//
-//                String searchKeyword = newValue.toLowerCase();
-//
-//                return String.valueOf(item.getItemID()).contains(searchKeyword) ||
-//                        item.getItemName().toLowerCase().contains(searchKeyword) ||
-//                        item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
-//                        item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
-//                        String.valueOf(item.getAlertSetting()).contains(searchKeyword) ||
-//                        (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
-//            });
-//        });
-//
-//        SortedList<Item> findData = new SortedList<>(searchData);
-//        findData.comparatorProperty().bind(itemTable.comparatorProperty());
-//        itemTable.setItems(findData);
     }
 
     public void clearSearchResult() {

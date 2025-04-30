@@ -54,22 +54,12 @@ public class Batch implements ModelInitializable {
     public void createBatch() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
         QueryBuilder<Batch> qb = new QueryBuilder<>(Batch.class);
 
-        System.out.println("Batch Attributes: ");
-        System.out.println("batchID: " + this.batchID);
-        System.out.println("updatedDatetime: " + this.updatedDatetime);
-        System.out.println("verified: " + (this.verified ? "Verified" : "Not verified"));
-
         String[] values = new String[]{
-                this.batchID,
+//                this.batchID,
                 this.updatedDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 this.verified ? "Verified" : "Not verified"
         };
-        System.out.println(Arrays.toString(values));
-
-        for (String value : values) {
-            System.out.println(value);
-        }
-        qb.target("db/Batch").values(values).create();
+        qb.target("db/Batch").values(values).create(this.batchID);
     }
 
     @Override

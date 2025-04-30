@@ -10,9 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import models.DTO.InventoryUpdateRequestDTO;
+import models.Datas.InventoryUpdateLog;
 import models.Datas.InventoryUpdateRequest;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 import views.NotificationView;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -48,8 +51,13 @@ public class InventoryUpdateRequestController implements Initializable {
     @FXML
     private TableColumn<InventoryUpdateRequestDTO, String> userName;
 
+    SessionManager session = SessionManager.getInstance();
+    HashMap<String, String> userData = session.getUserData();
+    int currentUserID = Integer.parseInt(userData.get("user_id"));
+
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         configureTableCols();
         try {
             populateTable();
@@ -126,12 +134,11 @@ public class InventoryUpdateRequestController implements Initializable {
     }
 
     public void handleUpdate(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm Update");
-        alert.setHeaderText("Are you sure you want to approve this update?");
-        alert.setContentText("This action will subtract the requested quantity from the inventory.");
-
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showConfirmationDialog(
+                "Confirm Update",
+                "Are you sure you want to approve this update?",
+                "This action will approve the sales item request."
+        );
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
@@ -147,8 +154,7 @@ public class InventoryUpdateRequestController implements Initializable {
 
                 if (item.getQuantity() >= quantity && (item.getQuantity() - quantity) >= item.getAlertSetting()) {
                     int leftoverQty = item.getQuantity() - quantity;
-//                    NEED TO CHANGE USER ID TO CURRENT LOGIN USER
-//                    InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), leftoverQty, 12, "Update Sales Request", true);
+                    InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), leftoverQty, currentUserID, "Update Sales Request", true);
 
                     item.setQuantity(leftoverQty);
 
@@ -206,13 +212,13 @@ public class InventoryUpdateRequestController implements Initializable {
     public void handleDecline(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws IOException {
         try {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Update");
-            alert.setHeaderText("Are you sure you want to approve this update?");
-            alert.setContentText("This action will decline the sales item request.");
+            Optional<ButtonType> result = showConfirmationDialog(
+                    "Confirm Update",
+                    "Are you sure you want to approve this update?",
+                    "This action will decline the sales item request."
+            );
 
-            if (alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent()) {
-
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 QueryBuilder<InventoryUpdateRequest> qbRequest = new QueryBuilder<>(InventoryUpdateRequest.class);
                 List<InventoryUpdateRequest> requests = qbRequest.select().from("db/InventoryUpdateRequest.txt").getAsObjects();
                 InventoryUpdateRequest requestToUpdate = requests.stream()
@@ -244,12 +250,12 @@ public class InventoryUpdateRequestController implements Initializable {
         }
     }
 
-    private void showNotification(String title, String message, String type) {
-        Alert alert = new Alert(type.equals("success") ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR);
+    private Optional<ButtonType> showConfirmationDialog(String title, String headerText, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        return alert.showAndWait();
     }
 
 }

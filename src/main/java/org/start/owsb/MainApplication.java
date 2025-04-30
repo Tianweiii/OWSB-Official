@@ -23,20 +23,10 @@ public class MainApplication extends Application {
         navigator.setLayout(layout);
 
 
-        // Add dummy user for testing
-        HashMap<String, String> dummyUser = new HashMap<>();
-        dummyUser.put("username", "inventory_JY");
-        dummyUser.put("role_name", "4");
-        session.setUserData(dummyUser);
+        navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
-
-        layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Generate Stock Report", "Sales Purchase Request List"});
-
-        //Set login page or initial landing page here
-//        FXMLLoader inventoryHome = new FXMLLoader(getClass().getResource("test.fxml"));
-//        InventoryView stockView = new InventoryView();
-        navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
-//        navigator.navigate(navigator.getRouters("all").getRoute("login"));
+//        layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Generate Stock Report", "Sales Purchase Request List"});
+//        navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
 
         Scene scene = new Scene(layout.getRoot());
         scene.getStylesheets().add(getClass().getResource("/css/Inventory.css").toExternalForm());
