@@ -1,14 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.InventoryController.InventoryViewController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="900.0" prefWidth="1400.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.InventoryViewController">
+   <children>
+      <Label layoutX="57.0" layoutY="145.0" text="Welcome Back,">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtUser" layoutX="287.0" layoutY="145.0" text="Testing User">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Pane layoutX="32.0" layoutY="31.0" prefHeight="92.0" prefWidth="1325.0" style="-fx-border-radius: 10; -fx-background-color: #D9D9D9;">
+         <children>
+            <Label layoutX="14.0" layoutY="5.0" text="Inventory Management">
+               <font>
+                  <Font name="System Bold" size="32.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="52.0" text="View your inventory anywhere and anytime">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Button fx:id="btnGenerateReport" layoutX="1232.0" layoutY="232.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #1E3A8A;" text="Generate Report" textFill="WHITE" />
+      <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="287.0" prefHeight="123.0" prefWidth="688.0" spacing="50.0">
+         <children>
+            <Pane prefHeight="123.0" prefWidth="324.0" style="-fx-background-color: #EDF0F5;">
+               <children>
+                  <Label layoutX="14.0" layoutY="7.0" text="Total Quantity In Stock">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="txtTotalQtyInStock" layoutX="98.0" layoutY="54.0" text="Number">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane layoutX="10.0" layoutY="10.0" prefHeight="123.0" prefWidth="343.0" style="-fx-background-color: #EDF0F5;">
+               <children>
+                  <Label layoutX="14.0" layoutY="8.0" text="Total Value of Stock">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="txtTotalValueOfStock" layoutX="102.0" layoutY="54.0" text="Number">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <HBox layoutX="73.0" layoutY="459.0" prefHeight="415.0" prefWidth="724.0" spacing="50.0">
+         <children>
+            <Pane prefHeight="380.0" prefWidth="309.0" style="-fx-background-color: #F4F4F4;">
+               <children>
+                  <Label layoutX="11.0" layoutY="7.0" text="Low Stock Item">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <VBox fx:id="lowStockItems" layoutX="5.0" layoutY="47.0" prefHeight="361.0" prefWidth="298.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="380.0" prefWidth="331.0" style="-fx-background-color: #F4F4F4;">
+               <children>
+                  <Label layoutX="9.0" layoutY="8.0" text="Pending Purchase Order">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <VBox fx:id="pendingPurchaseOrder" layoutX="17.0" layoutY="46.0" prefHeight="361.0" prefWidth="298.0" />
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <BarChart fx:id="recentStockUpdates" layoutX="827.0" layoutY="292.0" prefHeight="582.0" prefWidth="530.0" style="-fx-background-color: white;" title="Top 10 Recent Stock Updates">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </BarChart>
+   </children>
 </AnchorPane>

@@ -107,7 +107,7 @@ public class InventoryUpdateLog implements ModelInitializable {
     public static void logItemUpdate(String itemId, int prevQty, int newQty, int userId, String note, boolean verified) throws Exception {
         String batchID = IDGenerator.generateBatchID();
         Batch batch = new Batch(batchID, LocalDateTime.now(), verified);
-//        batch.createBatch();
+        batch.createBatch();
         InventoryUpdateLog log = new InventoryUpdateLog(IDGenerator.generateLogID(), itemId, prevQty, newQty, userId, batchID, note);
         log.saveLog();
     }

@@ -1,9 +1,7 @@
 package controllers.InventoryController;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import static models.Datas.Item.stringifyDateTime;
 
@@ -50,7 +48,7 @@ public class UpdateInventoryController {
 
     private int stockNum;
     private Item item;
-    private Consumer<Item> refreshCallback;
+    private BiConsumer<Item, Boolean> refreshCallback;
     private AnchorPane overlay;
 
     @FXML
@@ -105,7 +103,7 @@ public class UpdateInventoryController {
         }
     }
 
-    public void setRefreshCallback(Consumer<Item> callback) {
+    public void setRefreshCallback(BiConsumer<Item, Boolean> callback) {
         this.refreshCallback = callback;
     }
 
@@ -132,34 +130,9 @@ public class UpdateInventoryController {
         };
 
         boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
-
-//        if (updateSuccess) {
-//
-//        }
-
-
-        if (refreshCallback != null) {
-            refreshCallback.accept(item);
-        }
         closeDialog();
-        updateItemPane.getScene().lookup("#stockManagementPane").toFront();
-
-// Notification not shown issue
-        Platform.runLater(() -> {
-            if (updateSuccess) {
-                showNotification("Success", "Inventory updated successfully.", "success");
-            } else {
-                showNotification("Failure", "Failed to update inventory. Please try again.", "error");
-            }
-        });
-    }
-
-
-    private void showNotification(String title, String message, String type) {
-        Alert alert = new Alert(type.equals("success") ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        if (refreshCallback != null) {
+            refreshCallback.accept(item, updateSuccess);
+        }
     }
 }

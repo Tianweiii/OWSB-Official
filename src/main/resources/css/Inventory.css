@@ -31,3 +31,16 @@
 .table-cell {
     -fx-alignment: center;
 }
+
+
+/*Bar chart*/
+/* styles.css */
+
+.default-color0.chart-bar {
+    -fx-bar-fill: lightblue;
+}
+
+.default-color0.chart-legend-item-symbol {
+    -fx-background-color: lightblue;
+}
+

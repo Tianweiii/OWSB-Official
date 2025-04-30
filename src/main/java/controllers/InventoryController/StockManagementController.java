@@ -1,5 +1,6 @@
 package controllers.InventoryController;
 
+import controllers.NotificationController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import models.Datas.Item;
 import models.Datas.Supplier;
+import views.NotificationView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -136,14 +138,8 @@ public class StockManagementController implements Initializable {
         });
 
         try {
-//        ItemList data
-            HashMap<Item, String> data = Item.getItemsWithSupplier();
-            supplierMap.putAll(data);
-            itemList.addAll(data.keySet());
-            itemTable.setItems(itemList);
-            itemTable.getSortOrder().add(itemID);
-            itemID.setSortType(TableColumn.SortType.ASCENDING);
-            itemTable.sort();
+//            Loading item list
+            loadInventoryTable();
 
 //        Filtering Function
             filterItems();
@@ -151,6 +147,17 @@ public class StockManagementController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadInventoryTable() throws Exception {
+        //        ItemList data
+        HashMap<Item, String> data = Item.getItemsWithSupplier();
+        supplierMap.putAll(data);
+        itemList.addAll(data.keySet());
+        itemTable.setItems(itemList);
+        itemTable.getSortOrder().add(itemID);
+        itemID.setSortType(TableColumn.SortType.ASCENDING);
+        itemTable.sort();
     }
 
     public void filterItems() {
@@ -254,24 +261,21 @@ public class StockManagementController implements Initializable {
 
     }
 
-    public void refreshTableAfterUpdate(Item updatedItem) {
+    public void refreshTableAfterUpdate(Item updatedItem, Boolean updateSuccess) {
         try {
-            HashMap<Item, String> updatedData = Item.getItemsWithSupplier();
-
             supplierMap.clear();
             itemList.clear();
-
-            supplierMap.putAll(updatedData);
-            itemList.addAll(updatedData.keySet());
-
-            itemTable.setItems(itemList);
-            itemTable.getSortOrder().add(itemID);
-            itemID.setSortType(TableColumn.SortType.ASCENDING);
-            itemTable.sort();
+            loadInventoryTable();
+            if (updateSuccess) {
+                NotificationView notificationView = new NotificationView("Successful Updating Inventory", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+                notificationView.show();
+            } else {
+                NotificationView notificationView = new NotificationView("Error Updating Inventory", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+                notificationView.show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 }
-

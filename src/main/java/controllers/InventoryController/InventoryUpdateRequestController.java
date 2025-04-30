@@ -1,5 +1,6 @@
 package controllers.InventoryController;
 
+import controllers.NotificationController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,11 +10,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import models.DTO.InventoryUpdateRequestDTO;
-import models.Datas.InventoryUpdateLog;
 import models.Datas.InventoryUpdateRequest;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
+import views.NotificationView;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -82,14 +84,18 @@ public class InventoryUpdateRequestController implements Initializable {
                     try {
                         handleUpdate(request);
                     } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
-                             IllegalAccessException e) {
+                             IllegalAccessException | IOException e) {
                         throw new RuntimeException(e);
                     }
                 });
 
                 declineButton.setOnAction(event -> {
                     InventoryUpdateRequestDTO request = getTableView().getItems().get(getIndex());
-                    handleDecline(request);
+                    try {
+                        handleDecline(request);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
             }
 
@@ -119,7 +125,7 @@ public class InventoryUpdateRequestController implements Initializable {
         }
     }
 
-    public void handleUpdate(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void handleUpdate(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Update");
         alert.setHeaderText("Are you sure you want to approve this update?");
@@ -175,25 +181,29 @@ public class InventoryUpdateRequestController implements Initializable {
                             requestToUpdate.getStatus(),
                     });
 
-                    showNotification("Success Updating", "The inventory request is approved", "success");
+                    NotificationView notificationView = new NotificationView("Successful Updating", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+                    notificationView.show();
 
                 } else {
-                    showNotification("Error Updating", "Out of stock", "error");
+                    NotificationView notificationView = new NotificationView("Error Updating - Out of stock", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+                    notificationView.show();
                 }
 
             } catch (Exception e) {
-                showNotification("Error Updating", "Error" + e, "error");
+                NotificationView notificationView = new NotificationView("Error Updating" + e, NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+                notificationView.show();
                 throw new RuntimeException(e);
             } finally {
                 populateTable();
             }
 
         } else {
-            showNotification("Update Cancelled", "The update has been cancelled", "info");
+            NotificationView notificationView = new NotificationView("Update Cancelled", NotificationController.popUpType.info, NotificationController.popUpPos.TOP);
+            notificationView.show();
         }
     }
 
-    public void handleDecline(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) {
+    public void handleDecline(InventoryUpdateRequestDTO inventoryUpdateRequestDTO) throws IOException {
         try {
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -219,12 +229,15 @@ public class InventoryUpdateRequestController implements Initializable {
                         requestToUpdate.getStatus(),
                 });
 
-                showNotification("Success Updating", "The inventory request is rejected", "success");
+                NotificationView notificationView = new NotificationView("The inventory request is rejected", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+                notificationView.show();
             } else {
-                showNotification("Update Cancelled", "The update has been cancelled", "info");
+                NotificationView notificationView = new NotificationView("The update has been cancelled", NotificationController.popUpType.info, NotificationController.popUpPos.TOP);
+                notificationView.show();
             }
         } catch (Exception e) {
-            showNotification("Error Updating", "Error" + e, "error");
+            NotificationView notificationView = new NotificationView("Error Updating" + e, NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+            notificationView.show();
             throw new RuntimeException(e);
         } finally {
             populateTable();
