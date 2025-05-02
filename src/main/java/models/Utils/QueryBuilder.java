@@ -233,7 +233,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 					String joinName = join.getSimpleName().toLowerCase();
 					String joinTextFileName = joinName + ".txt";
 
-					if (allData.get(0).get(joinName+"_id") == null) {
+					if (allData.get(0).get(joinName+"_id") == null && allData.get(0).get(joinName+"ID") == null) {
 						throw new RuntimeException("No " + joinName + " ID found");
 					}
 
