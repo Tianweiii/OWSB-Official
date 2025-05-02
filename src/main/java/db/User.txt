@@ -10,3 +10,4 @@
 10,Poppy,man@mail.com,abcde,addy,320,1
 11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
 12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2
+13,lee,leeaikyen@gmail.com,0VeLgnEFrJl5k8qcWnA5iYAH6nsOjLnEjbpOo53Outg=,Purchase Manager,21,3

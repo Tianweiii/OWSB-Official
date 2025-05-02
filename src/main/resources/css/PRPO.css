@@ -1,0 +1,13 @@
+.button.PRPOTab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #505050;
+    -fx-border-width: 0 0 4px 0;
+    -fx-border-radius: 0;
+    -fx-border-color: transparent;
+}
+
+.button.selected {
+    -fx-border-color: #1E3A8A;
+    -fx-text-fill: #1E3A8A;
+}
+
