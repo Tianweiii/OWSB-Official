@@ -24,6 +24,7 @@
 //import views.NotificationView;
 //import views.salesViews.AddItemView;
 //import views.salesViews.DeleteConfirmationView;
+//import views.salesViews.EditItemView;
 //
 //import java.io.IOException;
 //import java.net.URL;
@@ -32,6 +33,7 @@
 //import java.util.*;
 //
 //public class ItemListController implements Initializable {
+//	// Item List Page
 //	private ItemListController instance = this;
 //	@FXML private AnchorPane rootPane;
 //	@FXML private Button addItemButton;
@@ -49,10 +51,87 @@
 //	@FXML private Button saveAddItemButton;
 //	@FXML private Button cancelAddItemButton;
 //
+//	// Delete Item Pane
 //	@FXML private Pane deleteItemPane;
 //	@FXML private Button deleteButton;
 //	@FXML private Button cancelDeleteItemButton;
 //	@FXML private Label itemToBeDeleted = new Label();
+//
+//	// Edit Item Pane
+//	@FXML private Pane editItemPane;
+//	@FXML private TextField editItemNameField = new TextField();
+//	@FXML private Button saveEditItemButton;
+//	@FXML private Button cancelEditItemButton;
+//
+//	@FXML
+//	public void onCancelEditItemButtonClick() throws IOException {
+//		Layout layout = Layout.getInstance();
+//		BorderPane root = layout.getRoot();
+//		root.getChildren().remove(this.editItemPane);
+//
+//		ItemListController controller = EditItemView.getRootController();
+//		controller.getRootPane().setDisable(false);
+//
+//	}
+//
+//	@FXML
+//	public void onSaveEditItemButtonClick() {
+//		NotificationView notificationView;
+//		String changedItemName = this.editItemNameField.getText();
+//		String itemId = EditItemView.getData().get("item_id");
+//		String supplierId = EditItemView.getData().get("supplier_id");
+//
+//		HashMap<String, String> dataToUpdate = new HashMap<>();
+//		dataToUpdate.put("item_name", changedItemName);
+//		try {
+//			QueryBuilder<Item> checkerQb = new QueryBuilder<>(Item.class);
+//			ArrayList<HashMap<String, String>> existingData = checkerQb
+//					.select(new String[]{"item_name"})
+//					.from("db/Item.txt")
+//					.where("item_name", "=", changedItemName)
+//					.and("supplier_id", "=", supplierId)
+//					.get();
+//
+//			if (!existingData.isEmpty()) {
+//				notificationView = new NotificationView("Item already exists", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+//				notificationView.show();
+//				return;
+//			}
+//
+//			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
+//			boolean res = qb.target("db/Item.txt").update(itemId, dataToUpdate);
+//
+//			if (res) {
+//				ArrayList<HashMap<String, String>> newData = qb
+//						.select(new String[]{"item_id", "item_name", "supplier_name", "created_at", "updated_at", "supplier_id"})
+//						.from("db/Item.txt")
+//						.joins(Supplier.class, "supplier_id")
+//						.get();
+//				ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
+//				oListItems.addAll(newData);
+//
+//				Platform.runLater(() -> {
+//					Layout layout = Layout.getInstance();
+//					BorderPane root = layout.getRoot();
+//					root.getChildren().remove(this.editItemPane);
+//					ItemListController controller = EditItemView.getRootController();
+//					controller.getRootPane().setDisable(false);
+//
+//					TableView<HashMap<String, String>> itemTable = controller.getItemTable();
+//					itemTable.getItems().clear();
+//					itemTable.setItems(oListItems);
+//					itemTable.refresh();
+//
+//				});
+//				notificationView = new NotificationView("Item has been successfully changed", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+//			}else {
+//				notificationView = new NotificationView("Item deletion failed", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+//			}
+//			notificationView.show();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 //
 //	@FXML public void onDeleteItemButtonClick() throws IOException {
 //		HashMap<String, String> oldData = DeleteConfirmationView.getData();
@@ -258,10 +337,17 @@
 //				MenuItem editItem = new MenuItem("Edit");
 //				MenuItem deleteItem = new MenuItem("Delete");
 //
-//				editItem.setOnAction(event -> handleEdit());
-//				deleteItem.setOnAction(event -> {
+//				editItem.setOnAction(event -> {
+//					HashMap<String, String> data = this.getTableView().getItems().get(this.getIndex());
 //					try {
-//						HashMap<String, String> data = this.getTableView().getItems().get(this.getIndex());
+//						handleEdit(data);
+//					} catch (IOException e) {
+//						throw new RuntimeException(e);
+//					}
+//				});
+//				deleteItem.setOnAction(event -> {
+//					HashMap<String, String> data = this.getTableView().getItems().get(this.getIndex());
+//					try {
 //						handleDelete(data);
 //					} catch (IOException e) {
 //						throw new RuntimeException(e);
@@ -280,23 +366,24 @@
 //		return optionsColumns;
 //	}
 //
-//	private void handleEdit() {}
+//	private void handleEdit(HashMap<String, String> data) throws IOException {
+//		EditItemView editItemView = new EditItemView(this);
+//		this.editItemNameField.setPromptText(data.get("item_name"));
+//
+//		EditItemView.setData(data);
+//
+//		editItemView.showEditItemPane();
+//		this.rootPane.setDisable(true);
+//	}
 //
 //	private void handleDelete(HashMap<String, String> data) throws IOException {
 //		DeleteConfirmationView deleteConfirmationView = new DeleteConfirmationView(this);
 //		this.itemToBeDeleted.setText(data.get("item_name"));
-//		System.out.println(data.get("item_name"));
+//
 //		DeleteConfirmationView.setData(data);
 //
 //		deleteConfirmationView.showDeleteConfirmationView();
 //		this.rootPane.setDisable(true);
 //	}
 //
-//	public ItemListController getInstance() {
-//		return instance;
-//	}
-//
-//	public void setInstance(ItemListController instance) {
-//		this.instance = instance;
-//	}
 //}
