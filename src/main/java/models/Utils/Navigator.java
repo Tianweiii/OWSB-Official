@@ -37,7 +37,8 @@ public class Navigator {
 
 		// Inventory manager
 
-		// Finance manage
+		// Finance manager
+//		financeRouter.addRoute("home", );
 
 		// NON SIDEBAR ROUTES
 		allRouter.addRoute("login", LoginView.class);

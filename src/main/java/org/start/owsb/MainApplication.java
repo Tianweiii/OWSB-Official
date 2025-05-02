@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.Datas.Item;
 
+import models.Datas.PaymentCard;
 import models.Datas.Role;
 import models.Users.User;
 import models.Utils.Navigator;
@@ -25,9 +26,12 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
+        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
+
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
-        navigator.navigate(navigator.getRouters("all").getRoute("login"));
+//        navigator.navigate(navigator.getRouters("all").getRoute("login"));
+        navigator.navigate(home.load());
 
         Scene scene = new Scene(layout.getRoot());
         scene.getStylesheets().getClass().getResource("/css/general.css");
@@ -38,6 +42,19 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch();
+//        try {
+//            QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
+//            ArrayList<PaymentCard> res = qb.select().from("db/PaymentCard").getAsObjects();
+//            System.out.println(res);
+//        } catch (NoSuchMethodException e) {
+//            throw new RuntimeException(e);
+//        } catch (InvocationTargetException e) {
+//            throw new RuntimeException(e);
+//        } catch (InstantiationException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
 //        try {
 //            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 ////            qb.target("db/Item.txt").delete("11");
