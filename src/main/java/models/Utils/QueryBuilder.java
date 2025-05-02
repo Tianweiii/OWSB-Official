@@ -450,7 +450,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 		ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack = new ArrayDeque<>();
 
 		for (int i = 0; i < classAttrs.length; i++) {
-			dataMap.put(classAttrs[i], entryData[i]);
+			dataMap.put(classAttrs[i], entryData[i].strip());
 		}
 
 		dataHolder.add(dataMap);
