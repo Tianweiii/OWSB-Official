@@ -1,10 +1,9 @@
 package views.salesViews;
 
+import controllers.CustomTableViewController;
 import controllers.NotificationController;
-import controllers.salesController.ItemListController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import models.Utils.Helper;
 import org.start.owsb.Layout;
@@ -17,15 +16,15 @@ import java.util.HashMap;
 public class DeleteConfirmationView implements View {
 	private final Pane deletePane;
 	private static HashMap<String, String> data;
-	private static ItemListController rootController;
+	private static CustomTableViewController rootController;
 
-	public DeleteConfirmationView(ItemListController rootController) throws IOException {
+	public DeleteConfirmationView(CustomTableViewController rootController) throws IOException {
 		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/Components/DeleteConfirmationWindow.fxml"));
 		this.deletePane = loader.load();
 		DeleteConfirmationView.rootController = rootController;
 	}
 
-	public static ItemListController getRootController() {
+	public static CustomTableViewController getRootController() {
 		return rootController;
 	}
 
@@ -33,6 +32,15 @@ public class DeleteConfirmationView implements View {
 		Layout layout = Layout.getInstance();
 		layout.getRoot().getChildren().add(deletePane);
 		Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, layout.getRoot(), deletePane);
+
+		DeleteConfirmationView.rootController.getTableView().setDisable(true);
+	}
+
+	public void hideDeleteConfirmationView() {
+		Layout layout = Layout.getInstance();
+		layout.getRoot().getChildren().remove(deletePane);
+
+		DeleteConfirmationView.rootController.getTableView().setDisable(false);
 	}
 
 	@Override

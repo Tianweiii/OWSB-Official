@@ -1,23 +1,63 @@
 package views.salesViews;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
+import models.Datas.Item;
+import models.Datas.Supplier;
+import views.Command;
+import views.CustomTableView;
 import views.View;
 
 import java.io.IOException;
-import java.net.URL;
+import java.util.HashMap;
 
-public class ItemListView implements View {
-	private final AnchorPane itemListPane;
+public class ItemListView extends CustomTableView implements View, Command {
+	private AddItemView addItemView;
+	private EditItemView editItemView;
+	private DeleteConfirmationView deleteConfirmationView;
 
 	public ItemListView() throws IOException {
-		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/ItemList.fxml"));
-		this.itemListPane = loader.load();
+		super(new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"}, Item.class, createClassArray(Supplier.class), new String[]{"supplier_id"});
+		CustomTableView.setCommand(this);
 	}
 
-	@Override
-	public Parent getView() {
-		return this.itemListPane;
+	@SafeVarargs
+	public static <T> Class<? extends T>[] createClassArray(Class<? extends T>... classes) {
+		return classes;
+	}
+
+	public void openModal() throws IOException {
+		AddItemView addItemView = new AddItemView();
+		addItemView.showAddItemView(CustomTableView.controller);
+
+		this.addItemView = addItemView;
+	}
+
+	public void closeModal() {
+		this.addItemView.hideAddItemView();
+	}
+
+	public void openEditModal(HashMap<String, String> data) throws IOException {
+		EditItemView editItemView = new EditItemView(CustomTableView.controller);
+		EditItemView.setData(data);
+
+		editItemView.showEditItemPane();
+
+		this.editItemView = editItemView;
+	}
+
+	public void closeEditModal() {
+		this.editItemView.hideEditItemPane();
+	}
+
+	public void openDeleteModal(HashMap<String, String> data) throws IOException {
+		DeleteConfirmationView.setData(data);
+		DeleteConfirmationView deleteConfirmationView = new DeleteConfirmationView(CustomTableView.controller);
+
+		deleteConfirmationView.showDeleteConfirmationView();
+
+		this.deleteConfirmationView = deleteConfirmationView;
+	}
+
+	public void closeDeleteModal() {
+		this.deleteConfirmationView.hideDeleteConfirmationView();
 	}
 }

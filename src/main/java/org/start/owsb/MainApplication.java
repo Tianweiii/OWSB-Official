@@ -7,10 +7,12 @@ import javafx.stage.Stage;
 import models.Datas.Item;
 
 import models.Datas.Role;
+import models.Datas.Supplier;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
+import views.CustomTableView;
 import views.UserRegistrationView;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainApplication extends Application {
     @Override
@@ -27,6 +30,11 @@ public class MainApplication extends Application {
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
         navigator.navigate(navigator.getRouters("all").getRoute("login"));
+//        String[] columnNames = new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"};
+//        CustomTableView.setJoins(Supplier.class, "supplier_id");
+//        CustomTableView tableView = new CustomTableView(columnNames, Item.class);
+
+//        navigator.navigate(tableView.getView());
 
         Scene scene = new Scene(layout.getRoot());
         stage.setScene(scene);

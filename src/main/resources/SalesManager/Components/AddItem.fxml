@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane fx:id="addItemPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.ItemListController">
+<Pane fx:id="addItemPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.AddItemController">
    <children>
       <VBox layoutX="179.0" layoutY="100.0" prefHeight="200.0" prefWidth="243.0">
          <children>
@@ -60,9 +60,9 @@
             <Region prefHeight="24.0" prefWidth="243.0" />
             <HBox alignment="CENTER" prefHeight="48.0" prefWidth="243.0">
                <children>
-                  <Button onAction="#onSaveAddItemButtonClick"  fx:id="saveAddItemButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Save" HBox.hgrow="ALWAYS" />
+                  <Button onAction="#onSaveAddItemButtonClicked"  fx:id="saveAddItemButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Save" HBox.hgrow="ALWAYS" />
                   <Region prefHeight="44.0" prefWidth="64.0" HBox.hgrow="ALWAYS" />
-                  <Button onAction="#onCancelAddItemButtonClick" fx:id="cancelAddItemButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Cancel" HBox.hgrow="ALWAYS" />
+                  <Button onAction="#onCancelAddItemButtonClicked" fx:id="cancelAddItemButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Cancel" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

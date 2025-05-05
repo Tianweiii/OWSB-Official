@@ -14,6 +14,11 @@ import java.util.Base64;
 
 public class Helper {
 
+    public enum AttrFormat {
+        camelCase,
+        snake_case
+    }
+
     // exactly 8 bytes
     private static final String secretKey = "12345678";
     private static final SecretKey key = new SecretKeySpec(secretKey.getBytes(), "DES");
@@ -85,11 +90,13 @@ public class Helper {
         return "";
     }
 
-    public static String toAttrString(String input) {
-        return input.toLowerCase().replace(" ", "_");
+    public static String toAttrString(String input, AttrFormat format) {
+        if (format == AttrFormat.camelCase) return input.toLowerCase().replace(" ", "");
+        if (format == AttrFormat.snake_case) return input.toLowerCase().replace(" ", "_");
+        return "";
     }
 
-    public static String toTableString(String input) {
+    public static String toTableString(String input, AttrFormat format) {
 
         String[] split = input.replace("_", " ").split(" ");
         for (int i = 0; i < split.length; i++) {
