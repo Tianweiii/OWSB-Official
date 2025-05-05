@@ -16,7 +16,7 @@ public class ItemListView extends CustomTableView implements View, Command {
 	private DeleteConfirmationView deleteConfirmationView;
 
 	public ItemListView() throws IOException {
-		super(new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"}, Item.class, Helper.createClassArray(Supplier.class), new String[]{"supplier_id"});
+		super("Item List", new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"}, Item.class, Helper.createClassArray(Supplier.class), new String[]{"supplier_id"});
 		CustomTableView.setCommand(this);
 	}
 

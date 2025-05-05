@@ -15,10 +15,12 @@ public class CustomTableView implements View {
 	private final AnchorPane rootPane;
 	private static String[] columns;
 	private static Class<? extends ModelInitializable> model;
+	private static String labelText;
 	private static final ArrayList<Class<? extends ModelInitializable>> joins = new ArrayList<>();
 	private static final ArrayList<String> joinKeys = new ArrayList<>();
 
-	public CustomTableView(String[] columns, Class<? extends ModelInitializable> model, Class<? extends ModelInitializable>[] joins, String[] joinKey) throws IOException {
+	public CustomTableView(String labelText, String[] columns, Class<? extends ModelInitializable> model, Class<? extends ModelInitializable>[] joins, String[] joinKey) throws IOException {
+		CustomTableView.labelText = labelText;
 		CustomTableView.columns = columns;
 		CustomTableView.model = model;
 		for (Class<? extends ModelInitializable> join : joins) {
@@ -58,6 +60,8 @@ public class CustomTableView implements View {
 	public static Class<? extends ModelInitializable> getModel() {
 		return CustomTableView.model;
 	}
+
+	public static String getLabelText() { return CustomTableView.labelText; }
 
 	@Override
 	public Parent getView() {

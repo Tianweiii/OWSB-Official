@@ -6,11 +6,28 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CustomTableViewController">
+<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CustomTableViewController">
     <children>
       <VBox alignment="CENTER" prefHeight="900.0" prefWidth="1057.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
           <HBox alignment="CENTER" prefHeight="250.0" prefWidth="1400.0" VBox.vgrow="ALWAYS">
               <VBox alignment="CENTER" prefHeight="900.0" prefWidth="1400.0" HBox.hgrow="ALWAYS">
+                  <FlowPane layoutX="48.0" layoutY="57.0" prefHeight="66.0" prefWidth="552.0">
+                      <children>
+                          <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <!--                        <Image />-->
+                              </image>
+                          </ImageView>
+                          <Label fx:id="titleLabel">
+                              <font>
+                                  <Font name="System Bold" size="36.0" />
+                              </font>
+                              <FlowPane.margin>
+                                  <Insets left="50.0" />
+                              </FlowPane.margin>
+                          </Label>
+                      </children>
+                  </FlowPane>
                   <FlowPane layoutX="49.0" layoutY="135.0" prefHeight="28.0" prefWidth="450.0">
                       <children>
                           <Label text="Filter by" textFill="#707070">
@@ -60,26 +77,9 @@
                          </Button>
                       </children>
                   </FlowPane>
-                  <FlowPane layoutX="48.0" layoutY="57.0" prefHeight="66.0" prefWidth="552.0">
+                  <HBox layoutX="49.0" layoutY="243.0" prefHeight="702.0" prefWidth="1058.0" VBox.vgrow="SOMETIMES">
                       <children>
-                          <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                  <!--                        <Image />-->
-                              </image>
-                          </ImageView>
-                          <Label fx:id="titleLabel">
-                              <font>
-                                  <Font name="System Bold" size="36.0" />
-                              </font>
-                              <FlowPane.margin>
-                                  <Insets left="50.0" />
-                              </FlowPane.margin>
-                          </Label>
-                      </children>
-                  </FlowPane>
-                  <HBox layoutX="49.0" layoutY="243.0" prefHeight="627.0" prefWidth="1263.0" VBox.vgrow="SOMETIMES">
-                      <children>
-                          <TableView fx:id="tableView" prefHeight="627.0" prefWidth="1168.0" style="-fx-background-color: #EDF0F5;">
+                          <TableView fx:id="tableView" prefHeight="500.0" prefWidth="1168.0" style="-fx-background-color: #EDF0F5;">
                               <columns>
 
                               </columns>

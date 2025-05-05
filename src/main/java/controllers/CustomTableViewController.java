@@ -92,7 +92,7 @@ public class CustomTableViewController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
 			this.model = CustomTableView.getModel();
-
+			this.titleLabel.setText(CustomTableView.getLabelText());
 			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 
 			oListItems.addAll(getLatestData());
