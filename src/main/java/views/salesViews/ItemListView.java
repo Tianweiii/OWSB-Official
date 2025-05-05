@@ -2,6 +2,7 @@ package views.salesViews;
 
 import models.Datas.Item;
 import models.Datas.Supplier;
+import models.Utils.Helper;
 import views.Command;
 import views.CustomTableView;
 import views.View;
@@ -15,13 +16,8 @@ public class ItemListView extends CustomTableView implements View, Command {
 	private DeleteConfirmationView deleteConfirmationView;
 
 	public ItemListView() throws IOException {
-		super(new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"}, Item.class, createClassArray(Supplier.class), new String[]{"supplier_id"});
+		super(new String[]{"Item Id", "Item Name", "Supplier Name", "Created At", "Updated At"}, Item.class, Helper.createClassArray(Supplier.class), new String[]{"supplier_id"});
 		CustomTableView.setCommand(this);
-	}
-
-	@SafeVarargs
-	public static <T> Class<? extends T>[] createClassArray(Class<? extends T>... classes) {
-		return classes;
 	}
 
 	public void openModal() throws IOException {

@@ -152,4 +152,9 @@ public class Helper {
         }
         return result.toString();
     }
+
+    @SafeVarargs
+    public static <T> Class<? extends T>[] createClassArray(Class<? extends T>... classes) {
+        return classes;
+    }
 }
