@@ -23,5 +23,6 @@ module org.start.owsb {
 
 	exports views.salesViews;
 	opens views.salesViews to javafx.fxml;
+    exports models.DTO;
 
 }

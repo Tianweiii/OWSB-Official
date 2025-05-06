@@ -5,11 +5,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.DTO.TransactionDTO;
 import models.Datas.Item;
 
 import models.Datas.PaymentCard;
 import models.Datas.Role;
 import models.Users.User;
+import models.Utils.FileIO;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
@@ -18,8 +20,7 @@ import views.UserRegistrationView;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class MainApplication extends Application {
     @Override
@@ -40,8 +41,10 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
+    public static void main(String[] args) throws IOException, ReflectiveOperationException {
+//        launch();
+        System.out.println(TransactionDTO.getBasicSupplierDetails());
+
 //        try {
 //            QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
 //            ArrayList<PaymentCard> res = qb.select().from("db/PaymentCard").getAsObjects();

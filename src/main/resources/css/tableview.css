@@ -1,0 +1,35 @@
+.table-view {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ccc;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #e0e0e0;
+}
+
+.table-view .column-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f3f3f3;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #cdeffd;
+    -fx-text-fill: black;
+}
+
+.table-cell {
+    -fx-padding: 8px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}

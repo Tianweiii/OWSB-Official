@@ -28,8 +28,8 @@ public class Payment implements ModelInitializable {
 	private String paymentID;
 	private String PO_ID;
 	private String userID;
-	private String paymentMethod;
 	private double amount;
+	private String paymentMethod;
 	private String createdAt;
 	private String paymentReference;
 
@@ -54,8 +54,8 @@ public class Payment implements ModelInitializable {
 		paymentID = data.get("paymentID") != null ? data.get("paymentID") : "";
 		PO_ID = data.get("PO_ID");
 		userID = data.get("userID");
+		amount = Double.parseDouble(data.get("amount"));
 		paymentMethod = data.get("paymentMethod");
-		amount = Integer.parseInt(data.get("amount"));
 		createdAt = data.get("createdAt");
 		paymentReference = data.get("paymentReference");
 	}

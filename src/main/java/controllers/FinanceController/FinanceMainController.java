@@ -97,7 +97,6 @@ public class FinanceMainController implements Initializable {
         AnchorPane.setLeftAnchor(root, 0.0);
         AnchorPane.setRightAnchor(root, 0.0);
         contentArea.getChildren().setAll(root);
-        System.out.println("Set anchor");
     }
 
     private void loadPage(String fxmlFile, boolean back) {

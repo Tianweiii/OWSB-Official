@@ -173,6 +173,7 @@
                         </VBox>
                      </children>
                   </HBox>
+                  <Region prefHeight="200.0" prefWidth="200.0" />
                   <HBox fillHeight="false" prefHeight="39.0" prefWidth="282.0">
                      <children>
                         <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
@@ -225,7 +226,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
-            <ScrollPane prefHeight="480.0" prefWidth="400.0" stylesheets="@../css/general.css">
+            <ScrollPane prefHeight="480.0" prefWidth="400.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="orderSummaryContainer" prefHeight="200.0" prefWidth="380.0" spacing="20.0" />
                </content>
