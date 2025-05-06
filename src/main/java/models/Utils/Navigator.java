@@ -8,6 +8,7 @@ import views.Inventory.InventoryView;
 import views.Inventory.InventoryUpdateRequestView;
 import views.Inventory.StockManagementView;
 import views.LoginView;
+import views.PRPOView;
 import views.UserRegistrationView;
 import views.salesViews.ItemListView;
 
@@ -38,6 +39,7 @@ public class Navigator {
 		salesRouter.addRoute("item-list", ItemListView.class);
 
 		// Purchase manager
+		purchaseRouter.addRoute("PRPO", PRPOView.class);
 
 		// Inventory manager
 		inventoryRouter.addRoute("inventoryHome", InventoryView.class);
