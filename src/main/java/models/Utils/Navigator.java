@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
 import views.LoginView;
+import views.PRPOView;
 import views.UserRegistrationView;
 import views.salesViews.ItemListView;
 
@@ -34,6 +35,7 @@ public class Navigator {
 		salesRouter.addRoute("item-list", ItemListView.class);
 
 		// Purchase manager
+		purchaseRouter.addRoute("PRPO", PRPOView.class);
 
 		// Inventory manager
 
