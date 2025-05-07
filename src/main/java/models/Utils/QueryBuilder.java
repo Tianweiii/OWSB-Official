@@ -148,10 +148,10 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 *
 	 * @return a QueryBuilder of the type you passed in for method chaining.
 	 * */
-	public QueryBuilder<T> sort() {
-		this.sortByClause = new String[]{getClassName().toLowerCase() + "_id", "asc"};
-		return this;
-	}
+//	public QueryBuilder<T> sort() {
+//		this.sortByClause = new String[]{getClassName().toLowerCase() + "_id", "asc"};
+//		return this;
+//	}
 
 	/**
 	 * Sets the joins to be used when querying data.

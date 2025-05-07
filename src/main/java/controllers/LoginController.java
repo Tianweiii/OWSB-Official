@@ -36,10 +36,10 @@ public class LoginController implements Initializable {
 
 		if (usernameField.getText().equals(SUPERUSER_USERNAME) && passwordField.getText().equals(SUPERUSER_PASSWORD)) {
 			try {
-				superUser.put("role_id", "1");
+				superUser.put("roleID", "1");
 				superUser.put("username", SUPERUSER_USERNAME);
 				superUser.put("password", SUPERUSER_PASSWORD);
-				superUser.put("role_name", "Admin");
+				superUser.put("roleName", "Admin");
 				session.setUserData(superUser);
 				layout.initSidebar("admin", new String[]{"Register"});
 				// Navigate to dashboard
@@ -60,13 +60,13 @@ public class LoginController implements Initializable {
 					.from("db/User.txt")
 					.where("username", "=", usernameField.getText())
 					.and("password", "=", hashedPassword)
-					.joins(Role.class, "role_id")
+					.joins(Role.class, "roleID")
 					.get();
 
 			if (!data.isEmpty()) {
 				session.setUserData(data.get(0));
 
-				switch (data.get(0).get("role_id")) {
+				switch (data.get(0).get("roleID")) {
 					case "1":
 						layout.initSidebar("admin", new String[]{"Register"});
 						// Navigate to dashboard
@@ -79,9 +79,9 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
 						break;
 					case "3":
-						layout.initSidebar("purchase", new String[]{"Register"});
+						layout.initSidebar("purchase", new String[]{"Procurement Management"});
 						//Navigate to dashboard
-//						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
+						navigator.navigate(navigator.getRouters("purchase").getRoute("PRPO"));
 						break;
 					case "4":
 						layout.initSidebar("inventory", new String[]{"Register"});

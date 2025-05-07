@@ -5,14 +5,14 @@ import models.ModelInitializable;
 import java.util.HashMap;
 
 public class Supplier implements ModelInitializable {
-	private int supplier_id;
-	private String supplier_name;
+	private String supplierID;
+	private String supplierName;
 	private String company;
-	private String phone_number;
+	private String phoneNumber;
 	private String address;
 
-	public int getSupplierId() {
-		return this.supplier_id;
+	public String getSupplierId() {
+		return this.supplierID;
 	}
 
 	public String getCompanyName() {
@@ -20,11 +20,11 @@ public class Supplier implements ModelInitializable {
 	}
 
 	public String getSupplierName() {
-		return this.supplier_name;
+		return this.supplierName;
 	}
 
 	public String getPhoneNumber() {
-		return this.phone_number;
+		return this.phoneNumber;
 	}
 
 	public String getAddress() {
@@ -33,10 +33,10 @@ public class Supplier implements ModelInitializable {
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.supplier_id = Integer.parseInt(data.get("supplier_id"));
-		this.supplier_name = data.get("supplier_name");
+		this.supplierID = data.get("supplierID");
+		this.supplierName = data.get("supplierName");
 		this.company = data.get("company");
-		this.phone_number = data.get("phone_number");
+		this.phoneNumber = data.get("phoneNumber");
 		this.address = data.get("address");
 	}
 }
