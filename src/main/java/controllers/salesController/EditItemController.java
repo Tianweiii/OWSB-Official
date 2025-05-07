@@ -31,16 +31,16 @@ public class EditItemController extends CustomTableViewController implements Ini
 		HashMap<String, String> data = EditItemView.getData();
 		HashMap<String, String> dataToUpdate = new HashMap<>();
 
-		dataToUpdate.put("item_name", editItemNameField.getText());
+		dataToUpdate.put("itemName", editItemNameField.getText());
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			boolean res = qb.target("db/Item.txt").update(data.get("item_id"), dataToUpdate);
+			boolean res = qb.target("db/Item.txt").update(data.get("itemID"), dataToUpdate);
 
 			if (res) {
 				ArrayList<HashMap<String, String>> newData = qb
-						.select(new String[]{"item_id", "item_name", "supplier_name", "created_at", "updated_at", "supplier_id"})
+						.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
 						.from("db/Item.txt")
-						.joins(Supplier.class, "supplier_id")
+						.joins(Supplier.class, "supplierID")
 						.get();
 
 				Platform.runLater(() -> {

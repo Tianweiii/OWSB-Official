@@ -29,7 +29,7 @@ public class DeleteConfirmationController extends CustomTableViewController impl
 
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			boolean res = qb.target("db/Item.txt").delete(dataToDelete.get("item_id"));
+			boolean res = qb.target("db/Item.txt").delete(dataToDelete.get("itemID"));
 			if (res) {
 
 				Platform.runLater(() -> {
@@ -53,6 +53,6 @@ public class DeleteConfirmationController extends CustomTableViewController impl
 	}
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		this.itemToBeDeleted.setText(DeleteConfirmationView.getData().get("item_name"));
+		this.itemToBeDeleted.setText(DeleteConfirmationView.getData().get("itemName"));
 	}
 }

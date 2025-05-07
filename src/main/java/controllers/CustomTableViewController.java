@@ -54,7 +54,7 @@ public class CustomTableViewController implements Initializable {
 				.filter(item ->
 						Arrays.stream(columns)
 								.anyMatch(column ->
-										item.get(Helper.toAttrString(column, Helper.AttrFormat.snake_case))
+										item.get(Helper.toAttrString(column))
 												.toLowerCase()
 												.contains(searchText.toLowerCase())
 								)
@@ -105,7 +105,7 @@ public class CustomTableViewController implements Initializable {
 				TableColumn<HashMap<String, String>, String> column = new TableColumn<>(columnName);
 
 				column.setCellValueFactory(cellData ->
-						new SimpleStringProperty(cellData.getValue().get(Helper.toAttrString(columnName, Helper.AttrFormat.snake_case))));
+						new SimpleStringProperty(cellData.getValue().get(Helper.toAttrString(columnName))));
 
 				this.tableView.getColumns().add(column);
 			}
@@ -118,8 +118,8 @@ public class CustomTableViewController implements Initializable {
 		}
 
 		SessionManager sessionManager = SessionManager.getInstance();
-		String role_id = sessionManager.getUserData().get("role_id");
-		this.addItemButton.setVisible(role_id.equals("1") || role_id.equals("2"));
+		String roleID = sessionManager.getUserData().get("roleID");
+		this.addItemButton.setVisible(roleID.equals("1") || roleID.equals("2"));
 	}
 
 	public TableView<HashMap<String, String>> getTableView() { return this.tableView; }
