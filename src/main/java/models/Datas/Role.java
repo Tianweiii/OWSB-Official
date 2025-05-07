@@ -5,20 +5,20 @@ import models.ModelInitializable;
 import java.util.HashMap;
 
 public class Role implements ModelInitializable {
-	private int role_id;
-	private String role_name;
+	private String roleID;
+	private String roleName;
 
-	public int getId() {
-		return role_id;
+	public String getId() {
+		return roleID;
 	}
 
 	public String getName() {
-		return role_name;
+		return roleName;
 	}
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.role_id = Integer.parseInt(data.get("role_id"));
-		this.role_name = data.get("role_name");
+		this.roleID = data.get("roleID");
+		this.roleName = data.get("roleName");
 	}
 }

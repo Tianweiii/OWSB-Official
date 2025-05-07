@@ -8,68 +8,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Supplier implements ModelInitializable {
-	private int supplierID;
-	private String companyName;
-	private String phoneNumber;
-	private String address;
+    private String supplierID;
+    private String supplierName;
+    private String company;
+    private String phoneNumber;
+    private String address;
 
-	public Supplier() {
+    public Supplier() {
 
-	}
+    }
 
-	public Supplier(int supplierID, String companyName, String phoneNumber, String address) {
-		this.supplierID = supplierID;
-		this.companyName = companyName;
-		this.phoneNumber = phoneNumber;
-		this.address = address;
-	}
+    public Supplier(String supplierID, String companyName, String phoneNumber, String address) {
+        this.supplierID = supplierID;
+        this.company = companyName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
-	public int getSupplierID() {
-		return supplierID;
-	}
+    public String getSupplierId() {
+        return supplierID;
+    }
 
-	public void setSupplierID(int supplierID) {
-		this.supplierID = supplierID;
-	}
+    public String getCompanyName() {
+        return this.company;
+    }
 
-	public String getCompany() {
-		return companyName;
-	}
+    public String getSupplierName() {
+        return this.supplierName;
+    }
 
-	public void setCompany(String companyName) {
-		this.companyName = companyName;
-	}
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getAddress() {
+        return this.address;
+    }
 
 	public static ArrayList<HashMap<String, String>> getSupplierNameById(int supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-		ArrayList<HashMap<String, String>> suppliers = qb.select(new String[]{"companyName"})
-				.from("db/Supplier")
-				.where("supplierID", "=" , String.valueOf(supplierID))
+        QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
+        ArrayList<HashMap<String, String>> suppliers = qb.select(new String[]{"companyName"})
+                .from("db/Supplier")
+                .where("supplierID", "=", String.valueOf(supplierID))
 				.get();
 		return suppliers;
-	}
-
-	@Override
-	public void initialize(HashMap<String, String> data) {
-		this.supplierID = Integer.parseInt(data.get("supplierID"));
-		this.companyName = data.get("companyName");
+}
+    @Override
+    public void initialize(HashMap<String, String> data) {
+		this.supplierID = data.get("supplierID");
+		this.supplierName = data.get("supplierName");
+		this.company = data.get("company");
 		this.phoneNumber = data.get("phoneNumber");
-		this.address = data.get("address");
-	}
+        this.address = data.get("address");
+    }
 }
