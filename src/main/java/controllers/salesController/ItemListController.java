@@ -78,18 +78,18 @@ public class ItemListController implements Initializable {
 	public void onSaveEditItemButtonClick() {
 		NotificationView notificationView;
 		String changedItemName = this.editItemNameField.getText();
-		String itemId = EditItemView.getData().get("item_id");
-		String supplierId = EditItemView.getData().get("supplier_id");
+		String itemId = EditItemView.getData().get("itemID");
+		String supplierId = EditItemView.getData().get("supplierID");
 
 		HashMap<String, String> dataToUpdate = new HashMap<>();
-		dataToUpdate.put("item_name", changedItemName);
+		dataToUpdate.put("itemName", changedItemName);
 		try {
 			QueryBuilder<Item> checkerQb = new QueryBuilder<>(Item.class);
 			ArrayList<HashMap<String, String>> existingData = checkerQb
-					.select(new String[]{"item_name"})
+					.select(new String[]{"itemName"})
 					.from("db/Item.txt")
-					.where("item_name", "=", changedItemName)
-					.and("supplier_id", "=", supplierId)
+					.where("itemName", "=", changedItemName)
+					.and("supplierID", "=", supplierId)
 					.get();
 
 			if (!existingData.isEmpty()) {
@@ -103,9 +103,9 @@ public class ItemListController implements Initializable {
 
 			if (res) {
 				ArrayList<HashMap<String, String>> newData = qb
-						.select(new String[]{"item_id", "item_name", "supplier_name", "created_at", "updated_at", "supplier_id"})
+						.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
 						.from("db/Item.txt")
-						.joins(Supplier.class, "supplier_id")
+						.joins(Supplier.class, "supplierID")
 						.get();
 				ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 				oListItems.addAll(newData);
@@ -135,7 +135,7 @@ public class ItemListController implements Initializable {
 
 	@FXML public void onDeleteItemButtonClick() throws IOException {
 		HashMap<String, String> oldData = DeleteConfirmationView.getData();
-		String selectedId = oldData.get("item_id");
+		String selectedId = oldData.get("itemID");
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			boolean res = qb.target("db/Item.txt").delete(selectedId);
@@ -181,10 +181,10 @@ public class ItemListController implements Initializable {
 			NotificationView notificationView;
 			ItemListController controllerReference = AddItemView.getRootController();
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			ArrayList<HashMap<String, String>> data = qb.select(new String[]{"item_name", "supplier_id"}).from("db/Item.txt").get();
+			ArrayList<HashMap<String, String>> data = qb.select(new String[]{"itemName", "supplierID"}).from("db/Item.txt").get();
 
 			for (HashMap<String, String> item: data) {
-				if (item.get("item_name").equals(itemName) && item.get("supplier_id").equals(String.valueOf(supplier.getSupplierId()))) {
+				if (item.get("itemName").equals(itemName) && item.get("supplierID").equals(String.valueOf(supplier.getSupplierId()))) {
 					notificationView = new NotificationView("Item already exists", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 					notificationView.show();
 					return;
@@ -201,9 +201,9 @@ public class ItemListController implements Initializable {
 
 			if (res) {
 				ArrayList<HashMap<String, String>> newData = qb
-						.select(new String[]{"item_id", "item_name", "supplier_name", "created_at", "updated_at", "supplier_id"})
+						.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
 						.from("db/Item.txt")
-						.joins(Supplier.class, "supplier_id")
+						.joins(Supplier.class, "supplierID")
 						.get();
 				ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 				oListItems.addAll(newData);
@@ -262,13 +262,13 @@ public class ItemListController implements Initializable {
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList(qb
-					.select(new String[]{"item_id", "item_name", "supplier_name", "created_at", "updated_at", "supplier_id"})
+					.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
 					.from("db/Item.txt")
-					.joins(Supplier.class, "supplier_id")
+					.joins(Supplier.class, "supplierID")
 					.get());
 
 			List<String> columnNames = new ArrayList<>();
-			columnNames.add("Item Id");
+			columnNames.add("Item ID");
 			columnNames.add("Item Name");
 			columnNames.add("Supplier Name");
 			columnNames.add("Created At");
@@ -368,7 +368,7 @@ public class ItemListController implements Initializable {
 
 	private void handleEdit(HashMap<String, String> data) throws IOException {
 		EditItemView editItemView = new EditItemView(this);
-		this.editItemNameField.setPromptText(data.get("item_name"));
+		this.editItemNameField.setPromptText(data.get("itemName"));
 
 		EditItemView.setData(data);
 
@@ -378,7 +378,7 @@ public class ItemListController implements Initializable {
 
 	private void handleDelete(HashMap<String, String> data) throws IOException {
 		DeleteConfirmationView deleteConfirmationView = new DeleteConfirmationView(this);
-		this.itemToBeDeleted.setText(data.get("item_name"));
+		this.itemToBeDeleted.setText(data.get("itemName"));
 
 		DeleteConfirmationView.setData(data);
 

@@ -52,7 +52,7 @@ public class SidebarController implements Initializable {
 		SessionManager session = SessionManager.getInstance();
 		HashMap<String, String> user = session.getUserData();
 		usernameLabel.setText(user.get("username"));
-		positionLabel.setText(user.get("role_name"));
+		positionLabel.setText(user.get("roleName"));
 	}
 
 	@FXML
