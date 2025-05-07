@@ -129,13 +129,9 @@ public class Item implements ModelInitializable {
         this.updatedAt = formatDateTime(data.get("updatedAt"));
         this.alertSetting = Integer.parseInt(data.get("alertSetting"));
         this.quantity = Integer.parseInt(data.get("quantity"));
+        this.unitPrice = Double.parseDouble(data.get("unitPrice"));
+        this.supplierID = Integer.parseInt(data.get("supplierID"));
 
-        if (data.get("unitPrice") != null) {
-            this.unitPrice = Double.parseDouble(data.get("unitPrice"));
-        }
-        if (data.get("supplierID") != null) {
-            this.supplierID = Integer.parseInt(data.get("supplierID"));
-        }
     }
 
     public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -143,7 +139,7 @@ public class Item implements ModelInitializable {
         return qb.select().from("db/Item").get();
     }
 
-    public static HashMap<Item, String> getItemsWithSupplier() throws Exception {
+    public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
         HashMap<Item, String> itemSupplierMap = new HashMap<>();
 
         QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
@@ -180,7 +176,7 @@ public class Item implements ModelInitializable {
         return LocalDateTime.parse(strDatetime, formatter);
     }
 
-    public static String stringifyDateTime(LocalDateTime localDateTime){
+    public static String stringifyDateTime(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return localDateTime.format(formatter);
     }

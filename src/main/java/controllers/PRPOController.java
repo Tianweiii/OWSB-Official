@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import models.Abstract.*;
 import models.Utils.SessionManager;
 
 import java.io.IOException;
@@ -49,13 +51,13 @@ public class PRPOController implements Initializable {
             pr_pane.setVisible(false);
 
             // load data
-            loadPOData();
+            loadPOData(user_role);
 
             // initialize the PR/PO list display
             switchTab("order");
         } else {
-            loadPRData();
-            loadPOData();
+            loadPRData(user_role);
+            loadPOData(user_role);
             switchTab("request");
         }
 
@@ -66,13 +68,28 @@ public class PRPOController implements Initializable {
     }
 
     // TODO: Currently the loadPRData and loadPOData just create empty dummy PR PO box, will replace with real data in the future
-    public void loadPRData(){
+    public void loadPRData(String user_role){
         for(int i=0; i < 10; i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PRPOBox.fxml"));
                 Parent boxPane = loader.load();
 
                 PRPOBoxController boxController = loader.getController();
+//                PRPOAbstractHandler handler = null;
+//                switch (user_role) {
+//                    case "1":
+//                        handler = new SalesManagerPRPOHandler(boxController);
+//                        break;
+//                    case "2":
+//                        handler = new SalesManagerPRPOHandler(boxController);
+//                        break;
+//                    case "3":
+//                        handler = new PurchaseManagerPRPOHandler(boxController);
+//                        break;
+//                }
+//
+//                handler.setUpView();
+
                 if(i < 6){
                     boxController.setBoxStatus("pending");
                 } else {
@@ -87,7 +104,7 @@ public class PRPOController implements Initializable {
         }
     }
 
-    public void loadPOData(){
+    public void loadPOData(String user_role){
         for(int i=0; i < 4; i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PRPOBox.fxml"));
@@ -96,6 +113,25 @@ public class PRPOController implements Initializable {
                 PRPOBoxController boxController = loader.getController();
                 boxController.setBoxStatus("pending");
                 boxController.setPOData();
+
+//                PRPOAbstractHandler handler = null;
+//                switch (user_role) {
+//                    case "2":
+//                        handler = new SalesManagerPRPOHandler(boxController);
+//                        break;
+//                    case "3":
+//                        handler = new PurchaseManagerPRPOHandler(boxController);
+//                        break;
+//                    case "4":
+//                        handler = new InventoryPRPOHandler(boxController);
+//                        break;
+//                    case "5":
+//                        handler = new FinancePRPOHandler(boxController);
+//                        break;
+//                }
+//
+//                handler.setUpView();
+
                 po_list_container.getChildren().add(boxPane);
             } catch (IOException e) {
                 e.printStackTrace();

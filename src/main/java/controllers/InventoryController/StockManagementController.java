@@ -128,9 +128,9 @@ public class StockManagementController implements Initializable {
         itemTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !itemTable.getSelectionModel().isEmpty()) {
                 Item selectedItem = itemTable.getSelectionModel().getSelectedItem();
-                String selectedItemID = selectedItem.getItemID();
+//                String selectedItemID = selectedItem.getItemID();
                 try {
-                    loadUpdateDialog(selectedItemID, selectedItem);
+                    loadUpdateDialog(selectedItem);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -138,7 +138,7 @@ public class StockManagementController implements Initializable {
         });
 
         try {
-//            Loading item list
+//        Loading item list
             loadInventoryTable();
 
 //        Filtering Function
@@ -151,7 +151,7 @@ public class StockManagementController implements Initializable {
 
     private void loadInventoryTable() throws Exception {
         //        ItemList data
-        HashMap<Item, String> data = Item.getItemsWithSupplier();
+        HashMap<Item, String> data = Item.getItems(true);
         supplierMap.putAll(data);
         itemList.addAll(data.keySet());
         itemTable.setItems(itemList);
@@ -206,14 +206,14 @@ public class StockManagementController implements Initializable {
         txtSearchKeyword.setText("");
     }
 
-    public void loadUpdateDialog(String itemID, Item selectedItem) throws IOException {
+    public void loadUpdateDialog(Item selectedItem) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/InventoryFXML/UpdateInventoryDialog.fxml"));
 
         Parent updatePane = loader.load();
 
         UpdateInventoryController controller = loader.getController();
 
-        controller.setItemData(itemID, selectedItem);
+        controller.setItemData(selectedItem);
 
         controller.setRefreshCallback(this::refreshTableAfterUpdate);
 

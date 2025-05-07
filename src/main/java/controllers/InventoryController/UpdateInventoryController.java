@@ -1,5 +1,6 @@
 package controllers.InventoryController;
 
+import controllers.NotificationController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import models.Datas.InventoryUpdateLog;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
+import views.NotificationView;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ public class UpdateInventoryController {
         });
     }
 
-    public void setItemData(String itemID, Item item) {
+    public void setItemData(Item item) {
         this.item = item;
         this.stockNum = item.getQuantity();
         txtItemName.setText(item.getItemName());
@@ -87,10 +89,6 @@ public class UpdateInventoryController {
             stockNum--;
             txtNum.setText(String.valueOf(stockNum));
         }
-    }
-
-    public void setOverlay(AnchorPane overlay) {
-        this.overlay = overlay;
     }
 
     public void closeDialog() {
@@ -111,33 +109,38 @@ public class UpdateInventoryController {
     }
 
     public void updateInventoryItem(int currentUserID) throws Exception {
-        int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
-        stockNum = Integer.parseInt(txtNum.getText());
+        try{
+            int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
+            stockNum = Integer.parseInt(txtNum.getText());
 
-        QueryBuilder<Item> qb = new QueryBuilder(Item.class);
-        ArrayList<HashMap<String, String>> itemResult = qb.select().from("db/Item").where("itemID", "=", String.valueOf(item.getItemID())).get();
+            QueryBuilder<Item> qb = new QueryBuilder(Item.class);
+            ArrayList<HashMap<String, String>> itemResult = qb.select().from("db/Item").where("itemID", "=", String.valueOf(item.getItemID())).get();
 
-        HashMap<String, String> fullItemMap = itemResult.get(0);
+            HashMap<String, String> fullItemMap = itemResult.get(0);
 
-        double unitPrice = Double.parseDouble(fullItemMap.get("unitPrice"));
-        int supplierID = Integer.parseInt(fullItemMap.get("supplierID"));
+            double unitPrice = Double.parseDouble(fullItemMap.get("unitPrice"));
+            int supplierID = Integer.parseInt(fullItemMap.get("supplierID"));
 
-        InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), stockNum, currentUserID, "Update Inventory Item", true);
+            InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), stockNum, currentUserID, "Update Inventory Item", true);
 
-        String[] values = new String[]{
-                item.getItemName(),
-                stringifyDateTime(item.getCreatedAt()),
-                stringifyDateTime(LocalDateTime.now()),
-                String.valueOf(newAlertLevel),
-                String.valueOf(stockNum),
-                String.format("%.2f", unitPrice),
-                String.valueOf(supplierID),
-        };
+            String[] values = new String[]{
+                    item.getItemName(),
+                    stringifyDateTime(item.getCreatedAt()),
+                    stringifyDateTime(LocalDateTime.now()),
+                    String.valueOf(newAlertLevel),
+                    String.valueOf(stockNum),
+                    String.format("%.2f", unitPrice),
+                    String.valueOf(supplierID),
+            };
 
-        boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
-        closeDialog();
-        if (refreshCallback != null) {
-            refreshCallback.accept(item, updateSuccess);
+            boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
+            closeDialog();
+            if (refreshCallback != null) {
+                refreshCallback.accept(item, updateSuccess);
+            }
+        } catch (NumberFormatException e) {
+            NotificationView notificationView = new NotificationView("Please enter numbers only", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+            notificationView.show();
         }
     }
 }

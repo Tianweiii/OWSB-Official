@@ -10,6 +10,8 @@ public class PurchaseOrder implements ModelInitializable {
 	private int user_id;
 	private int pr_order_status_id;
 
+
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.pr_order_id = Integer.parseInt(data.get("pr_order_id"));

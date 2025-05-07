@@ -31,8 +31,6 @@ public class InventoryUpdateRequestDTO {
         this.status = status;
     }
 
-    // Getters and setters (can generate with IDE)
-
     public String getInventoryUpdateRequestID() {
         return inventoryUpdateRequestID;
     }
