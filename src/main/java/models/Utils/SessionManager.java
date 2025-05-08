@@ -1,10 +1,19 @@
 package models.Utils;
 
+import models.Datas.PurchaseOrder;
+import models.Users.FinanceManager;
+
 import java.util.HashMap;
 
 public class SessionManager {
 	private static SessionManager instance;
 	private HashMap<String, String> userData;
+
+	// create session instance on login, all values binded to that instance
+	// clear instance on logout
+	// all temp static, for static, will change to non after binding
+	private static FinanceManager financeManagerData;
+	private static PurchaseOrder paymentPurchaseOrder;
 
 	public static SessionManager getInstance() {
 		if (instance == null) {
@@ -20,4 +29,16 @@ public class SessionManager {
 	public void setUserData(HashMap<String, String> userData) {
 		this.userData = userData;
 	}
+
+	public static void setFinanceManagerData(FinanceManager fm) {
+		financeManagerData = fm;
+	}
+
+	public static FinanceManager getFinanceManagerData() { return financeManagerData; }
+
+	public static void setCurrentPaymentPO(PurchaseOrder PO) {
+		paymentPurchaseOrder = PO;
+	}
+
+	public static PurchaseOrder getCurrentPaymentPO() { return paymentPurchaseOrder; }
 }

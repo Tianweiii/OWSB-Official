@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
@@ -23,8 +25,11 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.util.Duration;
+import models.DTO.PaymentDTO;
 import models.Datas.PaymentCard;
+import models.Datas.PurchaseOrder;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 
 public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
@@ -43,6 +48,10 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     @FXML
     private TextField cvvField;
 
+    // PO data
+    private PurchaseOrder currentPO = SessionManager.getCurrentPaymentPO();
+    private Map<String, List<PaymentDTO>> paymentItems;
+
     private String[] testArr = new String[]{"1", "2", "3", "4", "5", "6", "7"};
     private FinanceMainController mainController;
     private ArrayList<PaymentCard> cardDatas;
@@ -50,14 +59,21 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // show toast if no currentPO
         try {
             QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
             cardDatas = qb.select().from("db/PaymentCard").getAsObjects();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+
+            paymentItems = currentPO.getPurchaseItemList();
+            System.out.println(paymentItems);
+
+        } catch (ReflectiveOperationException | IOException e) {
             throw new RuntimeException(e);
         }
 
         setupGreyBackground(newCardContainer);
+
+        // rendering cards
         for (PaymentCard item : cardDatas) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/CardItem.fxml"));
@@ -70,22 +86,23 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                 cardItemContainer.getChildren().add(card);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
-        for (String i : testArr) {
+        // rendering payment items
+        for (var entry : paymentItems.entrySet()) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PaymentItem.fxml"));
                 Parent card = loader.load();
 
                 PaymentItemController controller = loader.getController();
-//                controller.setData(item); // Inject data into component
+                controller.setData(entry.getKey(), entry.getValue()); // Inject data into component
 
                 orderSummaryContainer.getChildren().add(card);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

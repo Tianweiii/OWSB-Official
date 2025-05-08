@@ -5,7 +5,7 @@ import models.ModelInitializable;
 import java.util.HashMap;
 
 public class User implements ModelInitializable {
-	private int user_id;
+	private String user_id;
 	private String username;
 	private String email;
 	private String password;
@@ -22,9 +22,19 @@ public class User implements ModelInitializable {
 
 	}
 
+	public User(String user_id, String username, String email, String password, String position, int age, int role_id) {
+		this.user_id = user_id;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.position = position;
+		this.age = age;
+		this.role_id = role_id;
+	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.user_id = data.get("user_id") != null ? Integer.parseInt(data.get("user_id")) : 0;
+		this.user_id = data.get("user_id");
 		this.username = data.get("username");
 		this.email = data.get("email");
 		this.password = data.get("password");
@@ -53,7 +63,7 @@ public class User implements ModelInitializable {
 		return this.age;
 	}
 
-	public int getId() {
+	public String getId() {
 		return this.user_id;
 	}
 
@@ -81,7 +91,7 @@ public class User implements ModelInitializable {
 		this.age = age;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.user_id = id;
 	}
 

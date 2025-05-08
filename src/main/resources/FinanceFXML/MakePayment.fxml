@@ -75,7 +75,7 @@
       </VBox>
       <VBox prefHeight="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="218.0" prefWidth="282.0">
                <children>
                   <VBox prefHeight="71.0" prefWidth="400.0">
                      <children>
@@ -173,7 +173,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <Region prefHeight="200.0" prefWidth="200.0" />
+                  <Region prefHeight="157.0" prefWidth="282.0" />
                   <HBox fillHeight="false" prefHeight="39.0" prefWidth="282.0">
                      <children>
                         <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
@@ -209,7 +209,7 @@
       </VBox>
       <VBox prefHeight="795.0" spacing="15.0">
          <children>
-            <VBox prefHeight="53.0" prefWidth="400.0">
+            <VBox prefHeight="44.0" prefWidth="400.0">
                <children>
                   <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Order Summary">
                      <font>
@@ -226,7 +226,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
-            <ScrollPane prefHeight="480.0" prefWidth="400.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
+            <ScrollPane prefHeight="542.0" prefWidth="400.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="orderSummaryContainer" prefHeight="200.0" prefWidth="380.0" spacing="20.0" />
                </content>

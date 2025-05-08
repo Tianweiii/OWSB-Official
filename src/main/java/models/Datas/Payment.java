@@ -1,7 +1,10 @@
 package models.Datas;
 
+import models.DTO.PaymentDTO;
 import models.ModelInitializable;
+import models.Utils.FileIO;
 import models.Utils.Helper;
+import models.Utils.QueryBuilder;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -11,13 +14,14 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Payment implements ModelInitializable {
 
@@ -40,7 +44,7 @@ public class Payment implements ModelInitializable {
 		this.userID = userID;
 
 		// TODO: get latest row count
-		int count = 1;
+		int count = 30;
 
 		this.paymentID = MessageFormat.format("PY{0}", count); // TODO: change to fetch row count
 		this.createdAt = LocalDateTime.now().toString();
@@ -108,6 +112,43 @@ public class Payment implements ModelInitializable {
 
 		return result.toArray(new String[0]);
 	}
+
+	public static ArrayList<HashMap<String, String>> getPaymentDTO(String PO_ID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		// List of item ids in this PO
+		QueryBuilder<PurchaseOrderItem> qb = new QueryBuilder<>(PurchaseOrderItem.class);
+		String[] columns = new String[]{"itemID"};
+		ArrayList<HashMap<String, String>> itemIDs = qb.select(columns)
+								.from("db/PurchaseOrderItem")
+								.where("", "=", PO_ID)
+								.get();
+		return itemIDs;
+
+//		Set<String> itemIDs = FileIO.filterIDFileBelow("PurchaseOrderItem", )
+	}
+
+//	public Map<String, List<PaymentDTO>> getPurchaseItemList() throws IOException, ReflectiveOperationException {
+//		Map<String, List<PaymentDTO>> payments = new HashMap<>();
+//		// get item ids and quantity
+//		HashMap<String, String> itemAndQuantity = FileIO.filterIDToHashMap("PurchaseOrderItem", 1, 2, 3, PO_ID);
+//		Set<String> itemIDs = itemAndQuantity.keySet();
+//
+//		// getting items of PO
+//		ArrayList<Item> items = FileIO.getIDsAsObjects(Item.class, "Item", itemIDs);
+//
+//		for (Item i : items) {
+//			String supplierID = i.getSupplierID();
+//			String itemID = i.getItemID();
+//			int quantity = Integer.parseInt(itemAndQuantity.get(itemID));
+//			double amount = quantity * i.getUnitPrice();
+//
+//			PaymentDTO payment = new PaymentDTO(PO_ID, amount, itemID);
+//
+//			// Group by supplier ID
+//			payments.computeIfAbsent(supplierID, k -> new ArrayList<>()).add(payment);
+//		}
+//
+//		return payments;
+//	}
 
 	public static void generatePaymentReportPDF() {
 		try {

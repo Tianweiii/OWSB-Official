@@ -8,8 +8,10 @@ import javafx.stage.Stage;
 import models.DTO.TransactionDTO;
 import models.Datas.Item;
 
+import models.Datas.Payment;
 import models.Datas.PaymentCard;
 import models.Datas.Role;
+import models.Users.FinanceManager;
 import models.Users.User;
 import models.Utils.FileIO;
 import models.Utils.Navigator;
@@ -17,6 +19,7 @@ import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import views.UserRegistrationView;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -42,9 +45,13 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) throws IOException, ReflectiveOperationException {
-//        launch();
-        System.out.println(TransactionDTO.getBasicSupplierDetails());
-
+//        FinanceManager fm = new FinanceManager("")
+        FinanceManager fm = FileIO.getIDsAsObject(FinanceManager.class, "User", "US13");
+        SessionManager.setFinanceManagerData(fm);
+        launch();
+//        System.out.println(TransactionDTO.getBasicSupplierDetails());
+//        Payment payment = new Payment("Credit Card", 1000, "PO10", "US10");
+//        System.out.println(payment.getPurchaseItemList());
 //        try {
 //            QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
 //            ArrayList<PaymentCard> res = qb.select().from("db/PaymentCard").getAsObjects();

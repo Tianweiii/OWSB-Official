@@ -19,8 +19,13 @@ public class TransactionDTO {
     private double amount;
     private String status;
 
-    private static List<String> paymentPOs;
+    // this is to track suppliers to pay
+    private static Set<String> supplierIDs;
+    // this is to track items
+    private static List<String> itemIDs;
+    private static Set<String> paymentPOs;
 
+    // rough steps
     // qb returns all payments
     // qb returns all suppliers of PO
     // extract required data from payments + supplier data
@@ -30,20 +35,20 @@ public class TransactionDTO {
         QueryBuilder<Payment> qb = new QueryBuilder<>(Payment.class);
         ArrayList<Payment> data = qb.select().from("db/Payment").getAsObjects();
 
-        List<PaymentDTO> paymentData = data.stream()
-                                    .map(payment -> new PaymentDTO(payment.getPO_ID(), payment.getPaymentReference(), payment.getAmount(), "Success"))
-                                    .collect(Collectors.toList());
+//        List<PaymentDTO> paymentData = data.stream()
+//                                    .map(payment -> new PaymentDTO(payment.getPO_ID(), payment.getPaymentReference(), payment.getAmount(), "Success"))
+//                                    .collect(Collectors.toList());
+        List<PaymentDTO> paymentData = new ArrayList<>();
 
-        paymentPOs = data.stream().map(Payment::getPO_ID).toList();
-        System.out.println(paymentPOs);
+        paymentPOs = data.stream().map(Payment::getPO_ID).collect(Collectors.toSet());
 
         return paymentData;
     }
 
     public static List<Supplier> getBasicSupplierDetails() throws IOException, ReflectiveOperationException {
         // getting ids only
-        Set<String> PO_IDs = new HashSet<>(Arrays.asList("PO6", "PO10", "PO11"));
-        Set<String> PR_IDs = FileIO.filterIDFileBelow("PurchaseOrder", 0, 1, PO_IDs);
+//        Set<String> PO_IDs = new HashSet<>(Arrays.asList("PO6", "PO10", "PO11"));
+        Set<String> PR_IDs = FileIO.filterIDFileBelow("PurchaseOrder", 0, 1, paymentPOs);
         Set<String> ItemIDs = FileIO.filterIDFileBelow("PurchaseRequisitionItem", 1, 2, PR_IDs);
         Set<String> SupplierIDs = FileIO.filterIDFileBelow("Item", 0, 7, ItemIDs);
 
@@ -57,4 +62,13 @@ public class TransactionDTO {
 //    private ObservableList<TransactionDTO> getRecentTransactions() {
 //
 //    }
+
+    // Pay PO
+    // get Purchase Items and their suppliers, count amount to pay --> display accordingly
+        // join by itemID
+    // record a payment record for each supplier
+
+    public static void getPOPurchaseItems() {
+
+    }
 }

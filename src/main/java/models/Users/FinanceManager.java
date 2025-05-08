@@ -2,6 +2,7 @@ package models.Users;
 
 import models.Datas.Payment;
 import models.Datas.PurchaseOrder;
+import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
 import javax.activation.DataHandler;
@@ -21,14 +22,27 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class FinanceManager extends User {
-    private int FinanceId;
+//    private int FinanceId;
 
     final String paymentPath = "db/Payment.txt";
     final String[] paymentColumns = new String[]{"paymentID", "PO_ID", "userID", "paymentMethod", "amount", "createdAt", "paymentReference"};
 
-    public FinanceManager(String username, int age, int financeId) {
-        super(username, age);
-        FinanceId = financeId;
+    public FinanceManager(String user_id, String username, String email, String password, String position, int age, int role_id) {
+        super(user_id, username, email, password, position, age, role_id);
+    }
+
+    public FinanceManager() {}
+
+    public FinanceManager(String[] data) {
+        super(
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+                data[4],
+                Integer.parseInt(data[5]),
+                Integer.parseInt(data[6])
+        );
     }
 
     public ArrayList<HashMap<String, String>> getAllPayments() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

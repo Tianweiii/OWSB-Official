@@ -1,12 +1,13 @@
-3,Maika,many@mail.com,abcde,addy,21,2
-1,John,man@mail.com,abcde,addy,20,1
-2,Poon,man@mail.com,abcde,addy,21,2
-4,Mannn,man@mail.com,abcde,addyib,20,1
-5,Albert,man@mail.com,abcde,addy,20,3
-6,Sien,man@mail.com,abcde,addy,40,1
-7,Amber,man@mail.com,abcde,addy,69,1
-8,Gamer,man@mail.com,abcde,addy,32,2
-9,Yasuo,man@mail.com,abcde,addy,22,3
-10,Poppy,man@mail.com,abcde,addy,320,1
-11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
-12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2
+US1,John,man@mail.com,abcde,addy,20,1
+US2,Poon,man@mail.com,abcde,addy,21,2
+US3,Maika,many@mail.com,abcde,addy,21,2
+US4,Mannn,man@mail.com,abcde,addyib,20,1
+US5,Albert,man@mail.com,abcde,addy,20,3
+US6,Sien,man@mail.com,abcde,addy,40,1
+US7,Amber,man@mail.com,abcde,addy,69,1
+US8,Gamer,man@mail.com,abcde,addy,32,2
+US9,Yasuo,man@mail.com,abcde,addy,22,3
+US10,Poppy,man@mail.com,abcde,addy,320,1
+US11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
+US12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2
+US13,Tian,tian123@gmail.com,123123123,FinanceManager,21,5
