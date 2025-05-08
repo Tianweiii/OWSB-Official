@@ -3,7 +3,6 @@ package models.Utils;
 import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
-import views.Inventory.GenerateStockReportView;
 import views.Inventory.InventoryView;
 import views.Inventory.InventoryUpdateRequestView;
 import views.Inventory.StockManagementView;
@@ -45,7 +44,6 @@ public class Navigator {
 		inventoryRouter.addRoute("inventoryHome", InventoryView.class);
 		inventoryRouter.addRoute("stockManagement", StockManagementView.class);
 		inventoryRouter.addRoute("PRPO", PRPOView.class);
-//		inventoryRouter.addRoute("generateStockReport", GenerateStockReportView.class);
 		inventoryRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
 
 		// Finance manage

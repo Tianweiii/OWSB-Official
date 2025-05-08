@@ -4,7 +4,6 @@ import models.ModelInitializable;
 import models.Utils.IDGenerator;
 import models.Utils.QueryBuilder;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class InventoryUpdateLog implements ModelInitializable {
     private String itemID;
     private int prevQuantity;
     private int newQuantity;
-    private int userId;
+    private String userID;
     private String batchId;
     private String note;
 
@@ -24,12 +23,12 @@ public class InventoryUpdateLog implements ModelInitializable {
     public InventoryUpdateLog() {
     }
 
-    public InventoryUpdateLog(String logID, String itemID, int prevQuantity, int newQuantity, int userId, String batchId, String note) {
+    public InventoryUpdateLog(String logID, String itemID, int prevQuantity, int newQuantity, String userID, String batchId, String note) {
         this.logID = logID;
         this.itemID = itemID;
         this.prevQuantity = prevQuantity;
         this.newQuantity = newQuantity;
-        this.userId = userId;
+        this.userID = userID;
         this.batchId = batchId;
         this.note = note;
     }
@@ -50,8 +49,8 @@ public class InventoryUpdateLog implements ModelInitializable {
         return newQuantity;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserID() {
+        return userID;
     }
 
     public String getBatchId() {
@@ -85,7 +84,7 @@ public class InventoryUpdateLog implements ModelInitializable {
         this.itemID = data.get("itemID");
         this.prevQuantity = Integer.parseInt(data.get("prevQuantity"));
         this.newQuantity = Integer.parseInt(data.get("newQuantity"));
-        this.userId = Integer.parseInt(data.get("userId"));
+        this.userID = data.get("userID");
         this.batchId = data.get("batchId");
         this.note = data.get("note");
     }
@@ -93,22 +92,21 @@ public class InventoryUpdateLog implements ModelInitializable {
     public void saveLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<InventoryUpdateLog> qb = new QueryBuilder<>(InventoryUpdateLog.class);
         String[] values = new String[]{
-//                this.logID,
                 this.itemID,
                 String.valueOf(this.prevQuantity),
                 String.valueOf(this.newQuantity),
-                String.valueOf(this.userId),
+                String.valueOf(this.userID),
                 String.valueOf(this.batchId),
                 this.note
         };
         qb.target("db/InventoryUpdateLog").values(values).create(this.logID);
     }
 
-    public static void logItemUpdate(String itemId, int prevQty, int newQty, int userId, String note, boolean verified) throws Exception {
+    public static void logItemUpdate(String itemId, int prevQty, int newQty, String userID, String note, boolean verified) throws Exception {
         String batchID = IDGenerator.generateBatchID();
         Batch batch = new Batch(batchID, LocalDateTime.now(), verified);
         batch.createBatch();
-        InventoryUpdateLog log = new InventoryUpdateLog(IDGenerator.generateLogID(), itemId, prevQty, newQty, userId, batchID, note);
+        InventoryUpdateLog log = new InventoryUpdateLog(IDGenerator.generateLogID(), itemId, prevQty, newQty, userID, batchID, note);
         log.saveLog();
     }
 

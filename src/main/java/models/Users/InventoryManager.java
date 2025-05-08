@@ -29,13 +29,4 @@ public class InventoryManager extends User{
     public void setAssignedWarehouse(String assignedWarehouse) {
         this.assignedWarehouse = assignedWarehouse;
     }
-
-    @Override
-    public String toString() {
-        return "InventoryManager{" +
-                "username='" + getName() + '\'' +
-                "managerCode='" + managerCode + '\'' +
-                ", assignedWarehouse='" + assignedWarehouse + '\'' +
-                '}';
-    }
 }

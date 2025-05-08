@@ -34,7 +34,7 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
-        
+
     }
 
     public static void main(String[] args) {
@@ -51,3 +51,5 @@ public class MainApplication extends Application {
 //        }
     }
 }
+
+

@@ -57,7 +57,7 @@ public class UpdateInventoryController {
     public void initialize() {
         SessionManager session = SessionManager.getInstance();
         HashMap<String, String> userData = session.getUserData();
-        int currentUserID = Integer.parseInt(userData.get("user_id"));
+        String currentUserID = userData.get("userID");
 
         btnIncrease.setOnMouseClicked(e -> incrementStock());
         btnDecrease.setOnMouseClicked(e -> decrementStock());
@@ -108,10 +108,16 @@ public class UpdateInventoryController {
         this.refreshCallback = callback;
     }
 
-    public void updateInventoryItem(int currentUserID) throws Exception {
+    public void updateInventoryItem(String currentUserID) throws Exception {
         try{
             int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
             stockNum = Integer.parseInt(txtNum.getText());
+
+            if(stockNum < 0) {
+                NotificationView notificationView = new NotificationView("Enter value more than 0", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+                notificationView.show();
+                return;
+            }
 
             QueryBuilder<Item> qb = new QueryBuilder(Item.class);
             ArrayList<HashMap<String, String>> itemResult = qb.select().from("db/Item").where("itemID", "=", String.valueOf(item.getItemID())).get();
@@ -119,7 +125,7 @@ public class UpdateInventoryController {
             HashMap<String, String> fullItemMap = itemResult.get(0);
 
             double unitPrice = Double.parseDouble(fullItemMap.get("unitPrice"));
-            int supplierID = Integer.parseInt(fullItemMap.get("supplierID"));
+            String supplierID = fullItemMap.get("supplierID");
 
             InventoryUpdateLog.logItemUpdate(item.getItemID(), item.getQuantity(), stockNum, currentUserID, "Update Inventory Item", true);
 
@@ -130,7 +136,7 @@ public class UpdateInventoryController {
                     String.valueOf(newAlertLevel),
                     String.valueOf(stockNum),
                     String.format("%.2f", unitPrice),
-                    String.valueOf(supplierID),
+                    supplierID,
             };
 
             boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);

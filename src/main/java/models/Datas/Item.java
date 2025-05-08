@@ -18,7 +18,7 @@ public class Item implements ModelInitializable {
     private int alertSetting;
     private int quantity;
     private double unitPrice;
-    private int supplierID;
+    private String supplierID;
 
     public Item() {
     }
@@ -32,7 +32,7 @@ public class Item implements ModelInitializable {
         this.quantity = quantity;
     }
 
-    public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity, double unitPrice, int supplierID) {
+    public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity, double unitPrice, String supplierID) {
         this.itemID = itemID;
         this.itemName = itemName;
         this.createdAt = createdAt;
@@ -71,7 +71,7 @@ public class Item implements ModelInitializable {
         return unitPrice;
     }
 
-    public int getSupplierID() {
+    public String getSupplierID() {
         return supplierID;
     }
 
@@ -104,21 +104,8 @@ public class Item implements ModelInitializable {
         this.unitPrice = unitPrice;
     }
 
-    public void setSupplierID(int supplierID) {
+    public void setSupplierID(String supplierID) {
         this.supplierID = supplierID;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "itemID=" + itemID +
-                ", itemName='" + itemName + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", alertSetting='" + alertSetting + '\'' +
-                ", quantity=" + quantity +
-                ", supplierID=" + supplierID +
-                '}';
     }
 
     @Override
@@ -130,7 +117,7 @@ public class Item implements ModelInitializable {
         this.alertSetting = Integer.parseInt(data.get("alertSetting"));
         this.quantity = Integer.parseInt(data.get("quantity"));
         this.unitPrice = Double.parseDouble(data.get("unitPrice"));
-        this.supplierID = Integer.parseInt(data.get("supplierID"));
+        this.supplierID = data.get("supplierID");
 
     }
 
@@ -147,13 +134,13 @@ public class Item implements ModelInitializable {
         ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
 
         for (HashMap<String, String> itemData : items) {
-            int supplierID = Integer.parseInt(itemData.get("supplierID"));
+            String supplierID = itemData.get("supplierID");
 
             ArrayList<HashMap<String, String>> supplierResult = Supplier.getSupplierNameById(supplierID);
             String companyName = "";
 
             if (!supplierResult.isEmpty()) {
-                companyName = supplierResult.get(0).get("companyName");
+                companyName = supplierResult.get(0).get("supplierName");
             }
 
             Item item = new Item(

@@ -45,11 +45,11 @@ public class Supplier implements ModelInitializable {
         return this.address;
     }
 
-	public static ArrayList<HashMap<String, String>> getSupplierNameById(int supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public static ArrayList<HashMap<String, String>> getSupplierNameById(String supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-        ArrayList<HashMap<String, String>> suppliers = qb.select(new String[]{"companyName"})
+        ArrayList<HashMap<String, String>> suppliers = qb.select(new String[]{"supplierName"})
                 .from("db/Supplier")
-                .where("supplierID", "=", String.valueOf(supplierID))
+                .where("supplierID", "=", supplierID)
 				.get();
 		return suppliers;
 }

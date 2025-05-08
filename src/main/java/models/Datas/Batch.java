@@ -3,13 +3,10 @@ package models.Datas;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
-import javax.management.Query;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 public class Batch implements ModelInitializable {
@@ -55,7 +52,6 @@ public class Batch implements ModelInitializable {
         QueryBuilder<Batch> qb = new QueryBuilder<>(Batch.class);
 
         String[] values = new String[]{
-//                this.batchID,
                 this.updatedDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 this.verified ? "Verified" : "Not verified"
         };

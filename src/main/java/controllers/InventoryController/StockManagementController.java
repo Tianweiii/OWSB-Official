@@ -128,7 +128,7 @@ public class StockManagementController implements Initializable {
         itemTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !itemTable.getSelectionModel().isEmpty()) {
                 Item selectedItem = itemTable.getSelectionModel().getSelectedItem();
-//                String selectedItemID = selectedItem.getItemID();
+
                 try {
                     loadUpdateDialog(selectedItem);
                 } catch (IOException e) {
@@ -187,11 +187,10 @@ public class StockManagementController implements Initializable {
         FilteredList<Item> searchData = new FilteredList<>(itemList, item -> {
             if (searchKeyword.isEmpty()) return true;
 
-            return String.valueOf(item.getItemID()).contains(searchKeyword) ||
+            return item.getItemID().toLowerCase().contains(searchKeyword) ||
                     item.getItemName().toLowerCase().contains(searchKeyword) ||
                     item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
                     item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
-                    String.valueOf(item.getAlertSetting()).contains(searchKeyword) ||
                     (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
         });
 

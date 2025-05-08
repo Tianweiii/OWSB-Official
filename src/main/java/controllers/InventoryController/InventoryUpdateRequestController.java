@@ -53,7 +53,7 @@ public class InventoryUpdateRequestController implements Initializable {
 
     SessionManager session = SessionManager.getInstance();
     HashMap<String, String> userData = session.getUserData();
-    int currentUserID = Integer.parseInt(userData.get("user_id"));
+    String currentUserID = userData.get("userID");
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -144,7 +144,7 @@ public class InventoryUpdateRequestController implements Initializable {
             try {
                 String itemID = inventoryUpdateRequestDTO.getItemID();
                 int quantity = inventoryUpdateRequestDTO.getQuantity();
-                int userID = inventoryUpdateRequestDTO.getUserID();
+                String userID = inventoryUpdateRequestDTO.getUserID();
 
                 QueryBuilder<Item> qbItem = new QueryBuilder<>(Item.class);
                 Item item = qbItem.select().from("db/Item.txt").getAsObjects().stream()

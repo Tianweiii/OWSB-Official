@@ -3,17 +3,13 @@ package models.Datas;
 import models.DTO.InventoryUpdateRequestDTO;
 import models.ModelInitializable;
 import models.Users.User;
-import models.Utils.QueryBuilder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InventoryUpdateRequest implements ModelInitializable {
     private String inventoryUpdateRequestID;
     private String itemID;
-    private int userID;
+    private String userID;
     private int quantity;
     private String status;
 
@@ -21,7 +17,7 @@ public class InventoryUpdateRequest implements ModelInitializable {
 
     }
 
-    public InventoryUpdateRequest(String inventoryUpdateRequestID, String itemID, int userID, int quantity, String status) {
+    public InventoryUpdateRequest(String inventoryUpdateRequestID, String itemID, String userID, int quantity, String status) {
         this.inventoryUpdateRequestID = inventoryUpdateRequestID;
         this.itemID = itemID;
         this.userID = userID;
@@ -37,7 +33,7 @@ public class InventoryUpdateRequest implements ModelInitializable {
         return itemID;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
@@ -57,7 +53,7 @@ public class InventoryUpdateRequest implements ModelInitializable {
         this.itemID = itemID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -73,7 +69,7 @@ public class InventoryUpdateRequest implements ModelInitializable {
     public void initialize(HashMap<String, String> data) {
         this.inventoryUpdateRequestID = data.get("inventoryUpdateRequestID");
         this.itemID = data.get("itemID");
-        this.userID = Integer.parseInt(data.get("userID"));
+        this.userID = data.get("userID");
         this.quantity = Integer.parseInt(data.get("quantity"));
         this.status = data.get("status");
     }

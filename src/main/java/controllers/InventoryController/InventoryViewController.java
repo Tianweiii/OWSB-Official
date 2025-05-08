@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import models.Datas.InventoryUpdateLog;
 import models.Datas.Item;
+import models.Datas.PurchaseOrder;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -73,7 +74,11 @@ public class InventoryViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        loadPendingPurchaseOrders();
+        try {
+            loadPendingPurchaseOrders();
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         btnGenerateReport.setOnAction(e -> generateStockReport());
     }
@@ -131,8 +136,39 @@ public class InventoryViewController implements Initializable {
         lowStockItems.setPadding(new Insets(10));
     }
 
-    private void loadPendingPurchaseOrders() {
+    private void loadPendingPurchaseOrders() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         pendingPurchaseOrder.getChildren().clear();
+
+        QueryBuilder<PurchaseOrder> qb = new QueryBuilder<>(PurchaseOrder.class);
+        String[] cols = new String[]{"prOrderID", "POStatus"};
+        ArrayList<HashMap<String, String>> POList = qb.select(cols).from("db/PurchaseOrder").get();
+        List<HashMap<String, String>> sortedPO = POList.stream()
+                .filter(po -> !po.get("POStatus").isEmpty() && po.get("POStatus").equalsIgnoreCase("Approved"))
+                .toList();
+
+        for (HashMap<String, String> po : POList) {
+            if (!po.get("POStatus").isEmpty() && po.get("POStatus").equalsIgnoreCase("Approved")) {
+                VBox tile = new VBox();
+                tile.setPadding(new Insets(10, 10, 10, 10));
+                tile.setSpacing(5);
+                tile.setStyle(
+                        "-fx-background-color: #D7F8D7;" +
+                                "-fx-background-radius: 10;" +
+                                "-fx-border-radius: 10;" +
+                                "-fx-border-color: #C2F5C2;" +
+                                "-fx-border-width: 1;" +
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);"
+                );
+
+                Label nameLabel = new Label(po.get("prOrderID") + " " + po.get("POStatus"));
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                tile.getChildren().addAll(nameLabel);
+                pendingPurchaseOrder.getChildren().add(tile);
+                pendingPurchaseOrder.setSpacing(10);
+                pendingPurchaseOrder.setPadding(new Insets(10));
+            }
+        }
     }
 
     private void loadRecentStockUpdates(ArrayList<HashMap<String, String>> itemList) {

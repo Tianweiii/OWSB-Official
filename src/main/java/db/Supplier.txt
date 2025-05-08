@@ -1,15 +1,20 @@
-301,ToolMaster Inc.,555-123-4567,123 Industrial Park, Springfield
-302,ProTools Co.,555-234-5678,456 Builder's Lane, Rivertown
-303,Global Hardware,555-345-6789,789 Commerce Street, Hill Valley
-304,Quality Supplies,555-456-7890,321 Trade Avenue, Lakeside
-305,Precision Tools,555-567-8901,654 Workshop Road, Mountain View
-306,Reliable Equipment,555-678-9012,987 Factory Drive, Ocean City
-307,Industrial Gear,555-789-0123,159 Warehouse Blvd, Pine Grove
-308,Safety First Ltd.,555-890-1234,753 Protection Way, Sunnyvale
-309,Construct Pro,555-901-2345,486 Building Circle, Woodland
-310,All-Tools LLC,555-012-3456,624 Hardware Street, Greenfield
-311,Power Equipment,555-123-4560,135 Electric Avenue, Rockville
-312,Handy Supplies,555-234-5671,246 Grip Lane, Stonebridge
-313,Tech Tools,555-345-6782,357 Innovation Road, Fairview
-314,Paint & More,555-456-7893,468 Color Street, Brushwood
-315,Lighting Solutions,555-567-8904,579 Bright Way, Beacon Hill
+SP1,Ahmad Supplies,Bumi Trading Sdn Bhd,0123456789,45 Jalan Tun Razak, Kuala Lumpur
+SP2,Lee Hardware,Lee Enterprise Sdn Bhd,0138765432,12 Jalan Ampang, Kuala Lumpur
+SP3,Ravi Distributors,Ravi & Sons Sdn Bhd,0172233445,89 Jalan Tebrau, Johor Bahru
+SP4,Lim Industrial,Lim Engineering Sdn Bhd,0199988776,23 Jalan Dato Onn, Ipoh
+SP5,Muhammad Supplies,Southeast Ventures,0123456789,45 Jalan Ampang Kuala Lumpur 50450
+SP6,Elite Mart Supplies,Elite Distribution,0198765432,12 Jalan Tun Razak Kuala Lumpur 50400
+SP7,Supplier Hub,Borneo Traders,0134455667,88 Jalan Bukit Bintang Kuala Lumpur 55100
+SP8,Asia Pacific Goods,Dynamic Resources,0143344556,27 Lorong Merdeka Shah Alam 40000
+SP9,Kota Supply Co,Eastside Logistics,0167788990,90 Jalan Gasing Petaling Jaya 46000
+SP10,GlobalMart Sdn Bhd,Global Commerce,0112233445,11 Jalan Raja Chulan Kuala Lumpur 50200
+SP11,Tropics Distributors,Tropics Ventures,0121122334,76 Jalan Klang Lama Kuala Lumpur 58000
+SP12,Sabah Supply House,Kinabalu Industries,0189988776,33 Jalan Pantai Kota Kinabalu 88000
+SP13,Penang Traders,Bayan Logistics,0176655443,100 Jalan Burma George Town 10050
+SP14,Central Suppliers,MidCity Group,0139988776,21 Jalan Kuching Kuala Lumpur 51200
+SP15,Southlink Supply,Southern Connect,0148877665,62 Jalan Skudai Johor Bahru 80200
+SP16,BizLink Supplies,Techno Holdings,0127766554,40 Jalan Sultan Ismail Kuala Lumpur 50250
+SP17,Trusted Source,Trust Capital,0163344556,29 Jalan Ipoh Kuala Lumpur 51200
+SP18,Pacific Distributors,Pacific Group,0194433221,58 Jalan Tun Perak Kuala Lumpur 50050
+SP19,Selatan Trading,Selatan Enterprise,0178899001,15 Jalan Tebrau Johor Bahru 80300
+SP20,North Supply Co,Utara Business Hub,0183344557,70 Jalan Alor Setar Alor Setar 05100

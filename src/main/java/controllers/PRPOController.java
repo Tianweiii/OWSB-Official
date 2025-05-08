@@ -10,7 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import models.Abstract.*;
 import models.Utils.SessionManager;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class PRPOController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Get user role info
         SessionManager session = SessionManager.getInstance();
-        String user_role = session.getUserData().get("role_id");
+        String user_role = session.getUserData().get("roleID");
 
         // Hide the PR/PO Tab based on role:
             // Admin & Sales & Purchase = show both PR & PO Tab
@@ -75,20 +74,6 @@ public class PRPOController implements Initializable {
                 Parent boxPane = loader.load();
 
                 PRPOBoxController boxController = loader.getController();
-//                PRPOAbstractHandler handler = null;
-//                switch (user_role) {
-//                    case "1":
-//                        handler = new SalesManagerPRPOHandler(boxController);
-//                        break;
-//                    case "2":
-//                        handler = new SalesManagerPRPOHandler(boxController);
-//                        break;
-//                    case "3":
-//                        handler = new PurchaseManagerPRPOHandler(boxController);
-//                        break;
-//                }
-//
-//                handler.setUpView();
 
                 if(i < 6){
                     boxController.setBoxStatus("pending");
@@ -113,24 +98,6 @@ public class PRPOController implements Initializable {
                 PRPOBoxController boxController = loader.getController();
                 boxController.setBoxStatus("pending");
                 boxController.setPOData();
-
-//                PRPOAbstractHandler handler = null;
-//                switch (user_role) {
-//                    case "2":
-//                        handler = new SalesManagerPRPOHandler(boxController);
-//                        break;
-//                    case "3":
-//                        handler = new PurchaseManagerPRPOHandler(boxController);
-//                        break;
-//                    case "4":
-//                        handler = new InventoryPRPOHandler(boxController);
-//                        break;
-//                    case "5":
-//                        handler = new FinancePRPOHandler(boxController);
-//                        break;
-//                }
-//
-//                handler.setUpView();
 
                 po_list_container.getChildren().add(boxPane);
             } catch (IOException e) {

@@ -14,14 +14,14 @@ public class InventoryUpdateRequestDTO {
     private String itemID;
     private String itemName;
     private int quantity;
-    private int userID;
+    private String userID;
     private String userName;
     private String status;
 
     public InventoryUpdateRequestDTO() {}
 
     public InventoryUpdateRequestDTO(String inventoryUpdateRequestID, String itemID, String itemName,
-                                     int quantity, int userID, String userName, String status) {
+                                     int quantity, String userID, String userName, String status) {
         this.inventoryUpdateRequestID = inventoryUpdateRequestID;
         this.itemID = itemID;
         this.itemName = itemName;
@@ -47,7 +47,7 @@ public class InventoryUpdateRequestDTO {
         return quantity;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
@@ -75,7 +75,7 @@ public class InventoryUpdateRequestDTO {
         this.quantity = quantity;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -99,7 +99,7 @@ public class InventoryUpdateRequestDTO {
         QueryBuilder<Item> qbItem = new QueryBuilder<>(Item.class);
         List<Item> items = qbItem.select().from("db/Item.txt").getAsObjects();
 
-        HashMap<Integer, User> userMapping = new HashMap<>();
+        HashMap<String, User> userMapping = new HashMap<>();
         for (User user : users) {
             userMapping.put(user.getId(), user);
         }
