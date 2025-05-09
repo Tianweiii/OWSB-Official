@@ -24,30 +24,6 @@ public class Batch implements ModelInitializable {
         this.verified = verified;
     }
 
-    public String getBatchID() {
-        return batchID;
-    }
-
-    public LocalDateTime getUpdatedDatetime() {
-        return updatedDatetime;
-    }
-
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public void setBatchID(String batchID) {
-        this.batchID = batchID;
-    }
-
-    public void setUpdatedDatetime(LocalDateTime updatedDatetime) {
-        this.updatedDatetime = updatedDatetime;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
     public void createBatch() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
         QueryBuilder<Batch> qb = new QueryBuilder<>(Batch.class);
 
@@ -60,6 +36,8 @@ public class Batch implements ModelInitializable {
 
     @Override
     public void initialize(HashMap<String, String> data) {
-
+        this.batchID = data.get("batchID");
+        this.updatedDatetime = LocalDateTime.parse(data.get("updatedDatetime"));
+        this.verified = data.get("verified").equals("Verified");
     }
 }

@@ -33,46 +33,6 @@ public class InventoryUpdateLog implements ModelInitializable {
         this.note = note;
     }
 
-    public String getLogId() {
-        return logID;
-    }
-
-    public String getItemId() {
-        return itemID;
-    }
-
-    public int getPrevQuantity() {
-        return prevQuantity;
-    }
-
-    public int getNewQuantity() {
-        return newQuantity;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public String getBatchId() {
-        return batchId;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setPrevQuantity(int prevQuantity) {
-        this.prevQuantity = prevQuantity;
-    }
-
-    public void setNewQuantity(int newQuantity) {
-        this.newQuantity = newQuantity;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public static ArrayList<HashMap<String, String>> getInventoryUpdateLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<InventoryUpdateLog> qb = new QueryBuilder<>(InventoryUpdateLog.class);
         return qb.select().from("db/InventoryUpdateLog").get();

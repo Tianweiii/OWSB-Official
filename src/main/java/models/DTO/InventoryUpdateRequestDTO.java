@@ -18,8 +18,6 @@ public class InventoryUpdateRequestDTO {
     private String userName;
     private String status;
 
-    public InventoryUpdateRequestDTO() {}
-
     public InventoryUpdateRequestDTO(String inventoryUpdateRequestID, String itemID, String itemName,
                                      int quantity, String userID, String userName, String status) {
         this.inventoryUpdateRequestID = inventoryUpdateRequestID;
