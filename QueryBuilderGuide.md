@@ -119,3 +119,8 @@ The `delete()`method takes the target ID.
 QueryBuilder<YourModel> qb = new QueryBuilder(YourModel.class);
 boolean res = qb.target("db/fileName").delete("9");
 ```
+
+## License
+© 2025 Too Tze Jiat. All rights reserved.
+
+This repository contains proprietary code. No license is granted to use, copy, modify, or distribute this software without explicit written permission.

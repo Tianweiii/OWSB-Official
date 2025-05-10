@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025 Too Tze Jiat
+ * All Rights Reserved.
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited.
+ */
+
 package models.Utils;
 
 import models.ModelInitializable;
