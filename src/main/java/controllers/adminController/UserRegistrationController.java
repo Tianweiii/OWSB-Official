@@ -1,5 +1,6 @@
-package controllers;
+package controllers.adminController;
 
+import controllers.NotificationController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

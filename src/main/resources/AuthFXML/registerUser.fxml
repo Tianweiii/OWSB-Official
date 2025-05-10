@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserRegistrationController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminController.UserRegistrationController">
    <children>
       <VBox alignment="CENTER" layoutX="188.0" prefHeight="400.0" prefWidth="224.0" AnchorPane.leftAnchor="188.0" AnchorPane.rightAnchor="188.0">
          <children>
