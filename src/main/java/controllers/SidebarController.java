@@ -3,22 +3,29 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import models.Utils.Navigator;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
 import routes.Router;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import static java.lang.Integer.MAX_VALUE;
 
 public class SidebarController implements Initializable {
 
 	private String[] sidebarItems;
+	private final ArrayList<Button> sidebarButtons = new ArrayList<>();
 	private String sidebarType;
 	@FXML
 	private GridPane sidebarGrid;
@@ -37,16 +44,27 @@ public class SidebarController implements Initializable {
 		String[] routerPaths = router.getRoutePaths();
 
 		for(int i = 0; i < sidebarItems.length; i++) {
+			HBox hBox = new HBox();
 			Button button = new Button(sidebarItems[i]);
+			button.setAlignment(Pos.CENTER_LEFT);
 			button.setPadding(new Insets(5, 5, 5, 15));
 			button.setBackground(null);
+			button.setMaxWidth(MAX_VALUE);
+			HBox.setHgrow(button, Priority.ALWAYS);
 
+			hBox.getChildren().add(button);
+			sidebarButtons.add(button);
 			int finalI = i;
 			button.setOnAction((actionEvent) -> {
+				sidebarButtons.forEach(button1 -> {
+					button1.setBackground(null);
+					button1.setStyle("-fx-text-fill: black; -fx-font-weight: normal;");
+				});
+				button.setStyle("-fx-background-color: #CFDBF0; -fx-text-fill: #092165; -fx-font-weight: bold;");
 				navigator.navigate(router.getRoute(routerPaths[finalI]));
 			});
 
-			sidebarGrid.add(button, 0, i);
+			sidebarGrid.add(hBox, 0, i);
 		}
 
 		SessionManager session = SessionManager.getInstance();
@@ -68,5 +86,10 @@ public class SidebarController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+
+	}
+
+	public void highlightHomeButton() {
+		sidebarButtons.get(0).setStyle("-fx-background-color: #CFDBF0; -fx-text-fill: #092165; -fx-font-weight: bold;");
 	}
 }

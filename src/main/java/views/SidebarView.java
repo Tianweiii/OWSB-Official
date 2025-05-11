@@ -23,6 +23,7 @@ public class SidebarView implements View{
 		SidebarController ctrlPointer = sidebar.getController();
 		ctrlPointer.setSidebarItems(sidebarType, sidebarItems);
 		ctrlPointer.setText();
+		ctrlPointer.highlightHomeButton();
 	}
 
 	public Parent getView() {

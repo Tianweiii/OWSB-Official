@@ -1,4 +1,4 @@
-package controllers;
+package controllers.adminController;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -9,34 +9,36 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import models.Datas.Role;
 import models.ModelInitializable;
+import models.Users.User;
 import models.Utils.Helper;
+import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
-import views.Command;
 import views.CustomTableView;
+import views.adminViews.DeleteUserView;
+import views.adminViews.EditUserView;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CustomTableViewController implements Initializable {
-	private static Command command;
-	private Class<? extends ModelInitializable> model;
+public class UserListController implements Initializable {
 	private String[] columns;
 	@FXML private AnchorPane rootPane;
 	@FXML private ComboBox<String> filterComboBox;
 	@FXML private TextField searchField;
 	@FXML private Button btnSearch;
 	@FXML private Button btnClear;
-	@FXML private Button addItemButton;
-	@FXML private Label titleLabel;
+	@FXML private Button addUserButton;
 	@FXML private TableView<HashMap<String, String>> tableView;
 
 	@FXML
-	public void onAddItemButtonClicked() throws IOException {
-		command.openModal();
+	public void onAddUserButtonClicked() throws IOException {
+		Navigator navigator = Navigator.getInstance();
+		navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 	}
 
 	@FXML
@@ -69,6 +71,7 @@ public class CustomTableViewController implements Initializable {
 		ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 		oListItems.addAll(getLatestData());
 		tableView.setItems(oListItems);
+		tableView.refresh();
 		searchField.setText("");
 	}
 
@@ -91,13 +94,11 @@ public class CustomTableViewController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
-			this.model = CustomTableView.getModel();
-			this.titleLabel.setText(CustomTableView.getLabelText());
 			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 
 			oListItems.addAll(getLatestData());
 
-			this.columns = CustomTableView.getColumns();
+			this.columns = new String[]{"User ID", "Username", "Email", "Position", "Age"};
 			List<String> columnNames = List.of(this.columns);
 
 			this.tableView.setRowFactory(tv -> new TableRow<>());
@@ -116,33 +117,19 @@ public class CustomTableViewController implements Initializable {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
-		SessionManager sessionManager = SessionManager.getInstance();
-		String roleID = sessionManager.getUserData().get("roleID");
-		this.addItemButton.setVisible(roleID.equals("1") || roleID.equals("2"));
 	}
 
 	public TableView<HashMap<String, String>> getTableView() { return this.tableView; }
 
-	public static void setCommand(Command command) { CustomTableViewController.command = command; }
-
-	public static Command getCommand() { return CustomTableViewController.command; }
-
-	public CustomTableViewController getInstance() { return this; }
-
 	private ObservableList<HashMap<String, String>> getLatestData() {
 		ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
 		try {
-			QueryBuilder<?> qb = new QueryBuilder<>(model);
-			String className = model.getSimpleName();
-			if (!CustomTableView.getJoins().isEmpty()) {
-				for (Class<? extends ModelInitializable> join: CustomTableView.getJoins()) {
-					qb.joins(join, CustomTableView.getJoinKeys().get(CustomTableView.getJoins().indexOf(join)));
-				}
-			}
+			QueryBuilder<User> qb = new QueryBuilder<>(User.class);
+			String className = qb.getClassName();
 			oListItems.addAll(qb
 					.select()
 					.from("db/" + className + ".txt")
+					.joins(Role.class, "roleID")
 					.get());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -194,10 +181,20 @@ public class CustomTableViewController implements Initializable {
 	}
 
 	private void handleEdit(HashMap<String, String> data) throws IOException {
-		CustomTableViewController.command.openEditModal(data);
+		EditUserView.setData(data);
+
+		EditUserView editUserView = new EditUserView(this);
+		editUserView.show();
 	}
 
 	private void handleDelete(HashMap<String, String> data) throws IOException {
-		CustomTableViewController.command.openDeleteModal(data);
+		DeleteUserView.setData(data);
+
+		DeleteUserView deleteUserView = new DeleteUserView(this);
+		deleteUserView.show();
+	}
+
+	public AnchorPane getRootPane() {
+		return this.rootPane;
 	}
 }

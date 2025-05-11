@@ -6,6 +6,7 @@ import routes.Router;
 import views.LoginView;
 import views.PRPOView;
 import views.UserRegistrationView;
+import views.adminViews.UserListView;
 import views.salesViews.ItemListView;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class Navigator {
 		// Ensure routes are the same order as labels in the sidebar
 		// Admin
 		adminRouter.addRoute("register", UserRegistrationView.class);
-//		adminRouter.addRoute("EEEE", SidebarView.class);
+		adminRouter.addRoute("user-list", UserListView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager

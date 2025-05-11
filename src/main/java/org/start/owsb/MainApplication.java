@@ -1,26 +1,13 @@
 package org.start.owsb;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Datas.Item;
 
-import models.Datas.Role;
-import models.Datas.Supplier;
-import models.Users.User;
 import models.Utils.Navigator;
-import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
-import views.CustomTableView;
-import views.UserRegistrationView;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainApplication extends Application {
     @Override

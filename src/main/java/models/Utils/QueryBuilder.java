@@ -598,7 +598,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 				if (latestIdString.matches("[0-9]+")) {
 					latestId = allLines.isEmpty() ? 1 : Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
 				} else {
-					latestId = Integer.parseInt(Helper.extractNumber(latestIdString)+1);
+					latestId = Integer.parseInt(Helper.extractNumber(latestIdString))+1;
 				}
 				idToUse = customId + latestId;
 			} else {

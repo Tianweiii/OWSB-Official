@@ -41,7 +41,7 @@ public class LoginController implements Initializable {
 				superUser.put("password", SUPERUSER_PASSWORD);
 				superUser.put("roleName", "Admin");
 				session.setUserData(superUser);
-				layout.initSidebar("admin", new String[]{"Register"});
+				layout.initSidebar("admin", new String[]{"Register, User Management"});
 				// Navigate to dashboard
 				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 
@@ -68,7 +68,7 @@ public class LoginController implements Initializable {
 
 				switch (data.get(0).get("roleID")) {
 					case "1":
-						layout.initSidebar("admin", new String[]{"Register"});
+						layout.initSidebar("admin", new String[]{"Register", "User Management"});
 						// Navigate to dashboard
 						FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
 						navigator.navigate(test.load());
