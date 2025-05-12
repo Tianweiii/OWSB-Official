@@ -14,17 +14,6 @@ public class Supplier implements ModelInitializable {
     private String phoneNumber;
     private String address;
 
-    public Supplier() {
-
-    }
-
-    public Supplier(String supplierID, String companyName, String phoneNumber, String address) {
-        this.supplierID = supplierID;
-        this.company = companyName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
-
     public String getSupplierId() {
         return supplierID;
     }
