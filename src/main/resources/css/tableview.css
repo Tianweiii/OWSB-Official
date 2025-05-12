@@ -16,7 +16,7 @@
 .table-view .column-header .label {
     -fx-text-fill: #092165;
     -fx-font-weight: bold;
-    -fx-font-size: 20;
+    -fx-font-size: 16;
     -fx-font-family: "Poppins";
     -fx-padding: 20px 20px;
 }

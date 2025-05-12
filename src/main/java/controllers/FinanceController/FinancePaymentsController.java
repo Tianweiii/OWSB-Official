@@ -53,7 +53,6 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
 
     ObservableList<PurchaseOrder> getAllVerifiedPO() throws IOException, ReflectiveOperationException {
         ArrayList<PurchaseOrder> POs = FileIO.getIDsAsObjects(PurchaseOrder.class, "PurchaseOrder", "verified", 5);
-        System.out.println(POs);
         return FXCollections.observableArrayList(POs);
     }
 

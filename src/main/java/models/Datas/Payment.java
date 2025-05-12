@@ -54,6 +54,16 @@ public class Payment implements ModelInitializable {
 
 	public Payment() {}
 
+	public Payment(String[] data) {
+		paymentID = data[0];
+		PO_ID = data[1];
+		userID = data[2];
+		amount = Double.parseDouble(data[3]);
+		paymentMethod = data[4];
+		createdAt = data[5];
+		paymentReference = data[6];
+	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		paymentID = data.get("paymentID") != null ? data.get("paymentID") : "";

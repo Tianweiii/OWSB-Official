@@ -1,7 +1,6 @@
 package controllers.FinanceController;
 
 import controllers.NotificationController;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

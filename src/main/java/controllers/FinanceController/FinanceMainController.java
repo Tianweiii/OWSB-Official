@@ -143,6 +143,14 @@ public class FinanceMainController implements Initializable {
                         PaymentSuccessController paymentSuccessController = loader.getController();
                         paymentSuccessController.setMainController(this);
                     }
+                    case "FinanceReport.fxml" -> {
+                        FinanceReportController controller = loader.getController();
+                        controller.setMainController(this);
+                    }
+                    case "ViewAllPayments.fxml" -> {
+                        ViewAllPaymentsController controller = loader.getController();
+                        controller.setMainController(this);
+                    }
                 }
 
             } catch (IOException e) {
@@ -237,6 +245,10 @@ public class FinanceMainController implements Initializable {
 
     public void goToPaymentSuccess() {
         loadPage("PaymentSuccess.fxml", false);
+    }
+
+    public void viewAllPayments() {
+        loadPage("ViewAllPayments.fxml", false);
     }
 
     public void goBack() {

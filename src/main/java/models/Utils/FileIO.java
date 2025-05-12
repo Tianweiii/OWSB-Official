@@ -1,9 +1,11 @@
 package models.Utils;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class FileIO {
@@ -127,5 +129,30 @@ public class FileIO {
             }
         }
         return "";
+    }
+
+    public static <T> ArrayList<T> getObjectsFromXLines(Class<T> classname, String filenameWithoutTXT, int lines) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        ArrayList<T> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (int i = 0; i < lines + 1; i++) {
+                String line = br.readLine();
+                String[] parts = line.split(",");
+                Constructor<T> constructor = classname.getConstructor(String[].class);
+                list.add(constructor.newInstance((Object) parts));
+            }
+        }
+        return list;
+    }
+
+    public static <T> ArrayList<T> getAllLines(Class<T> classname, String filenameWithoutTXT) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        ArrayList<T> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                String[] parts = line.split(",");
+                Constructor<T> constructor = classname.getConstructor(String[].class);
+                list.add(constructor.newInstance((Object) parts));
+            }
+        }
+        return list;
     }
 }
