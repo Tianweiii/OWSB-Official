@@ -6,11 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.DTO.TransactionDTO;
-import models.Datas.Item;
+import models.Datas.*;
 
-import models.Datas.Payment;
-import models.Datas.PaymentCard;
-import models.Datas.Role;
 import models.Users.FinanceManager;
 import models.Users.User;
 import models.Utils.FileIO;
@@ -45,35 +42,11 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) throws IOException, ReflectiveOperationException {
-//        FinanceManager fm = new FinanceManager("")
+//        QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
+//        ArrayList<PurchaseRequisition> PRs = qb.select().from("db/PurchaseRequisition").getAsObjects();
+//        System.out.println(PRs.get(0).getUserID());
         FinanceManager fm = FileIO.getIDsAsObject(FinanceManager.class, "User", "US13");
         SessionManager.setFinanceManagerData(fm);
         launch();
-//        System.out.println(TransactionDTO.getBasicSupplierDetails());
-//        Payment payment = new Payment("Credit Card", 1000, "PO10", "US10");
-//        System.out.println(payment.getPurchaseItemList());
-//        try {
-//            QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
-//            ArrayList<PaymentCard> res = qb.select().from("db/PaymentCard").getAsObjects();
-//            System.out.println(res);
-//        } catch (NoSuchMethodException e) {
-//            throw new RuntimeException(e);
-//        } catch (InvocationTargetException e) {
-//            throw new RuntimeException(e);
-//        } catch (InstantiationException e) {
-//            throw new RuntimeException(e);
-//        } catch (IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//        try {
-//            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-////            qb.target("db/Item.txt").delete("11");
-//            HashMap<String, String> newdata = new HashMap<>();
-//            newdata.put("item_name", "testingg");
-//            qb.target("db/Item.txt").update("1", newdata);
-//            qb.target("db/Item.txt").update("2", new String[]{"ddjadjasid","2025-04-27","2025-04-27","1","1099","1"});
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
     }
 }

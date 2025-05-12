@@ -14,7 +14,7 @@
             <Font name="Baloo 2 Medium" size="32.0" />
          </font>
       </Text>
-      <TableView prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
+      <TableView fx:id="PRTable" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="PR_IDField" prefWidth="123.59419250488281" text="PR_ID" />
           <TableColumn fx:id="userField" prefWidth="267.0020294189453" text="User" />

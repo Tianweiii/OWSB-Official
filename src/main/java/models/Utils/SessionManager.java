@@ -1,6 +1,7 @@
 package models.Utils;
 
 import models.Datas.PurchaseOrder;
+import models.Datas.PurchaseRequisition;
 import models.Users.FinanceManager;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class SessionManager {
 	// all temp static, for static, will change to non after binding
 	private static FinanceManager financeManagerData;
 	private static PurchaseOrder paymentPurchaseOrder;
+	private static PurchaseRequisition purchaseRequisition;
 
 	public static SessionManager getInstance() {
 		if (instance == null) {
@@ -41,4 +43,10 @@ public class SessionManager {
 	}
 
 	public static PurchaseOrder getCurrentPaymentPO() { return paymentPurchaseOrder; }
+
+	public static void setCurrentPR(PurchaseRequisition pr) {
+		purchaseRequisition = pr;
+	}
+
+	public static PurchaseRequisition getPurchaseRequisition() { return purchaseRequisition; }
 }

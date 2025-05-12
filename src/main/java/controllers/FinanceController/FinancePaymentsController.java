@@ -51,10 +51,6 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
         mainController = controller;
     }
 
-    public void onPressMakePayment() {
-        mainController.onPressPayment();
-    }
-
     ObservableList<PurchaseOrder> getAllVerifiedPO() throws IOException, ReflectiveOperationException {
         ArrayList<PurchaseOrder> POs = FileIO.getIDsAsObjects(PurchaseOrder.class, "PurchaseOrder", "verified", 5);
         System.out.println(POs);
@@ -82,6 +78,7 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
                     });
                 }
 
+                // idk why this is needed, if removed then button wont show
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
@@ -97,7 +94,6 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
 
     private void fillTable(ObservableList<PurchaseOrder> list) {
         POTable.setItems(list);
-        System.out.println("Table is filled");
     }
 
     public void onPressRow(MouseEvent e) {

@@ -116,4 +116,16 @@ public class FileIO {
         System.out.println("No data found.");
         return null;
     }
+
+    public static String getXFromID(String filenameWithoutTXT, int columnToCheck, int columnToGet, String targetID) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                String[] parts = line.split(",");
+                if (parts[columnToCheck].trim().equals(targetID)) {
+                    return parts[columnToGet];
+                }
+            }
+        }
+        return "";
+    }
 }

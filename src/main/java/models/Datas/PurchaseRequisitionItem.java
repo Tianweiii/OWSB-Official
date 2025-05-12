@@ -17,4 +17,6 @@ public class PurchaseRequisitionItem implements ModelInitializable {
 		this.pr_requisition_id = Integer.parseInt(data.get("pr_requisition_id"));
 		this.item_id = Integer.parseInt(data.get("item_id"));
 	}
+
+	public PurchaseRequisitionItem() {}
 }

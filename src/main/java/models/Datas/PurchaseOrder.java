@@ -90,11 +90,12 @@ public class PurchaseOrder implements ModelInitializable {
 
 		for (Item i : items) {
 			String supplierID = i.getSupplierID();
+			String itemName = FileIO.getXFromID("Item", 0, 1, i.getItemID());
 			String itemID = i.getItemID();
 			int quantity = Integer.parseInt(itemAndQuantity.get(itemID));
 			double amount = quantity * i.getUnitPrice();
 
-			PaymentDTO payment = new PaymentDTO(PO_ID, amount, itemID);
+			PaymentDTO payment = new PaymentDTO(PO_ID, itemName, amount, itemID, quantity);
 
 			// Group by supplier ID
 			payments.computeIfAbsent(supplierID, k -> new ArrayList<>()).add(payment);

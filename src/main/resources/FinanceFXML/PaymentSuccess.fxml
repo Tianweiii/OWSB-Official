@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox alignment="CENTER" fillWidth="false" prefHeight="1000.0" prefWidth="1185.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.PaymentSuccessController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="800.0" prefWidth="650.0" spacing="30.0" style="-fx-background-color: white;">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0">
+               <image>
+                  <Image url="@../assets/images/check.png" />
+               </image>
+            </ImageView>
+            <Text fill="#11bf08" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Successful">
+               <font>
+                  <Font name="Baloo 2 Medium" size="32.0" />
+               </font>
+            </Text>
+            <VBox prefWidth="608.0" spacing="15.0">
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Type">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Credit Card">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient Name">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Mobile">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mobile">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Amount Paid">
+                           <font>
+                              <Font name="Baloo 2 SemiBold" size="28.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM 99999">
+                           <font>
+                              <Font name="Baloo 2 SemiBold" size="28.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Reference">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PY123456789">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="608.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" onMouseClicked="#pressPrintReceipt" prefHeight="64.0" prefWidth="150.0" style="-fx-background-color: #1E3A8A;">
+                     <children>
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Send Receipt">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" onMouseClicked="#onPressBackToHome" prefHeight="200.0" prefWidth="150.0" style="-fx-background-color: #1E3A8A;">
+                     <children>
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Back To Home">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</VBox>

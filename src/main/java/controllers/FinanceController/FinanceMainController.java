@@ -122,19 +122,31 @@ public class FinanceMainController implements Initializable {
 
 //                setAnchor("/FinanceFXML/" + fxmlFile);
 
-                if (fxmlFile.equals("FinancePayments.fxml")) {
-                    FinancePaymentsController paymentsController = loader.getController();
-                    paymentsController.setMainController(this);
-                    System.out.println("Main controller is set");
-                } else if (fxmlFile.equals("MakePayment.fxml")) {
-                    MakePaymentController idkController = loader.getController();
-                    idkController.setMainController(this);
+                switch (fxmlFile) {
+                    case "FinancePayments.fxml" -> {
+                        FinancePaymentsController paymentsController = loader.getController();
+                        paymentsController.setMainController(this);
+                    }
+                    case "MakePayment.fxml" -> {
+                        MakePaymentController idkController = loader.getController();
+                        idkController.setMainController(this);
+                    }
+                    case "FinancePR.fxml" -> {
+                        FinancePRController financePRController = loader.getController();
+                        financePRController.setMainController(this);
+                    }
+                    case "PRDetails.fxml" -> {
+                        PRDetailsController prDetailsController = loader.getController();
+                        prDetailsController.setMainController(this);
+                    }
+                    case "PaymentSuccess.fxml" -> {
+                        PaymentSuccessController paymentSuccessController = loader.getController();
+                        paymentSuccessController.setMainController(this);
+                    }
                 }
 
             } catch (IOException e) {
-                System.out.println("Main exception");
-                e.printStackTrace();
-                System.out.println(e.getMessage());
+                throw new RuntimeException(e);
             }
 
             PauseTransition pause = getPauseTransition();
@@ -157,28 +169,14 @@ public class FinanceMainController implements Initializable {
     }
 
     public void renderLoader() {
-//        Circle circle = new Circle(15, Color.TRANSPARENT);
-//        circle.setStroke(Color.DODGERBLUE);
-//        circle.setStrokeWidth(3);
-//        circle.getStrokeDashArray().addAll(15.0, 10.0);
-//
-//        RotateTransition rotate = new RotateTransition(Duration.seconds(1), circle);
-//        rotate.setByAngle(360);
-//        rotate.setCycleCount(Animation.INDEFINITE);
-//        rotate.play();
-//
-//        loaderPane.getChildren().add(circle);
-
         Group spinnerGroup = new Group();
 
-        // Main spinning circle
         Circle outerRing = new Circle(25, Color.TRANSPARENT);
         outerRing.setStroke(Color.DODGERBLUE);
         outerRing.setStrokeWidth(3);
         // Create a gap in the circle
         outerRing.getStrokeDashArray().addAll(90.0, 10.0);
 
-        // Add a subtle glow effect
         DropShadow glow = new DropShadow();
         glow.setColor(Color.rgb(70, 150, 255, 0.7));
         glow.setRadius(10);
@@ -186,7 +184,6 @@ public class FinanceMainController implements Initializable {
 
         spinnerGroup.getChildren().add(outerRing);
 
-        // Animate with a smooth rotation
         RotateTransition rotate = new RotateTransition(Duration.seconds(1.2), outerRing);
         rotate.setByAngle(360);
         rotate.setCycleCount(Animation.INDEFINITE);
@@ -234,10 +231,23 @@ public class FinanceMainController implements Initializable {
         loadPage("MakePayment.fxml", false);
     }
 
+    public void onPressPRDetails() {
+        loadPage("PRDetails.fxml", false);
+    }
+
+    public void goToPaymentSuccess() {
+        loadPage("PaymentSuccess.fxml", false);
+    }
+
     public void goBack() {
         int index = stackList.size() - 1;
         String path = index < 0 ? "FinanceHome.fxml" : stackList.get(index);
         loadPage(path, true);
+    }
+
+    public void goHome() {
+        loadPage("FinanceHome.fxml", false);
+        setupSidebarSelection(homeNavButton);
     }
 
     private void setupSidebarSelection(HBox target) {
@@ -269,7 +279,6 @@ public class FinanceMainController implements Initializable {
                 new KeyValue(transitionPanel3.prefHeightProperty(), appHeight, inOut)
             )
         );
-
 
         growAnims.setOnFinished(event -> {
             if (onFinished != null) {

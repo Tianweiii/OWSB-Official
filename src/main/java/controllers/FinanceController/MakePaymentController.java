@@ -1,16 +1,22 @@
 package controllers.FinanceController;
 
+import controllers.NotificationController;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +30,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import models.DTO.PaymentDTO;
+import models.Datas.Payment;
 import models.Datas.PaymentCard;
 import models.Datas.PurchaseOrder;
+import models.Utils.Helper;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
+import views.NotificationView;
 
 public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
@@ -47,19 +57,30 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     private TextField expirationDateField;
     @FXML
     private TextField cvvField;
+    @FXML
+    private CheckBox saveCardField;
+
+    @FXML
+    private Text subtotalField;
+    @FXML
+    private Text shippingField;
+    @FXML
+    private Text totalField;
 
     // PO data
     private PurchaseOrder currentPO = SessionManager.getCurrentPaymentPO();
     private Map<String, List<PaymentDTO>> paymentItems;
 
-    private String[] testArr = new String[]{"1", "2", "3", "4", "5", "6", "7"};
     private FinanceMainController mainController;
     private ArrayList<PaymentCard> cardDatas;
     private boolean newCard = true;
+    private double subtotal = 0;
+    private double shipping = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // show toast if no currentPO
+        // TODO: clear session manager payment after making payment
         try {
             QueryBuilder<PaymentCard> qb = new QueryBuilder<>(PaymentCard.class);
             cardDatas = qb.select().from("db/PaymentCard").getAsObjects();
@@ -97,7 +118,9 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                 Parent card = loader.load();
 
                 PaymentItemController controller = loader.getController();
-                controller.setData(entry.getKey(), entry.getValue()); // Inject data into component
+                controller.setData(entry.getKey(), entry.getValue());
+
+                subtotal += entry.getValue().get(0).getAmount();
 
                 orderSummaryContainer.getChildren().add(card);
 
@@ -105,6 +128,9 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                 throw new RuntimeException(e);
             }
         }
+
+        subtotalField.setText("RM" + String.valueOf(subtotal));
+        totalField.setText("RM" + String.valueOf(subtotal + shipping));
     }
 
     @Override
@@ -138,6 +164,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     }
 
     public void onPressCard(PaymentCard card) {
+        saveCardField.setDisable(true);
+        saveCardField.setSelected(false);
         cardNumberField.setText(String.valueOf(card.getCardNumber()));
         nameField.setText(card.getCardName());
         expirationDateField.setText(card.getExpiryDate());
@@ -146,6 +174,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     }
 
     public void onPressNewCard() {
+        saveCardField.setDisable(false);
+        saveCardField.setSelected(false);
         cardNumberField.clear();
         nameField.clear();
         expirationDateField.clear();
@@ -153,18 +183,98 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
         newCard = true;
     }
 
-    public void onPressPay() {
-        // show loading screen
-        mainController.renderLoader();
-        PauseTransition delay = new PauseTransition(Duration.seconds(1));
-        delay.setOnFinished(e -> {
-            mainController.removeLoader();
-        });
+    private boolean validateCardFields() throws IOException {
+        String cardNumber = cardNumberField.getText().trim();
+        String name = nameField.getText().trim();
+        String expirationDate = expirationDateField.getText().trim();
+        String cvv = cvvField.getText().trim();
 
-        delay.play();
+        if (!cardNumber.matches("\\d{16}")) {
+            NotificationView notificationView = new NotificationView("Card number must have exactly 16 digits!", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+            notificationView.show();
+            return false;
+        }
 
-        // create new payment row
-        // nav to payment success screen
-        // send receipt to email
+        if (name.isEmpty()) {
+            NotificationView notificationView = new NotificationView("Name cannot be empty!", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+            notificationView.show();
+            return false;
+        }
+
+        if (!cvv.matches("\\d{3}")) {
+            NotificationView notificationView = new NotificationView("CVV must be exactly 3 digits.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+            notificationView.show();
+            return false;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            LocalDate date = LocalDate.parse(expirationDate, formatter);
+            if (date.isBefore(LocalDate.now())) {
+                NotificationView notificationView = new NotificationView("Expiration date must be in the future.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+                notificationView.show();
+                return false;
+            }
+        } catch (DateTimeParseException e) {
+            NotificationView notificationView = new NotificationView("Expiration date must be in the format dd/MM/yyyy.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+            notificationView.show();
+            return false;
+        }
+
+        return true;
     }
+
+
+    public void onPressPay() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
+        mainController.renderLoader();
+
+        if (validateCardFields()) {
+            new Thread(() -> {
+            boolean res = false;
+
+            try {
+                QueryBuilder<Payment> qb = new QueryBuilder<>(Payment.class);
+                res = qb.target("db/Payment")
+                        .values(new String[]{
+                                currentPO.getPO_ID(),
+                                currentPO.getUserID(),
+                                String.valueOf(subtotal + shipping),
+                                "Credit Card",
+                                Helper.getTodayDate(),
+                                Payment.generatePaymentReference(Payment.getPaymentLatestRowCount())
+                        }).create();
+
+                // update po status to paid
+                QueryBuilder<PurchaseOrder> qb3 = new QueryBuilder<>(PurchaseOrder.class);
+                qb3.update(currentPO.getPO_ID(), new String[]{currentPO.getPR_ID(), currentPO.getUserID(), currentPO.getTitle(), String.valueOf(currentPO.getPayableAmount()), "Paid"});
+
+                // if save card, save card
+                if (saveCardField.isSelected()) {
+                    QueryBuilder<PaymentCard> qb2 = new QueryBuilder<>(PaymentCard.class);
+                    qb2.target("db/PaymentCard")
+                            .values(new String[]{
+                                    cardNumberField.getText(),
+                                    nameField.getText(),
+                                    expirationDateField.getText(),
+                                    cvvField.getText(),
+                                    "9999"
+                            }).create("PC");
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            boolean finalRes = res;
+            Platform.runLater(() -> {
+                if (finalRes) {
+                    mainController.goToPaymentSuccess();
+                }
+                mainController.removeLoader();
+            });
+        }).start();
+        }
+        mainController.removeLoader();
+    }
+
 }

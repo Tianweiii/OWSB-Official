@@ -14,15 +14,6 @@
             <Font name="Baloo 2 Medium" size="32.0" />
          </font>
       </Text>
-      <VBox fx:id="makePaymentButton" alignment="CENTER" onMouseClicked="#onPressMakePayment" prefHeight="49.0" prefWidth="181.0" style="-fx-border-color: red;">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Make payment">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-         </children>
-      </VBox>
       <TableView fx:id="POTable" onMouseClicked="#onPressRow" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="PO_IDField" prefWidth="35.0" text="PO_ID" />

@@ -246,7 +246,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
+                        <Text fx:id="subtotalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
                            <font>
                               <Font name="Baloo 2 Medium" size="16.0" />
                            </font>
@@ -261,7 +261,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM0.00">
+                        <Text fx:id="shippingField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM0.00">
                            <font>
                               <Font name="Baloo 2 Medium" size="16.0" />
                            </font>
@@ -276,7 +276,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
+                        <Text fx:id="totalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
                            <font>
                               <Font name="Baloo 2 Medium" size="16.0" />
                            </font>

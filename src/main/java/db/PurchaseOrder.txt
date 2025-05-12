@@ -1,4 +1,4 @@
-PO1,PR1,US1,A purchase order,1011.89,Verified
+PO1,PR1,US1,A purchase order,1011.89,Approved
 PO2,PR3,US5,Office furniture,520.45,Pending
 PO3,PR7,US2,Laptop procurement,1299.99,Approved
 PO4,PR5,US9,Printer supplies,240.00,Missing Item

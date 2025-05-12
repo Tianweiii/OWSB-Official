@@ -62,10 +62,10 @@ public class PaymentItemController implements Initializable {
         detailsContainer.setPrefWidth(134.0);
         HBox.setHgrow(detailsContainer, javafx.scene.layout.Priority.ALWAYS);
 
-        Text itemName = new Text("Item Name"); // Replace with actual data
+        Text itemName = new Text(payment.getItemName());
         itemName.setFont(new javafx.scene.text.Font("Baloo Da 2 Medium", 16.0));
 
-        Text itemID = new Text(payment.getItems()); // Use the items value as the ID
+        Text itemID = new Text(payment.getItem());
         itemID.setFont(new javafx.scene.text.Font("Baloo Da 2 Medium", 12.0));
         itemID.setFill(javafx.scene.paint.Color.valueOf("#a8a8a8"));
 
@@ -76,7 +76,7 @@ public class PaymentItemController implements Initializable {
         quantityContainer.setPrefHeight(44.0);
         quantityContainer.setPrefWidth(57.0);
 
-        Text quantity = new Text("31x");
+        Text quantity = new Text(String.valueOf(payment.getQuantity()) + "x");
         quantity.setFont(new javafx.scene.text.Font("Baloo Da 2 Medium", 14.0));
         quantity.setFill(javafx.scene.paint.Color.valueOf("#a8a8a8"));
         quantity.setTextAlignment(javafx.scene.text.TextAlignment.RIGHT);

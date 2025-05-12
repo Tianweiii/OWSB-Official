@@ -11,17 +11,18 @@ import net.sf.jasperreports.engine.util.JRLoader;
 
 import javax.security.auth.Subject;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Payment implements ModelInitializable {
 
@@ -64,12 +65,12 @@ public class Payment implements ModelInitializable {
 		paymentReference = data.get("paymentReference");
 	}
 
-	private String generatePaymentReference(int hashKey) {
+	public static String generatePaymentReference(int hashKey) {
 		String prefix = "REF";
 		String temp = String.valueOf(hashKey);
 		String hashCode = Helper.MD5_Hashing(temp).substring(0, 10);
 
-		return MessageFormat.format("{0}-{1}", prefix, hashCode);
+		return MessageFormat.format("{0}{1}", prefix, hashCode);
 	}
 
 	public String getPaymentID() {
@@ -126,29 +127,14 @@ public class Payment implements ModelInitializable {
 //		Set<String> itemIDs = FileIO.filterIDFileBelow("PurchaseOrderItem", )
 	}
 
-//	public Map<String, List<PaymentDTO>> getPurchaseItemList() throws IOException, ReflectiveOperationException {
-//		Map<String, List<PaymentDTO>> payments = new HashMap<>();
-//		// get item ids and quantity
-//		HashMap<String, String> itemAndQuantity = FileIO.filterIDToHashMap("PurchaseOrderItem", 1, 2, 3, PO_ID);
-//		Set<String> itemIDs = itemAndQuantity.keySet();
-//
-//		// getting items of PO
-//		ArrayList<Item> items = FileIO.getIDsAsObjects(Item.class, "Item", itemIDs);
-//
-//		for (Item i : items) {
-//			String supplierID = i.getSupplierID();
-//			String itemID = i.getItemID();
-//			int quantity = Integer.parseInt(itemAndQuantity.get(itemID));
-//			double amount = quantity * i.getUnitPrice();
-//
-//			PaymentDTO payment = new PaymentDTO(PO_ID, amount, itemID);
-//
-//			// Group by supplier ID
-//			payments.computeIfAbsent(supplierID, k -> new ArrayList<>()).add(payment);
-//		}
-//
-//		return payments;
-//	}
+	public static int getPaymentLatestRowCount() throws IOException {
+		Path path = Path.of("src/main/java/db/Payment.txt");
+		int lineCount;
+		try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
+			lineCount = (int) stream.count();
+		}
+		return lineCount + 1;
+	}
 
 	public static void generatePaymentReportPDF() {
 		try {
