@@ -168,7 +168,12 @@ public class Helper {
     // dd/MM/yyyy
     public static String getTodayDate() {
         LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return today.format(formatter);
+    }
+
+    public static double toFixed2(double number) {
+        number = Math.round(number * 100);
+        return number/100;
     }
 }

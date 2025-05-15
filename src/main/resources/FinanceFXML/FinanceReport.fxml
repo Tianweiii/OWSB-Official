@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -19,20 +22,15 @@
         </Text>
       <HBox prefHeight="422.0" prefWidth="1105.0" spacing="20.0">
          <children>
-            <VBox prefHeight="420.0" prefWidth="676.0" style="-fx-background-radius: 8; -fx-background-color: white;" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="420.0" prefWidth="676.0" spacing="20.0" style="-fx-background-radius: 8; -fx-background-color: white;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox fillHeight="false" prefWidth="630.0">
                      <children>
                         <VBox prefHeight="44.0" prefWidth="304.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Text fill="#b5b5b5" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Revenue">
+                              <Text fill="#727272" strokeType="OUTSIDE" strokeWidth="0.0" text="Year finance review">
                                  <font>
-                                    <Font name="Baloo Da 2 SemiBold" size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM 10,912,132">
-                                 <font>
-                                    <Font name="PingFang HK Semibold" size="32.0" />
+                                    <Font name="Baloo 2 Medium" size="18.0" />
                                  </font>
                               </Text>
                            </children>
@@ -48,11 +46,14 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: red;" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Goes Here" />
-                     </children>
-                  </VBox>
+                  <LineChart fx:id="lineChart" VBox.vgrow="ALWAYS">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
                </children>
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -263,14 +264,14 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text fill="#9626ff" strokeType="OUTSIDE" strokeWidth="0.0" text="View all sales" underline="true">
+                        <Text fill="#8c1aff" onMouseClicked="#viewAllSales" strokeType="OUTSIDE" strokeWidth="0.0" text="View all sales" underline="true">
                            <font>
-                              <Font name="Baloo Chettan 2 SemiBold" size="14.0" />
+                              <Font name="Baloo Chettan 2 SemiBold" size="15.0" />
                            </font>
                         </Text>
                      </children>
                   </HBox>
-                  <VBox fx:id="salesContainer" maxHeight="345.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-border-color: red;" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="salesContainer" maxHeight="345.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" HBox.hgrow="ALWAYS">
@@ -283,9 +284,9 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text fill="#9626ff" onMouseClicked="#viewAllPayments" strokeType="OUTSIDE" strokeWidth="0.0" text="View all Payments" underline="true">
+                        <Text fill="#8c1aff" onMouseClicked="#viewAllPayments" strokeType="OUTSIDE" strokeWidth="0.0" text="View all Payments" underline="true">
                            <font>
-                              <Font name="Baloo Chettan 2 SemiBold" size="14.0" />
+                              <Font name="Baloo Chettan 2 SemiBold" size="15.0" />
                            </font>
                         </Text>
                      </children>

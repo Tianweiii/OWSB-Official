@@ -26,16 +26,6 @@ public class Item implements ModelInitializable {
 		this.supplier_id = data.get("supplier_id");
 	}
 
-	public String getItemID() { return this.item_id; }
-
-	public String getItemName() {
-		return this.item_name;
-	}
-
-	public String getSupplierID() {return supplier_id; }
-
-	public double getUnitPrice() { return unitPrice; }
-
 	public Item(String[] data) {
 		item_id = data[0];
 		item_name = data[1];
@@ -46,4 +36,23 @@ public class Item implements ModelInitializable {
 		unitPrice = Double.parseDouble(data[6]);
 		supplier_id = data[7];
 	}
+
+	public Item() {}
+
+	public Item(String itemID, String itemName, double unitPrice) {
+		this.item_id = itemID;
+		this.item_name = itemName;
+		this.unitPrice = unitPrice;
+    }
+
+	public String getItemID() { return this.item_id; }
+
+	public String getItemName() {
+		return this.item_name;
+	}
+
+	public String getSupplierID() {return supplier_id; }
+
+	public double getUnitPrice() { return unitPrice; }
+
 }

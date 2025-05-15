@@ -5,20 +5,48 @@ import models.ModelInitializable;
 import java.util.HashMap;
 
 public class Transaction implements ModelInitializable {
-	private int transaction_id;
-	private String created_at;
-	private String updated_at;
-	private int sold_quantity;
-	private int item_id;
-	private int sales_id;
+	private String transactionID;
+	private String dailySalesHistoryID;
+	private int soldQuantity;
+	private String itemID;
+	private String salesID;
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.transaction_id = Integer.parseInt(data.get("transaction_id"));
-		this.created_at = data.get("created_at");
-		this.updated_at = data.get("updated_at");
-		this.sold_quantity = Integer.parseInt(data.get("sold_quantity"));
-		this.item_id = Integer.parseInt(data.get("item_id"));
-		this.sales_id = Integer.parseInt(data.get("sales_id"));
+		this.transactionID = data.get("transactionID");
+		this.dailySalesHistoryID = data.get("dailySalesHistoryID");
+		this.soldQuantity = Integer.parseInt(data.get("soldQuantity"));
+		this.itemID = data.get("itemID");
+		this.salesID = data.get("salesID");
+	}
+
+	public Transaction() {}
+
+	public Transaction(String[] data) {
+		transactionID = data[0];
+		dailySalesHistoryID = data[1];
+		soldQuantity = Integer.parseInt(data[2]);
+		itemID = data[3];
+		salesID = data[4];
+	}
+
+	public String getTransactionID() {
+		return transactionID;
+	}
+
+	public String getDailySalesHistoryID() {
+		return dailySalesHistoryID;
+	}
+
+	public int getSoldQuantity() {
+		return soldQuantity;
+	}
+
+	public String getItemID() {
+		return itemID;
+	}
+
+	public String getSalesID() {
+		return salesID;
 	}
 }

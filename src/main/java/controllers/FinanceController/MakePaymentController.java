@@ -1,6 +1,7 @@
 package controllers.FinanceController;
 
 import controllers.NotificationController;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -206,7 +207,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
             return false;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
             LocalDate date = LocalDate.parse(expirationDate, formatter);
             if (date.isBefore(LocalDate.now())) {
@@ -215,7 +216,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                 return false;
             }
         } catch (DateTimeParseException e) {
-            NotificationView notificationView = new NotificationView("Expiration date must be in the format dd/MM/yyyy.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+            NotificationView notificationView = new NotificationView("Expiration date must be in the format dd-MM-yyyy.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
             notificationView.show();
             return false;
         }
@@ -229,51 +230,68 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
         if (validateCardFields()) {
             new Thread(() -> {
-            boolean res = false;
+                boolean res = false;
+                long startTime = System.currentTimeMillis();
 
-            try {
-                QueryBuilder<Payment> qb = new QueryBuilder<>(Payment.class);
-                res = qb.target("db/Payment")
-                        .values(new String[]{
-                                currentPO.getPO_ID(),
-                                currentPO.getUserID(),
-                                String.valueOf(subtotal + shipping),
-                                "Credit Card",
-                                Helper.getTodayDate(),
-                                Payment.generatePaymentReference(Payment.getPaymentLatestRowCount())
-                        }).create();
-
-                // update po status to paid
-                QueryBuilder<PurchaseOrder> qb3 = new QueryBuilder<>(PurchaseOrder.class);
-                qb3.update(currentPO.getPO_ID(), new String[]{currentPO.getPR_ID(), currentPO.getUserID(), currentPO.getTitle(), String.valueOf(currentPO.getPayableAmount()), "Paid"});
-
-                // if save card, save card
-                if (saveCardField.isSelected()) {
-                    QueryBuilder<PaymentCard> qb2 = new QueryBuilder<>(PaymentCard.class);
-                    qb2.target("db/PaymentCard")
+                try {
+                    QueryBuilder<Payment> qb = new QueryBuilder<>(Payment.class);
+                    res = qb.target("db/Payment")
                             .values(new String[]{
-                                    cardNumberField.getText(),
-                                    nameField.getText(),
-                                    expirationDateField.getText(),
-                                    cvvField.getText(),
-                                    "9999"
-                            }).create("PC");
+                                    currentPO.getPO_ID(),
+                                    currentPO.getUserID(),
+                                    String.valueOf(subtotal + shipping),
+                                    "Credit Card",
+                                    Helper.getTodayDate(),
+                                    Payment.generatePaymentReference(Payment.getPaymentLatestRowCount())
+                            }).create();
+
+                    // update PO status to paid
+                    QueryBuilder<PurchaseOrder> qb3 = new QueryBuilder<>(PurchaseOrder.class);
+                    qb3.update(currentPO.getPO_ID(), new String[]{
+                            currentPO.getPR_ID(),
+                            currentPO.getUserID(),
+                            currentPO.getTitle(),
+                            String.valueOf(currentPO.getPayableAmount()),
+                            "Paid"
+                    });
+
+                    // if save card, save card
+                    if (saveCardField.isSelected()) {
+                        QueryBuilder<PaymentCard> qb2 = new QueryBuilder<>(PaymentCard.class);
+                        qb2.target("db/PaymentCard")
+                                .values(new String[]{
+                                        cardNumberField.getText(),
+                                        nameField.getText(),
+                                        expirationDateField.getText(),
+                                        cvvField.getText(),
+                                        "9999"
+                                }).create("PC");
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+                long elapsed = System.currentTimeMillis() - startTime;
+                // load for at least 2 seconds to mimic real ting lol
+                long remainingTime = Math.max(0, 2000 - elapsed);
 
-            boolean finalRes = res;
-            Platform.runLater(() -> {
-                if (finalRes) {
-                    mainController.goToPaymentSuccess();
-                }
-                mainController.removeLoader();
-            });
-        }).start();
+                boolean finalRes = res;
+                Platform.runLater(() -> {
+                    PauseTransition pause = new PauseTransition(Duration.millis(remainingTime));
+                    pause.setOnFinished(ev -> {
+                        if (finalRes) {
+                            mainController.goToPaymentSuccess();
+                        }
+                        mainController.removeLoader();
+                    });
+                    pause.play();
+                });
+
+            }).start();
+        } else {
+            mainController.removeLoader();
         }
-        mainController.removeLoader();
     }
 
 }

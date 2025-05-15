@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,16 +15,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="1000.0" prefWidth="1185.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.ViewAllPaymentsController">
+<VBox prefHeight="1000.0" prefWidth="1185.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.ViewAllSalesController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefWidth="200.0" spacing="10.0">
          <children>
             <ImageView fitHeight="39.0" fitWidth="39.0" onMouseClicked="#onPressBack" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/back.png" />
                </image>
             </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Payments">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sales">
                <font>
                   <Font name="Baloo 2 Medium" size="40.0" />
                </font>
@@ -33,7 +35,7 @@
          <children>
             <VBox fillWidth="false" prefHeight="269.0" prefWidth="400.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                <children>
-                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #9452e3; -fx-background-radius: 100;">
+                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #fcba03; -fx-background-radius: 100;">
                      <children>
                         <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -43,12 +45,12 @@
                      </children>
                   </VBox>
                   <Region prefHeight="132.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <Text fx:id="totalPaidField" strokeType="OUTSIDE" strokeWidth="0.0" text="Some stat here">
+                  <Text fx:id="totalTransactionsField" strokeType="OUTSIDE" strokeWidth="0.0" text="Some stat here">
                      <font>
                         <Font name="Baloo 2 Medium" size="24.0" />
                      </font>
                   </Text>
-                  <Text fill="#909090" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Paid">
+                  <Text fill="#909090" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Transactions">
                      <font>
                         <Font name="Baloo 2 Medium" size="16.0" />
                      </font>
@@ -60,7 +62,7 @@
             </VBox>
             <VBox fillWidth="false" prefHeight="269.0" prefWidth="400.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                <children>
-                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #6d9bf7; -fx-background-radius: 100;">
+                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #a346eb; -fx-background-radius: 100;">
                      <children>
                         <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -70,12 +72,12 @@
                      </children>
                   </VBox>
                   <Region prefHeight="132.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <Text fx:id="totalUnpaidField" strokeType="OUTSIDE" strokeWidth="0.0" text="Some stat here">
+                  <Text fx:id="totalSalesField" strokeType="OUTSIDE" strokeWidth="0.0" text="Some stat here">
                      <font>
                         <Font name="Baloo 2 Medium" size="24.0" />
                      </font>
                   </Text>
-                  <Text fill="#909090" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Unpaid">
+                  <Text fill="#909090" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Sales">
                      <font>
                         <Font name="Baloo 2 Medium" size="16.0" />
                      </font>
@@ -85,23 +87,32 @@
                   <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
                </padding>
             </VBox>
-            <PieChart fx:id="pieChart" prefHeight="229.0" prefWidth="404.0" style="-fx-background-color: white; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="200.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+               <children>
+                  <BarChart fx:id="barChart">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
                <padding>
-                  <Insets bottom="25.0" top="25.0" />
-               </padding></PieChart>
+                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+               </padding>
+            </VBox>
          </children>
       </HBox>
-      <TextField fx:id="searchBar" prefHeight="52.0" prefWidth="1105.0" promptText="Search payments by keyword" />
-      <TableView fx:id="paymentTable" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
-        <columns>
-          <TableColumn fx:id="paymentIDField" prefWidth="108.59435272216797" text="Payment ID" />
-          <TableColumn fx:id="PO_IDField" prefWidth="101.3990478515625" text="PO ID" />
-            <TableColumn fx:id="userIDField" prefWidth="139.95863342285156" text="User ID" />
-            <TableColumn fx:id="amountField" prefWidth="194.58621215820312" text="Amount" />
-            <TableColumn fx:id="paymentMethodField" prefWidth="196.281494140625" text="Payment Method" />
-            <TableColumn fx:id="createdAtField" prefWidth="136.357666015625" text="Created At" />
-            <TableColumn fx:id="paymentReferenceField" prefWidth="221.642333984375" text="Payment Reference" />
-        </columns>
+      <TextField fx:id="searchBar" prefHeight="52.0" prefWidth="1105.0" promptText="Search Sales by keyword" />
+      <TableView fx:id="salesTable" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="transactionIDField" prefWidth="139.27178955078125" text="Transaction ID" />
+            <TableColumn fx:id="itemNameField" prefWidth="411.5514831542969" text="Item Name" />
+            <TableColumn fx:id="amountField" prefWidth="249.756103515625" text="Amount" />
+            <TableColumn fx:id="userIDField" prefWidth="129.243896484375" text="User" />
+            <TableColumn fx:id="createdDateField" prefWidth="165.06597900390625" text="Created Date" />
+         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>

@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import models.Datas.Payment;
 import models.Utils.FileIO;
 
@@ -21,7 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ViewAllPaymentsController implements Initializable {
+public class ViewAllPaymentsController extends ViewPageEssentials implements Initializable {
 
     @FXML
     private TableView<Payment> paymentTable;
@@ -45,22 +46,29 @@ public class ViewAllPaymentsController implements Initializable {
     @FXML
     private PieChart pieChart;
 
+    private ObservableList<Payment> allPayments;
     private FilteredList<Payment> filteredPayments;
     private FinanceMainController mainController;
+
+    @FXML
+    private Text totalPaidField;
+    @FXML
+    private Text totalUnpaidField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             initTable();
-            ObservableList<Payment> payments = this.getAllPayments();
-            filteredPayments = new FilteredList<>(payments, predicate -> true);
-            fillTable(payments);
+            allPayments = this.getAllPayments();
+            filteredPayments = new FilteredList<>(allPayments, predicate -> true);
+            fillTable(allPayments);
+            updateSummaryFields();
 
             initPieChart();
         } catch (IOException | ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> searchPayments(newValue));
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> search(newValue));
     }
 
     public void setMainController(FinanceMainController controller) {
@@ -90,7 +98,7 @@ public class ViewAllPaymentsController implements Initializable {
         return FXCollections.observableArrayList(Payments);
     }
 
-    private void searchPayments(String input) {
+    public void search(String input) {
         String keyword = input.toLowerCase();
         filteredPayments.setPredicate(data -> {
             if (input.isBlank()) {
@@ -112,18 +120,14 @@ public class ViewAllPaymentsController implements Initializable {
         SortedList<Payment> sortedData = new SortedList<>(filteredPayments);
         sortedData.comparatorProperty().bind(paymentTable.comparatorProperty());
         paymentTable.setItems(sortedData);
+        updateSummaryFields();
     }
 
     // sum of all payments
-    private double getTotalPaid() throws IOException {
-        double total = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Payment.txt"))) {
-            for (String line; (line = br.readLine()) != null; ) {
-                String[] parts = line.split(",");
-                total += Double.parseDouble(parts[3].trim());
-            }
-        }
-        return total;
+    private double getTotalPaid() {
+        return filteredPayments.stream()
+                .mapToDouble(Payment::getAmount)
+                .sum();
     }
 
     // sum of all verified POs
@@ -137,6 +141,7 @@ public class ViewAllPaymentsController implements Initializable {
                 }
             }
         }
+        totalUnpaidField.setText("RM " + String.format("%.2f", total));
         return total;
     }
 
@@ -152,4 +157,9 @@ public class ViewAllPaymentsController implements Initializable {
         pieChart.setData(pieData);
         pieChart.setTitle("Total Paid vs Unpaid");
     }
+
+    private void updateSummaryFields() {
+        totalPaidField.setText("RM " + String.format("%.2f", getTotalPaid()));
+    }
+
 }

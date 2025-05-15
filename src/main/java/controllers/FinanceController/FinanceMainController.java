@@ -122,6 +122,7 @@ public class FinanceMainController implements Initializable {
 
 //                setAnchor("/FinanceFXML/" + fxmlFile);
 
+                // this shit is horrible my bad haha
                 switch (fxmlFile) {
                     case "FinancePayments.fxml" -> {
                         FinancePaymentsController paymentsController = loader.getController();
@@ -149,6 +150,10 @@ public class FinanceMainController implements Initializable {
                     }
                     case "ViewAllPayments.fxml" -> {
                         ViewAllPaymentsController controller = loader.getController();
+                        controller.setMainController(this);
+                    }
+                    case "ViewAllSales.fxml" -> {
+                        ViewAllSalesController controller = loader.getController();
                         controller.setMainController(this);
                     }
                 }
@@ -249,6 +254,10 @@ public class FinanceMainController implements Initializable {
 
     public void viewAllPayments() {
         loadPage("ViewAllPayments.fxml", false);
+    }
+
+    public void viewAllSales() {
+        loadPage("ViewAllSales.fxml", false);
     }
 
     public void goBack() {

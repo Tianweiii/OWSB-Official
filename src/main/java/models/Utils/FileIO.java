@@ -155,4 +155,38 @@ public class FileIO {
         }
         return list;
     }
+
+    public static int getRowCount(String filenameWithoutTXT) throws IOException {
+        int count = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            while (br.readLine() != null) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
+    public static double getCountOfX(String filenameWithoutTXT, int indexToReceive) throws IOException {
+        double amount = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                String[] parts = line.split(",");
+                    amount += Double.parseDouble(parts[indexToReceive].trim());
+            }
+        }
+        return amount;
+    }
+
+    public static double getCountOfX(String filenameWithoutTXT, int indexToCheck, int indexToReceive, String condition) throws IOException {
+        double amount = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                String[] parts = line.split(",");
+                if (parts[indexToCheck].trim().toLowerCase().equals(condition)) {
+                    amount += Double.parseDouble(parts[indexToReceive].trim());
+                }
+            }
+        }
+        return amount;
+    }
 }

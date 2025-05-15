@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -14,6 +21,77 @@
             <Font name="Baloo 2 Medium" size="32.0" />
          </font>
       </Text>
+      <HBox prefHeight="264.0" prefWidth="1105.0" spacing="20.0">
+         <children>
+            <VBox fillWidth="false" prefHeight="273.0" prefWidth="270.0" style="-fx-background-color: white; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+               <children>
+                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 100; -fx-background-color: #9843d9;">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/bag.png" />
+                           </image>
+                        </ImageView>
+                     </children></VBox>
+                  <Region prefHeight="87.0" prefWidth="107.0" VBox.vgrow="NEVER" />
+                  <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Paid">
+                     <font>
+                        <Font name="Baloo 2 Medium" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="totalPaidField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM 99,999">
+                     <font>
+                        <Font name="Baloo 2 Medium" size="32.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" prefHeight="273.0" prefWidth="270.0" style="-fx-background-color: white; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+               <children>
+                  <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 100; -fx-background-color: #67bee6;">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/bag.png" />
+                           </image>
+                        </ImageView>
+                     </children></VBox>
+                  <Region prefHeight="87.0" prefWidth="107.0" />
+                  <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Pending Payments">
+                     <font>
+                        <Font name="Baloo 2 Medium" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="totalUnpaidField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM 99,999">
+                     <font>
+                        <Font name="Baloo 2 Medium" size="32.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" prefHeight="273.0" prefWidth="600.0" style="-fx-background-color: white; -fx-background-radius: 8;" HBox.hgrow="NEVER">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+                  <BarChart fx:id="barChart" prefHeight="224.0" prefWidth="784.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
       <TableView fx:id="POTable" onMouseClicked="#onPressRow" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/tableview.css" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="PO_IDField" prefWidth="35.0" text="PO_ID" />
