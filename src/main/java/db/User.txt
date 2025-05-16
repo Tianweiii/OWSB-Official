@@ -10,3 +10,5 @@ US9,Yasuo,man@mail.com,abcde,addy,22,3
 US10,Poppy,man@mail.com,abcde,addy,320,1
 US11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
 US12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2
+U13,lee,lee@gmail.com,0VeLgnEFrJl5k8qcWnA5iYAH6nsOjLnEjbpOo53Outg=,Purchase Manager,21,3
+U14,finance,finance@gmail.com,SPcxKSTXQ1jnUpTjs2E/IxnZnpRBhLaVUPUoV3yggvs=,Finance Manager,21,5

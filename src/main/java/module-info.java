@@ -2,9 +2,11 @@ module org.start.owsb {
     requires javafx.controls;
     requires javafx.fxml;
 	requires java.desktop;
+    requires java.management;
+    requires jdk.unsupported.desktop;
 
 
-	opens org.start.owsb to javafx.fxml;
+    opens org.start.owsb to javafx.fxml;
     exports org.start.owsb;
 
     opens controllers to javafx.fxml;

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -48,6 +49,16 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="574.0" layoutY="70.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="40.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter By:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <ComboBox fx:id="filter_dropdown" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #efefef;" />
                </children>
             </HBox>
          </children>

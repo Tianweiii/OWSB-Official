@@ -4,7 +4,8 @@ import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
 import views.LoginView;
-import views.PRPOView;
+import views.PRPO.EditPRPOView;
+import views.PRPO.PRPOView;
 import views.UserRegistrationView;
 import views.salesViews.ItemListView;
 
@@ -36,10 +37,13 @@ public class Navigator {
 
 		// Purchase manager
 		purchaseRouter.addRoute("PRPO", PRPOView.class);
+		purchaseRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Inventory manager
 
 		// Finance manage
+		financeRouter.addRoute("PRPO", PRPOView.class);
+		financeRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// NON SIDEBAR ROUTES
 		allRouter.addRoute("login", LoginView.class);

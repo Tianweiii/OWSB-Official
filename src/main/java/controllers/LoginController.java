@@ -102,7 +102,7 @@ public class LoginController implements Initializable {
 				notificationView.show();
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

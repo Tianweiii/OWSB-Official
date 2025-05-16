@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="200.0" prefHeight="200.0" prefWidth="1105.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 2, 2); -fx-background-color: #EDF0F5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PRPOBoxController">
+<AnchorPane minHeight="200.0" onMouseClicked="#ViewPRPODetails" prefHeight="200.0" prefWidth="1105.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 2, 2); -fx-background-color: #EDF0F5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PRPOBoxController">
    <children>
       <VBox layoutX="20.0" layoutY="14.0" spacing="16.0">
          <children>
@@ -41,12 +42,12 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="15.0">
                <children>
-                  <Text fx:id="items_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Items: ">
+                  <Label fx:id="items_text" maxWidth="350.0" prefHeight="18.0" text="Items: " textFill="#707070">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>
-                  </Text>
-                  <Text fill="#1e3a8a" onMouseClicked="#view_all_item" strokeType="OUTSIDE" strokeWidth="0.0" text="[View All Item]" />
+                  </Label>
+                  <Text fill="#1e3a8a" strokeType="OUTSIDE" strokeWidth="0.0" text="[View All Item]" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="20.0">

@@ -1,11 +1,4 @@
-PO1,PR1,US1,A purchase order,1011.89,Verified
-PO2,PR3,US5,Office furniture,520.45,Pending
-PO3,PR7,US2,Laptop procurement,1299.99,Approved
-PO4,PR5,US9,Printer supplies,240.00,Missing Item
-PO5,PR2,US1,Software licenses,750.30,Paid
-PO6,PR10,US4,Conference materials,380.20,Returned
-PO7,PR6,US11,Workstation upgrade,1120.75,Verified
-PO8,PR8,US6,Team uniforms,495.00,Late
-PO9,PR9,US3,Maintenance tools,630.89,Approved
-PO10,PR11,US8,Kitchen equipment,899.99,Pending
-PO11,PR4,US12,Mobile devices,1440.50,Verified
+PO1,PR2,US12,A purchase order,1011.89,approved
+PO2,PR5,US12,Office furniture,846.0,pending
+PO3,PR7,US12,Laptop procurement,1299.99,pending
+PO4,PR10,US12,Printer supplies,240.00,pending
