@@ -47,6 +47,8 @@ public class PaymentItemController implements Initializable {
         imageContainer.setAlignment(javafx.geometry.Pos.CENTER);
         imageContainer.setPrefHeight(70.0);
         imageContainer.setPrefWidth(70.0);
+        imageContainer.setMinHeight(70);
+        imageContainer.setMinWidth(70);
         imageContainer.setStyle("-fx-background-color: #e7e4f5; -fx-background-radius: 8;");
 
         ImageView imageView = new ImageView(new Image(getClass().getResource("/assets/images/bag.png").toExternalForm()));

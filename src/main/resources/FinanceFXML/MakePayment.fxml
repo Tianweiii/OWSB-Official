@@ -226,7 +226,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
-            <ScrollPane prefHeight="542.0" prefWidth="400.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
+            <ScrollPane prefHeight="542.0" prefWidth="420.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="orderSummaryContainer" prefHeight="200.0" prefWidth="380.0" spacing="20.0" />
                </content>
