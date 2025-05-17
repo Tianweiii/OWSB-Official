@@ -19,7 +19,8 @@ public class Router {
 			view = route.getDeclaredConstructor().newInstance().getView();
 
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("Error routing to path: " + path);
+			e.printStackTrace();
 		}
 		return view;
 	}

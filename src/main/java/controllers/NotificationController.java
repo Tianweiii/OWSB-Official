@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,8 +14,7 @@ import java.util.ResourceBundle;
 public class NotificationController implements Initializable {
 	@FXML private Pane rootPane;
 	@FXML private HBox notificationContainer;
-	@FXML private Label notificationLabel;
-	@FXML private ImageView notificationImage = new ImageView();
+	@FXML private Text notificationLabel;
 
 	public enum popUpType {
 		error, warning, info, success

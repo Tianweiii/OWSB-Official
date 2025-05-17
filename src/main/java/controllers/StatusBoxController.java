@@ -31,6 +31,8 @@ public class StatusBoxController implements Initializable {
     private Color YELLOW_TEXT_COLOR = new Color(102 / 255.0, 102 / 255.0, 48 / 255.0, 1.0);
     private Color RED_BOX_COLOR = new Color(248 / 255.0, 116 / 255.0, 116 / 255.0, 1.0);
     private Color RED_TEXT_COLOR = new Color(102 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
+    private Color UNKNOWN_BOX_COLOR = new Color(204 / 255.0, 204 / 255.0, 204 / 255.0, 1.0);
+    private Color UNKNOWN_TEXT_COLOR = new Color(80 / 255.0, 80 / 255.0, 80 / 255.0, 1.0);
 
     private Color box_color;
     private Color text_color;
@@ -54,10 +56,6 @@ public class StatusBoxController implements Initializable {
                 box_color = GREEN_BOX_COLOR;
                 text_color = GREEN_TEXT_COLOR;
                 break;
-            case "MISSING ITEM":
-                box_color = RED_BOX_COLOR;
-                text_color = RED_TEXT_COLOR;
-                break;
             case "RETURNED":
                 box_color = RED_BOX_COLOR;
                 text_color = RED_TEXT_COLOR;
@@ -66,17 +64,20 @@ public class StatusBoxController implements Initializable {
                 box_color = GREEN_BOX_COLOR;
                 text_color = GREEN_TEXT_COLOR;
                 break;
+            case "DELETED":
+                box_color = RED_BOX_COLOR;
+                text_color = RED_TEXT_COLOR;
             default:
                 // If no status were caught, may be typos like "VERIFED"
-                box_color = YELLOW_BOX_COLOR;
-                text_color = RED_TEXT_COLOR;
+                box_color = UNKNOWN_BOX_COLOR;
+                text_color = UNKNOWN_TEXT_COLOR;
+                System.out.println("Invalid status '" + status + "' detected. From: StatusBoxController");
                 status = "UNKNOWN";
-                System.out.println("Invalid status detected. From: StatusBoxController");
         }
         status_box.setBackground(
                 new Background(
-                new BackgroundFill(box_color, new CornerRadii(10), Insets.EMPTY)
-        ));
+                        new BackgroundFill(box_color, new CornerRadii(10), Insets.EMPTY)
+                ));
         status_text.setFill(text_color);
         status_text.setText(status);
 
