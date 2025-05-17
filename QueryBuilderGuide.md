@@ -119,3 +119,14 @@ The `delete()`method takes the target ID.
 QueryBuilder<YourModel> qb = new QueryBuilder(YourModel.class);
 boolean res = qb.target("db/fileName").delete("9");
 ```
+ 
+You can also delete multiple entries at once using the `.deleteMany()` and `.deleteAnyMatching()` methods.
+
+```java
+import models.Utils.QueryBuilder;
+
+QueryBuilder<YourModel> qb = new QueryBuilder<>(YourModel.class);
+boolean res = qb.target("db/fileName").deleteMany(new String[]{"id1", "id2", "id3"});
+
+boolean res = qb.target("db/fileName").deleteAnyMatching("name", "=", "John");
+```

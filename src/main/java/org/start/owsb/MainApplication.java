@@ -37,15 +37,5 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch();
-//        try {
-//            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-////            qb.target("db/Item.txt").delete("11");
-//            HashMap<String, String> newdata = new HashMap<>();
-//            newdata.put("item_name", "testingg");
-//            qb.target("db/Item.txt").update("1", newdata);
-//            qb.target("db/Item.txt").update("2", new String[]{"ddjadjasid","2025-04-27","2025-04-27","1","1099","1"});
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
     }
 }
