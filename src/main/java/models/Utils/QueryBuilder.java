@@ -816,6 +816,78 @@ public class QueryBuilder<T extends ModelInitializable>{
 	}
 
 	/**
+	 * Deletes multiple ids inside the database.
+	 *
+	 * @param targetIds <b>String[]</b> <br> The ids of the data that will be deleted.
+	 * @throws FileNotFoundException will throw error if file does not exist
+	 * @see QueryBuilder#target()
+	 * @return <b>boolean</b>
+	 * */
+	public boolean deleteMany(String[] targetIds) throws FileNotFoundException {
+		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
+
+		Path filePath = Paths.get(FILE_ROOT + targetFile);
+		try {
+			// Read all lines
+			List<String> lines = Files.readAllLines(filePath);
+			List<String> targetIdsList = Arrays.asList(targetIds);
+
+			// Filter out the line to delete
+			List<String> updatedLines = lines.stream()
+					.filter(line -> !targetIdsList.contains(line.split(",")[0]))
+					.collect(Collectors.toList());
+
+			Files.write(filePath, updatedLines,
+					StandardOpenOption.WRITE,
+					StandardOpenOption.TRUNCATE_EXISTING,
+					StandardOpenOption.CREATE);
+
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public boolean deleteAnyMatching(String fieldOne, String operator, String fieldTwo) {
+		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
+
+		Path filePath = Paths.get(FILE_ROOT + targetFile);
+		try {
+			// Read all lines
+			List<String> lines = Files.readAllLines(filePath);
+
+			// Filter out the line to delete
+			List<String> updatedLines = lines.stream()
+					.filter(line -> {
+						String[] lineParts = line.split(",");
+						String[] classAttrs = this.getAttrs(true);
+
+						int indexOfField = Arrays.asList(classAttrs).indexOf(fieldOne);
+
+						switch (operator) {
+							case "=":
+								return !lineParts[indexOfField].equals(fieldTwo);
+							case "!=":
+								return lineParts[indexOfField].equals(fieldTwo);
+							case "like":
+								return !lineParts[indexOfField].contains(fieldTwo);
+							default:
+								return false;
+						}
+					})
+					.collect(Collectors.toList());
+
+			Files.write(filePath, updatedLines,
+					StandardOpenOption.WRITE,
+					StandardOpenOption.TRUNCATE_EXISTING,
+					StandardOpenOption.CREATE);
+
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+	/**
 	 * Validates the data entered by the user.
 	 *
 	 * @param values <b>String</b> <br> The values that will be validated.
