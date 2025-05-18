@@ -334,11 +334,6 @@ public class InventoryViewController implements Initializable {
                     Files.createDirectories(pdfPath.getParent());
                     JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath.toString());
 
-                    Platform.runLater(() -> {
-                        loadingIndicator.setVisible(false);
-                        overlayPane.setVisible(false);
-                    });
-
                     if (Desktop.isDesktopSupported()) {
                         Desktop.getDesktop().open(pdfPath.toFile());
                     }
@@ -355,10 +350,12 @@ public class InventoryViewController implements Initializable {
                             notificationView.show();
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                        } finally {
-                            loadingIndicator.setVisible(false);
-                            overlayPane.setVisible(false);
                         }
+                    });
+                } finally {
+                    Platform.runLater(() -> {
+                        loadingIndicator.setVisible(false);
+                        overlayPane.setVisible(false);
                     });
                 }
                 return null;
