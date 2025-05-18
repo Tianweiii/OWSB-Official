@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import models.DTO.InventoryUpdateRequestDTO;
 import models.Datas.InventoryUpdateLog;
@@ -29,6 +30,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class InventoryUpdateRequestController implements Initializable {
+
+    @FXML
+    private AnchorPane inventoryUpdateReqPane;
 
     @FXML
     private TableColumn<InventoryUpdateRequestDTO, Void> actions;
@@ -214,7 +218,7 @@ public class InventoryUpdateRequestController implements Initializable {
 
             Optional<ButtonType> result = showConfirmationDialog(
                     "Confirm Update",
-                    "Are you sure you want to approve this update?",
+                    "Are you sure you want to decline this update?",
                     "This action will decline the sales item request."
             );
 

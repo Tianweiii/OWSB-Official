@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -10,85 +9,135 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="stockManagementPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1400.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.StockManagementController">
-   <children>
-      <HBox layoutX="49.0" layoutY="243.0" prefHeight="627.0" prefWidth="1263.0">
-         <children>
-            <TableView fx:id="itemTable" prefHeight="627.0" prefWidth="1168.0" style="-fx-background-color: #EDF0F5;">
-               <columns>
-                  <TableColumn fx:id="itemID" prefWidth="169.5" text="Item ID" />
-                  <TableColumn fx:id="itemName" minWidth="0.0" prefWidth="199.0" text="Item Name" />
-                  <TableColumn fx:id="supplierName" prefWidth="200.0" text="Supplier Name" />
-                  <TableColumn fx:id="createdAt" minWidth="0.0" prefWidth="195.5" text="Created At" />
-                  <TableColumn fx:id="lastUpdated" minWidth="0.0" prefWidth="195.5" text="Last Updated" />
-                  <TableColumn fx:id="quantity" minWidth="0.0" prefWidth="190.0" text="Quantity" />
-               </columns>
-            </TableView>
-         </children>
-      </HBox>
-      <FlowPane layoutX="49.0" layoutY="135.0" prefHeight="28.0" prefWidth="450.0">
-         <children>
-            <Label text="Filter by" textFill="#707070">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label text="Search Bar" textFill="#707070">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <FlowPane.margin>
-                  <Insets left="140.0" />
-               </FlowPane.margin>
-            </Label>
-         </children>
-      </FlowPane>
-      <FlowPane layoutX="48.0" layoutY="163.0" prefHeight="47.0" prefWidth="883.0">
-         <children>
-            <ComboBox fx:id="filterSelection" prefHeight="40.0" prefWidth="148.0" promptText="All" style="-fx-background-color: white; -fx-border-radius: 5; -fx-border-color: #707070;" />
-            <TextField fx:id="txtSearchKeyword" prefHeight="40.0" prefWidth="387.0" promptText="Search for item or supplier name..." style="-fx-border-color: #707070;">
-               <FlowPane.margin>
-                  <Insets left="48.0" />
-               </FlowPane.margin>
-            </TextField>
-            <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#onSearchButtonClicked" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #1e3a8a; -fx-border-radius: 5;" text="Search" textFill="#ecedf0">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <FlowPane.margin>
-                  <Insets left="20.0" />
-               </FlowPane.margin>
-            </Button>
-            <Button fx:id="btnClear" layoutX="613.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClearButtonClicked" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #D9D9D9; -fx-border-radius: 5;" text="Clear">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <FlowPane.margin>
-                  <Insets left="30.0" />
-               </FlowPane.margin>
-            </Button>
-         </children>
-      </FlowPane>
-      <FlowPane layoutX="48.0" layoutY="57.0" prefHeight="66.0" prefWidth="552.0">
-         <children>
-            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Assets/icon/Box.png" />
-               </image>
-            </ImageView>
-            <Label text="Stock Management">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-               <FlowPane.margin>
-                  <Insets left="50.0" />
-               </FlowPane.margin>
-            </Label>
-         </children>
-      </FlowPane>
-   </children>
+<AnchorPane fx:id="stockManagementPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1400.0" style="-fx-background-color: linear-gradient(to bottom right, #F0F7FF, #E6F0FF);" stylesheets="@../css/Inventory.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.StockManagementController">
+    <children>
+        <!-- Header section -->
+        <Pane layoutX="32.0" layoutY="38.0" prefHeight="102.0" prefWidth="1325.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+            <children>
+                <HBox alignment="CENTER_LEFT" layoutX="24.0" layoutY="16.0" spacing="20">
+                    <children>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Assets/icon/Box.png" />
+                            </image>
+                        </ImageView>
+                        <VBox spacing="2">
+                            <children>
+                                <Label text="Stock Management" textFill="#2563EB">
+                                    <font>
+                                        <Font name="System Bold" size="32.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Track and manage your inventory items" textFill="#64748B">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </Pane>
+
+        <!-- Search and Filter section -->
+        <Pane layoutX="32.0" layoutY="159.0" prefHeight="130.0" prefWidth="1325.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+            <children>
+                <VBox layoutX="24.0" layoutY="18.0" spacing="10">
+                    <children>
+                        <Label text="Search and Filter" textFill="#334155">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <children>
+                                <VBox spacing="5">
+                                    <children>
+                                        <Label text="Filter by" textFill="#64748B">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <ComboBox fx:id="filterSelection" prefHeight="40.0" prefWidth="180.0" promptText="All" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #CBD5E1; -fx-border-width: 1;" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5">
+                                    <children>
+                                        <Label text="Search" textFill="#64748B">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <HBox spacing="10">
+                                            <children>
+                                                <TextField fx:id="txtSearchKeyword" prefHeight="40.0" prefWidth="400.0" promptText="Search for item or supplier name..." style="-fx-border-color: #CBD5E1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;" />
+                                                <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#onSearchButtonClicked" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #2563EB; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);" text="Search" textFill="WHITE">
+                                                    <font>
+                                                        <Font name="System Bold" size="14.0" />
+                                                    </font>
+                                                </Button>
+                                                <Button fx:id="btnClear" mnemonicParsing="false" onAction="#onClearButtonClicked" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #F1F5F9; -fx-background-radius: 8; -fx-border-color: #CBD5E1; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand;" text="Clear" textFill="#475569">
+                                                    <font>
+                                                        <Font size="14.0" />
+                                                    </font>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Action buttons -->
+                <HBox alignment="CENTER_RIGHT" layoutX="994.0" layoutY="80.0" spacing="15" />
+                  <Button fx:id="btnExport" layoutX="1161.0" layoutY="80.0" mnemonicParsing="false" onAction="#onExportButtonClicked" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #3B82F6; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);" text="Export Data" textFill="WHITE">
+                      <font>
+                          <Font name="System Bold" size="14.0" />
+                      </font>
+                  </Button>
+            </children>
+        </Pane>
+
+        <!-- Table section -->
+        <Pane layoutX="32.0" layoutY="311.0" prefHeight="589.0" prefWidth="1325.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+            <children>
+                <VBox layoutX="24.0" layoutY="20.0" prefHeight="552.0" prefWidth="1150.0" spacing="15">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <children>
+                                <Label text="Inventory Items" textFill="#334155">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="itemCountLabel" text="(120 items)" textFill="#64748B">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <TableView fx:id="itemTable" prefHeight="510.0" prefWidth="1209.0" style="-fx-background-color: #EDF0F5;">
+                            <columns>
+                                <TableColumn fx:id="itemID" prefWidth="169.5" text="Item ID" />
+                                <TableColumn fx:id="itemName" minWidth="0.0" prefWidth="199.0" text="Item Name" />
+                                <TableColumn fx:id="supplierName" prefWidth="200.0" text="Supplier Name" />
+                                <TableColumn fx:id="createdAt" minWidth="0.0" prefWidth="195.5" text="Created At" />
+                                <TableColumn fx:id="lastUpdated" minWidth="0.0" prefWidth="195.5" text="Last Updated" />
+                                <TableColumn fx:id="quantity" minWidth="0.0" prefWidth="190.0" text="Quantity" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>

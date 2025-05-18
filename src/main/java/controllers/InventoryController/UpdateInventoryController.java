@@ -110,11 +110,22 @@ public class UpdateInventoryController {
 
     public void updateInventoryItem(String currentUserID) throws Exception {
         try{
+            String alertLevelText = txtAlertLevel.getText();
+            String stockNumText = txtNum.getText();
+
+            if (alertLevelText == null || alertLevelText.trim().isEmpty() ||
+                    stockNumText == null || stockNumText.trim().isEmpty()) {
+                NotificationView notificationView = new NotificationView("Input must not be empty", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+                notificationView.show();
+                return;
+            }
+
+
             int newAlertLevel = Integer.parseInt(txtAlertLevel.getText());
             stockNum = Integer.parseInt(txtNum.getText());
 
-            if(stockNum < 0) {
-                NotificationView notificationView = new NotificationView("Enter value more than 0", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+            if (newAlertLevel < 0 || stockNum < 0) {
+                NotificationView notificationView = new NotificationView("Alert level and stock cannot be negative", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
                 notificationView.show();
                 return;
             }

@@ -1,107 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<StackPane fx:id="rootPane" stylesheets="@../css/Inventory.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.InventoryViewController">
+    <AnchorPane prefHeight="900.0" prefWidth="1400.0" style="-fx-background-color: linear-gradient(to bottom right, #F0F7FF, #E6F0FF);">
+        <children>
+            <!-- Top Header Bar -->
+            <Pane layoutX="32.0" layoutY="31.0" prefHeight="92.0" prefWidth="1325.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+                <children>
+                    <Label layoutX="24.0" layoutY="7.0" text="Inventory Management" textFill="#2563EB">
+                        <font>
+                            <Font name="System Bold" size="32.0" />
+                        </font>
+                    </Label>
+                    <Label layoutX="24.0" layoutY="53.0" text="View your inventory anywhere and anytime" textFill="#64748B">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                    </Label>
+                </children>
+            </Pane>
 
-<AnchorPane prefHeight="900.0" prefWidth="1400.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.InventoryViewController">
-   <children>
-      <Label layoutX="57.0" layoutY="145.0" text="Welcome Back,">
-         <font>
-            <Font size="34.0" />
-         </font>
-      </Label>
-      <Label fx:id="txtUser" layoutX="287.0" layoutY="145.0" text="Testing User">
-         <font>
-            <Font size="35.0" />
-         </font>
-      </Label>
-      <Pane layoutX="32.0" layoutY="31.0" prefHeight="92.0" prefWidth="1325.0" style="-fx-border-radius: 10; -fx-background-color: #D9D9D9;">
-         <children>
-            <Label layoutX="14.0" layoutY="5.0" text="Inventory Management">
-               <font>
-                  <Font name="System Bold" size="32.0" />
-               </font>
-            </Label>
-            <Label layoutX="14.0" layoutY="52.0" text="View your inventory anywhere and anytime">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
-      <Button fx:id="btnGenerateReport" layoutX="1232.0" layoutY="232.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #1E3A8A;" text="Generate Report" textFill="WHITE" />
-      <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="287.0" prefHeight="123.0" prefWidth="688.0" spacing="50.0">
-         <children>
-            <Pane prefHeight="123.0" prefWidth="324.0" style="-fx-background-color: #EDF0F5;">
-               <children>
-                  <Label layoutX="14.0" layoutY="7.0" text="Total Quantity In Stock">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="txtTotalQtyInStock" layoutX="98.0" layoutY="54.0" text="Number">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-               </children>
+            <!-- Welcome Message -->
+            <HBox alignment="CENTER_LEFT" layoutX="57.0" layoutY="145.0" prefHeight="51.0" prefWidth="544.0" spacing="10">
+                <children>
+                    <Label text="Welcome Back," textFill="#334155">
+                        <font>
+                            <Font size="34.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="txtUser" prefHeight="51.0" prefWidth="300.0" text="Testing User" textFill="#1E40AF">
+                        <font>
+                            <Font name="System Bold" size="35.0" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+
+            <!-- Generate Report Button -->
+            <Button fx:id="btnGenerateReport" layoutX="1232.0" layoutY="218.0" mnemonicParsing="false" style="-fx-background-color: #2563EB; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);" text="Generate Report" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+                <padding>
+                    <Insets bottom="10" left="15" right="15" top="10" />
+                </padding>
+            </Button>
+
+            <!-- Statistics Cards -->
+            <HBox alignment="CENTER_LEFT" layoutX="57.0" layoutY="287.0" prefHeight="130.0" prefWidth="724.0" spacing="40.0">
+                <children>
+                    <Pane prefHeight="130.0" prefWidth="340.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                        <children>
+                            <Label layoutX="24.0" layoutY="18.0" text="Total Quantity In Stock" textFill="#334155">
+                                <font>
+                                    <Font name="System Bold" size="20.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="txtTotalQtyInStock" layoutX="24.0" layoutY="54.0" text="5,320" textFill="#2563EB">
+                                <font>
+                                    <Font name="System Bold" size="32.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="26.0" layoutY="100.0" text="units" textFill="#64748B">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                        </children>
+                    </Pane>
+                    <Pane prefHeight="130.0" prefWidth="340.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                        <children>
+                            <Label layoutX="24.0" layoutY="18.0" text="Total Value of Stock" textFill="#334155">
+                                <font>
+                                    <Font name="System Bold" size="20.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="txtTotalValueOfStock" layoutX="24.0" layoutY="54.0" text="RM12,345" textFill="#10B981">
+                                <font>
+                                    <Font name="System Bold" size="32.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="26.0" layoutY="101.0" text="RM" textFill="#64748B">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                        </children>
+                    </Pane>
+                </children>
+            </HBox>
+
+            <!-- Info Panels -->
+            <HBox layoutX="57.0" layoutY="450.0" prefHeight="415.0" prefWidth="724.0" spacing="40.0">
+                <children>
+                    <Pane prefHeight="415.0" prefWidth="340.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                        <children>
+                            <Label layoutX="24.0" layoutY="20.0" text="Low Stock Items" textFill="#334155">
+                                <font>
+                                    <Font name="System Bold" size="20.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="24.0" layoutY="50.0" text="Requires attention" textFill="#F97316">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <VBox fx:id="lowStockItems" layoutX="24.0" layoutY="80.0" prefHeight="320.0" prefWidth="292.0" style="-fx-background-color: #F8FAFC; -fx-background-radius: 8; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                        </children>
+                    </Pane>
+                    <Pane prefHeight="415.0" prefWidth="340.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                        <children>
+                            <Label layoutX="24.0" layoutY="20.0" text="Pending Purchase Orders" textFill="#334155">
+                                <font>
+                                    <Font name="System Bold" size="20.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="24.0" layoutY="50.0" text="In progress" textFill="#3B82F6">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <VBox fx:id="pendingPurchaseOrder" layoutX="24.0" layoutY="80.0" prefHeight="320.0" prefWidth="292.0" style="-fx-background-color: #F8FAFC; -fx-background-radius: 8; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                        </children>
+                    </Pane>
+                </children>
+            </HBox>
+
+            <!-- Chart -->
+            <Pane layoutX="827.0" layoutY="287.0" prefHeight="582.0" prefWidth="530.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <children>
+                    <Label layoutX="24.0" layoutY="20.0" text="Top 10 Recent Stock Updates" textFill="#334155">
+                        <font>
+                            <Font name="System Bold" size="20.0" />
+                        </font>
+                    </Label>
+                    <BarChart fx:id="recentStockUpdates" horizontalGridLinesVisible="false" layoutX="10.0" layoutY="60.0" prefHeight="510.0" prefWidth="510.0" style="-fx-background-color: white; -fx-plot-background-color: white; -fx-vertical-grid-lines-visible: false;" verticalGridLinesVisible="false">
+                        <xAxis>
+                            <CategoryAxis side="BOTTOM" tickLabelFill="#64748B" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT" tickLabelFill="#64748B" />
+                        </yAxis>
+                    </BarChart>
+                </children>
             </Pane>
-            <Pane layoutX="10.0" layoutY="10.0" prefHeight="123.0" prefWidth="343.0" style="-fx-background-color: #EDF0F5;">
-               <children>
-                  <Label layoutX="14.0" layoutY="8.0" text="Total Value of Stock">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="txtTotalValueOfStock" layoutX="102.0" layoutY="54.0" text="Number">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-         </children>
-      </HBox>
-      <HBox layoutX="73.0" layoutY="459.0" prefHeight="415.0" prefWidth="724.0" spacing="50.0">
-         <children>
-            <Pane prefHeight="380.0" prefWidth="309.0" style="-fx-background-color: #F4F4F4;">
-               <children>
-                  <Label layoutX="11.0" layoutY="7.0" text="Low Stock Item">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <VBox fx:id="lowStockItems" layoutX="5.0" layoutY="47.0" prefHeight="361.0" prefWidth="298.0" />
-               </children>
-            </Pane>
-            <Pane prefHeight="380.0" prefWidth="331.0" style="-fx-background-color: #F4F4F4;">
-               <children>
-                  <Label layoutX="9.0" layoutY="8.0" text="Pending Purchase Order">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <VBox fx:id="pendingPurchaseOrder" layoutX="17.0" layoutY="46.0" prefHeight="361.0" prefWidth="298.0" />
-               </children>
-            </Pane>
-         </children>
-      </HBox>
-      <BarChart fx:id="recentStockUpdates" layoutX="827.0" layoutY="292.0" prefHeight="582.0" prefWidth="530.0" style="-fx-background-color: white;" title="Top 10 Recent Stock Updates">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </BarChart>
-   </children>
-</AnchorPane>
+        </children>
+    </AnchorPane>
+
+    <!-- Loading Overlay -->
+    <Pane fx:id="overlayPane" prefHeight="900.0" prefWidth="1400.0" style="-fx-background-color: rgba(0, 0, 0, 0.3);" visible="false" StackPane.alignment="CENTER" />
+    <ProgressIndicator fx:id="loadingIndicator" maxHeight="100" maxWidth="100" style="-fx-progress-color: #3B82F6;" visible="false" StackPane.alignment="CENTER" />
+</StackPane>

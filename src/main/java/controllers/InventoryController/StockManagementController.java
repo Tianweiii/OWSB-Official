@@ -14,10 +14,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import models.Datas.Item;
 import models.Datas.Supplier;
 import views.NotificationView;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -32,6 +35,9 @@ public class StockManagementController implements Initializable {
 
     @FXML
     private Button btnClear;
+
+    @FXML
+    private Button btnExportData;
 
     @FXML
     private TableColumn<Item, Integer> quantity;
@@ -50,6 +56,9 @@ public class StockManagementController implements Initializable {
 
     @FXML
     private TableView<Item> itemTable;
+
+    @FXML
+    private Label itemCountLabel;
 
     @FXML
     private TableColumn<Item, LocalDateTime> lastUpdated;
@@ -71,6 +80,15 @@ public class StockManagementController implements Initializable {
     @FXML
     void onSearchButtonClicked(ActionEvent event) {
         searchItems();
+    }
+
+    @FXML
+    void onExportButtonClicked(ActionEvent event) {
+        try {
+            exportItemData();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final HashMap<Item, String> supplierMap = new HashMap<>();
@@ -117,7 +135,7 @@ public class StockManagementController implements Initializable {
 
                 if (item == null || empty) {
                     setStyle("");
-                } else if (item.getQuantity() < item.getAlertSetting()) {
+                } else if (item.getQuantity() <= item.getAlertSetting()) {
                     setStyle("-fx-background-color: #F6D4D4;");
                 } else {
                     setStyle("");
@@ -141,12 +159,20 @@ public class StockManagementController implements Initializable {
 //        Loading item list
             loadInventoryTable();
 
-//        Filtering Function
+//        Filtering function
             filterItems();
+
+//        Update item count label
+            updateItemCountLabel();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateItemCountLabel() {
+        int count = itemTable.getItems().size();
+        itemCountLabel.setText("(" + count + " items)");
     }
 
     private void loadInventoryTable() throws Exception {
@@ -158,6 +184,8 @@ public class StockManagementController implements Initializable {
         itemTable.getSortOrder().add(itemID);
         itemID.setSortType(TableColumn.SortType.ASCENDING);
         itemTable.sort();
+
+        updateItemCountLabel();
     }
 
     public void filterItems() {
@@ -178,6 +206,8 @@ public class StockManagementController implements Initializable {
             } else {
                 itemTable.setItems(itemList);
             }
+
+            updateItemCountLabel();
         });
     }
 
@@ -198,11 +228,58 @@ public class StockManagementController implements Initializable {
         findData.comparatorProperty().bind(itemTable.comparatorProperty());
         itemTable.setItems(findData);
 
+        updateItemCountLabel();
     }
 
     public void clearSearchResult() {
         itemTable.setItems(itemList);
         txtSearchKeyword.setText("");
+
+        updateItemCountLabel();
+    }
+
+    private void exportItemData() throws IOException {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Inventory Data");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+            fileChooser.setInitialFileName("inventory_export_" +
+                    java.time.LocalDate.now().toString() + ".csv");
+
+            File file = fileChooser.showSaveDialog(stockManagementPane.getScene().getWindow());
+
+            if (file != null) {
+                FileWriter writer = new FileWriter(file);
+
+                writer.write("Item ID,Item Name,Supplier Name,Quantity,Created At,Last Updated\n");
+
+                for (Item item : itemTable.getItems()) {
+                    writer.write(String.format("%s,%s,%s,%d,%s,%s\n",
+                            item.getItemID(),
+                            item.getItemName().replace(",", ";"), // Avoid CSV format issues
+                            supplierMap.get(item).replace(",", ";"),
+                            item.getQuantity(),
+                            stringifyDateTime(item.getCreatedAt()),
+                            stringifyDateTime(item.getUpdatedAt())
+                    ));
+                }
+
+                writer.close();
+
+                NotificationView notificationView = new NotificationView(
+                        "Data exported successfully",
+                        NotificationController.popUpType.success,
+                        NotificationController.popUpPos.TOP);
+                notificationView.show();
+            }
+        } catch (IOException ex) {
+            NotificationView notificationView = new NotificationView(
+                    "Error exporting data: " + ex.getMessage(),
+                    NotificationController.popUpType.error,
+                    NotificationController.popUpPos.TOP);
+            notificationView.show();
+        }
     }
 
     public void loadUpdateDialog(Item selectedItem) throws IOException {
@@ -249,6 +326,8 @@ public class StockManagementController implements Initializable {
                 NotificationView notificationView = new NotificationView("Error Updating Inventory", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
                 notificationView.show();
             }
+
+            updateItemCountLabel();
         } catch (Exception e) {
             e.printStackTrace();
         }

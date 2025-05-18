@@ -98,7 +98,6 @@ public class Item implements ModelInitializable {
         this.quantity = quantity;
     }
 
-
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }

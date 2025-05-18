@@ -25,12 +25,8 @@ public class MainApplication extends Application {
 
         navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
-//        layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Generate Stock Report", "Sales Purchase Request List"});
-//        navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
-
         Scene scene = new Scene(layout.getRoot());
-        scene.getStylesheets().add(getClass().getResource("/css/Inventory.css").toExternalForm());
-        stage.setTitle("OWSB Inventory System");
+        stage.setTitle("OWSB Purchase Order Management System");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
