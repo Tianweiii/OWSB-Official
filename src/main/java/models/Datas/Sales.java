@@ -1,20 +1,61 @@
 package models.Datas;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import models.ModelInitializable;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Sales implements ModelInitializable {
-	private String salesID;
-	private String createdAt;
-	private String updatedAt;
-	private String userID;
+	private final StringProperty salesID   = new SimpleStringProperty();
+	private final ObjectProperty<LocalDate> createdAt  = new SimpleObjectProperty<>();
+	private final ObjectProperty<LocalDate> updatedAt  = new SimpleObjectProperty<>();
+	private final StringProperty userID    = new SimpleStringProperty();
+
+	private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_DATE;
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.salesID = data.get("salesID");
-		this.createdAt = data.get("createdAt");
-		this.updatedAt = data.get("updatedAt");
-		this.userID = data.get("userID");
+		salesID.set(data.get("salesID"));
+		createdAt.set(LocalDate.parse(data.get("createdAt"), ISO));
+		updatedAt.set(LocalDate.parse(data.get("updatedAt"), ISO));
+		userID.set(data.get("userID"));
+	}
+
+	public String getSalesID() {
+		return this.salesID.get();
+	}
+	public StringProperty salesIDProperty() {
+		return this.salesID;
+	}
+
+	public LocalDate getCreatedAt() {
+		return this.createdAt.get();
+	}
+	public ObjectProperty<LocalDate> createdAtProperty() {
+		return this.createdAt;
+	}
+
+	public LocalDate getUpdatedAt() {
+		return this.updatedAt.get();
+	}
+	public ObjectProperty<LocalDate> updatedAtProperty() {
+		return this.updatedAt;
+	}
+
+	public String getUserID() {
+		return this.userID.get();
+	}
+	public StringProperty userIDProperty() {
+		return this.userID;
+	}
+
+	@Override
+	public String toString() {
+		return "Sales#" + getSalesID() + " by " + getUserID();
 	}
 }

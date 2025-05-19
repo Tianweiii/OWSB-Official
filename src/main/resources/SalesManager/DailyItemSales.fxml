@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="rootPane" prefHeight="137.0" prefWidth="611.0" style="-fx-background-color: var(--bg); -fx-padding: 20;" stylesheets="@../css/sales-manager.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.DailyItemSalesController">
+
+   <top>
+      <VBox spacing="20.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label text="Daily Item Sales" />
+               <DatePicker fx:id="datePicker" />
+               <TextField fx:id="searchField" promptText="Search item..." />
+               <ToggleButton fx:id="themeToggle" text="🌙">
+                  <tooltip>
+                     <Tooltip text="Toggle Dark/Light" />
+                  </tooltip>
+               </ToggleButton>
+      
+               <Button fx:id="exportBtn" prefWidth="129.0" styleClass="btn-secondary" text="⭳ Export CSV" />
+               <Label text="Total:" />
+               <Label fx:id="totalLabel" style="-fx-font-size:16px; -fx-font-weight:bold;" />
+            </HBox>
+            <HBox>
+               <children>
+                  <Region prefHeight="0.0" prefWidth="611.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="deleteAllButton" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" text="Button" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+
+   <center>
+      <StackPane fx:id="contentStack" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressIndicator fx:id="loadingIndicator" visible="false" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding></StackPane>
+   </center>
+
+   <bottom>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+         <Button fx:id="addBtn" styleClass="btn-primary" text="+ Add" />
+         <Button fx:id="editBtn" disable="true" styleClass="btn-secondary" text="✎ Edit" />
+         <Button fx:id="delBtn" disable="true" styleClass="btn-delete" text="🗑 Delete" />
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

@@ -73,12 +73,13 @@ public class Payment implements ModelInitializable {
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.paymentID = data.get("payment_id");
-		this.paymentMethod = PaymentMethod.valueOf(data.get("payment_method"));
+		this.paymentID = data.get("paymentID");
+		this.paymentMethod = PaymentMethod.valueOf(data.get("paymentMethod"));
 		this.amount = Double.parseDouble(data.get("amount"));
-		this.createdAt = data.get("created_at");
-		this.PO_ID = data.get("po_id");
-		this.userID = data.get("user_id");
-		this.paymentReference = data.get("payment_reference");
+		this.createdAt = data.get("createdAt");
+		this.PO_ID = data.get("PO_ID");
+		this.userID = data.get("userID");
+		this.paymentReference = data.get("paymentReference");
 	}
+
 }

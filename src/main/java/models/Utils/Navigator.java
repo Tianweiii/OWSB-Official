@@ -3,12 +3,18 @@ package models.Utils;
 import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
+import views.Inventory.InventoryView;
+import views.Inventory.InventoryUpdateRequestView;
+import views.Inventory.StockManagementView;
 import views.LoginView;
 import views.PRPO.EditPRPOView;
 import views.PRPO.PRPOView;
 import views.UserRegistrationView;
 import views.adminViews.UserListView;
+import views.salesViews.DailyItemSalesView;
 import views.salesViews.ItemListView;
+import views.salesViews.SalesManagerDashboardView;
+import views.salesViews.SupplierView;
 
 import java.util.HashMap;
 
@@ -33,14 +39,21 @@ public class Navigator {
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager
-		salesRouter.addRoute("home", UserRegistrationView.class);
+		salesRouter.addRoute("home", SalesManagerDashboardView.class);
 		salesRouter.addRoute("item-list", ItemListView.class);
+		salesRouter.addRoute("supplier", SupplierView.class);
+		salesRouter.addRoute("daily-sales", DailyItemSalesView.class);
+		salesRouter.addRoute("PRPO", PRPOView.class);
 
 		// Purchase manager
 		purchaseRouter.addRoute("PRPO", PRPOView.class);
 		purchaseRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Inventory manager
+		inventoryRouter.addRoute("inventoryHome", InventoryView.class);
+		inventoryRouter.addRoute("stockManagement", StockManagementView.class);
+		inventoryRouter.addRoute("PRPO", PRPOView.class);
+		inventoryRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
 
 		// Finance manage
 		financeRouter.addRoute("PRPO", PRPOView.class);

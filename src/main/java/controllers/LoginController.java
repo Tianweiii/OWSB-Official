@@ -74,7 +74,7 @@ public class LoginController implements Initializable {
 						navigator.navigate(test.load());
 						break;
 					case "2":
-						layout.initSidebar("sales", new String[]{"Home", "Manage Item List"});
+						layout.initSidebar("sales", new String[]{"Home", "Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition"});
 						//Navigate to dashboard
 						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
 						break;
@@ -84,9 +84,9 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("purchase").getRoute("PRPO"));
 						break;
 					case "4":
-						layout.initSidebar("inventory", new String[]{"Register"});
+						layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Procurement Management", "Sales Purchase Request List"});
 						//Navigate to dashboard
-//						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
+						navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
 						break;
 					case "5":
 						layout.initSidebar("finance", new String[]{"Register"});

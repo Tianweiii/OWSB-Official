@@ -4,9 +4,9 @@ import controllers.EditPRPOController;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
+import java.time.format.DateTimeFormatter;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.List;
 public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 	private String itemID;
 	private String itemName;
+	private String description;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private int alertSetting;
@@ -21,6 +22,19 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 	private double unitPrice;
 	private String supplierID;
 
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.itemID = data.get("itemID");
+		this.itemName = data.get("itemName");
+		this.description = data.get("description");
+		this.createdAt = formatDateTime(data.get("createdAt"));
+		this.updatedAt = formatDateTime(data.get("updatedAt"));
+		this.alertSetting = Integer.parseInt(data.get("alertSetting"));
+		this.quantity = Integer.parseInt(data.get("quantity"));
+		this.unitPrice = Double.parseDouble(data.get("unitPrice"));
+		this.supplierID = data.get("supplierID");
+
+	}
 	public Item() {
 	}
 
@@ -42,12 +56,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.quantity = quantity;
 		this.unitPrice = unitPrice;
 		this.supplierID = supplierID;
-	}
-
-	public Item(String itemID, String itemName, int quantity){
-		this.itemID = itemID;
-		this.itemName = itemName;
-		this.quantity = quantity;
 	}
 
 	public String getItemID() {
@@ -106,31 +114,12 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.quantity = quantity;
 	}
 
-
 	public void setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	public void setSupplierID(String supplierID) {
 		this.supplierID = supplierID;
-	}
-
-	@Override
-	public String toString() {
-		return itemID + " - " + itemName;
-	}
-
-	@Override
-	public void initialize(HashMap<String, String> data) {
-		this.itemID = data.get("itemID");
-		this.itemName = data.get("itemName");
-		this.createdAt = formatDateTime(data.get("createdAt"));
-		this.updatedAt = formatDateTime(data.get("updatedAt"));
-		this.alertSetting = Integer.parseInt(data.get("alertSetting"));
-		this.quantity = Integer.parseInt(data.get("quantity"));
-		this.unitPrice = Double.parseDouble(data.get("unitPrice"));
-		this.supplierID = data.get("supplierID");
-
 	}
 
 	public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -169,6 +158,27 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 
 		return itemSupplierMap;
 	}
+	public static LocalDateTime formatDateTime(String strDatetime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return LocalDateTime.parse(strDatetime, formatter);
+	}
+
+	public static String stringifyDateTime(LocalDateTime localDateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return localDateTime.format(formatter);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = LocalDateTime.parse(createdAt);
+	}
 
 	public static HashMap<String, Item> getItemMap() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		HashMap<String, Item> itemMap = new HashMap<>();
@@ -182,14 +192,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		}
 		return itemMap;
 	}
-
-	public static LocalDateTime formatDateTime(String strDatetime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		return LocalDateTime.parse(strDatetime, formatter);
-	}
-
-	public static String stringifyDateTime(LocalDateTime localDateTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		return localDateTime.format(formatter);
-	}
 }
+
+

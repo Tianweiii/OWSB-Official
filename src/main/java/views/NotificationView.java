@@ -33,9 +33,11 @@ public class NotificationView implements View{
 	}
 
 	public void show() {
-		FadeTransition fade = new FadeTransition(Duration.millis(500));
-		PauseTransition pause = new PauseTransition(Duration.millis(3000));
-		SequentialTransition sequentialTransition = new SequentialTransition(pause, fade);
+		FadeTransition fadeIn = new FadeTransition(Duration.millis(500));
+		PauseTransition pause = new PauseTransition(Duration.millis(3000)); // Show for 3 seconds
+		FadeTransition fadeOut = new FadeTransition(Duration.millis(500));
+
+		SequentialTransition sequentialTransition = new SequentialTransition(fadeIn, pause, fadeOut);
 
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
@@ -43,10 +45,14 @@ public class NotificationView implements View{
 		root.getChildren().add(this.notificationPane);
 		Helper.adjustPanePosition(this.pos, root, this.notificationPane);
 
-		fade.setNode(this.notificationPane);
-		fade.setFromValue(1.0);
-		fade.setToValue(0.0);
-		fade.setOnFinished(event -> {
+		fadeIn.setNode(this.notificationPane);
+		fadeIn.setFromValue(0.0);
+		fadeIn.setToValue(1.0);
+
+		fadeOut.setNode(this.notificationPane);
+		fadeOut.setFromValue(1.0);
+		fadeOut.setToValue(0.0);
+		fadeOut.setOnFinished(event -> {
 			root.getChildren().remove(this.notificationPane);
 		});
 

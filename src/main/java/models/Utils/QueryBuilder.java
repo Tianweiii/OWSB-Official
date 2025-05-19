@@ -908,6 +908,8 @@ public class QueryBuilder<T extends ModelInitializable>{
 		String[] dataToValidate = values.split(",");
 
 		if (dataToValidate.length != classAttrs.length) {
+			System.out.println(dataToValidate.length);
+			System.out.println(classAttrs.length);
 			throw new RuntimeException("Number of values does not match number of attributes");
 		}
 

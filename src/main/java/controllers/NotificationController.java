@@ -38,6 +38,13 @@ public class NotificationController implements Initializable {
 						"-fx-background-radius: 5; " +
 						"-fx-background-color: rgba(200, 238, 200, 1)");
 				break;
+			case info:
+				// notifactionImage.setImage(new Image("icons/" + type.toString() + ".png"));
+				notificationContainer.setStyle("-fx-border-color: blue; " +
+						"-fx-border-radius: 5; " +
+						"-fx-background-radius: 5; " +
+						"-fx-background-color: rgba(200, 220, 255, 1)");
+				break;
 		}
 	}
 
