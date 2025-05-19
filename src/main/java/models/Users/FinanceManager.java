@@ -27,7 +27,7 @@ public class FinanceManager extends User {
     final String paymentPath = "db/Payment.txt";
     final String[] paymentColumns = new String[]{"paymentID", "PO_ID", "userID", "paymentMethod", "amount", "createdAt", "paymentReference"};
 
-    public FinanceManager(String user_id, String username, String email, String password, String position, int age, int role_id) {
+    public FinanceManager(String user_id, String username, String email, String password, String position, int age, String role_id) {
         super(user_id, username, email, password, position, age, role_id);
     }
 
@@ -41,7 +41,7 @@ public class FinanceManager extends User {
                 data[3],
                 data[4],
                 Integer.parseInt(data[5]),
-                Integer.parseInt(data[6])
+                data[6]
         );
     }
 

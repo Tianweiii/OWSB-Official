@@ -22,14 +22,14 @@ public class User implements ModelInitializable {
 
 	}
 
-	public User(String user_id, String username, String email, String password, String position, int age, int role_id) {
-		this.user_id = user_id;
+	public User(String user_id, String username, String email, String password, String position, int age, String role_id) {
+		this.userID = user_id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.position = position;
 		this.age = age;
-		this.role_id = role_id;
+		this.roleID = role_id;
 	}
 
 	@Override

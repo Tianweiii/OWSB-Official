@@ -45,7 +45,7 @@ public class Supplier implements ModelInitializable {
 		supplierID = data[0];
 		supplierName = data[1];
 		company = data[2];
-		phone_number = data[3];
+		phoneNumber = data[3];
 		address = data[4];
 	}
 }

@@ -11,6 +11,7 @@ public class Item implements ModelInitializable {
 	private String updatedAt;
 	private String alertSetting;
 	private int quantity;
+	private double unitPrice;
 	private String supplierID;
 
 	@Override
@@ -25,31 +26,31 @@ public class Item implements ModelInitializable {
 	}
 
 	public Item(String[] data) {
-		item_id = data[0];
-		item_name = data[1];
-		created_at = data[2];
-		updated_at = data[3];
-		alert_setting = data[4];
+		itemID = data[0];
+		itemName = data[1];
+		createdAt = data[2];
+		updatedAt = data[3];
+		alertSetting = data[4];
 		quantity = Integer.parseInt(data[5]);
 		unitPrice = Double.parseDouble(data[6]);
-		supplier_id = data[7];
+		supplierID = data[7];
 	}
 
 	public Item() {}
 
 	public Item(String itemID, String itemName, double unitPrice) {
-		this.item_id = itemID;
-		this.item_name = itemName;
+		this.itemID = itemID;
+		this.itemName = itemName;
 		this.unitPrice = unitPrice;
     }
 
-	public String getItemID() { return this.item_id; }
+	public String getItemID() { return this.itemID; }
 
 	public String getItemName() {
 		return this.itemName;
 	}
 
-	public String getSupplierID() {return supplier_id; }
+	public String getSupplierID() {return supplierID; }
 
 	public double getUnitPrice() { return unitPrice; }
 
