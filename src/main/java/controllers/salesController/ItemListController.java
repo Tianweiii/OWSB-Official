@@ -1,6 +1,7 @@
 package controllers.salesController;
 
 import controllers.NotificationController;
+import controllers.SidebarController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -70,6 +71,7 @@ public class ItemListController implements Initializable {
 		root.getChildren().remove(this.editItemPane);
 
 		ItemListController controller = EditItemView.getRootController();
+		SidebarController.getSidebar().setDisable(false);
 		controller.getRootPane().setDisable(false);
 
 	}
@@ -116,6 +118,7 @@ public class ItemListController implements Initializable {
 					root.getChildren().remove(this.editItemPane);
 					ItemListController controller = EditItemView.getRootController();
 					controller.getRootPane().setDisable(false);
+					SidebarController.getSidebar().setDisable(false);
 
 					TableView<HashMap<String, String>> itemTable = controller.getItemTable();
 					itemTable.getItems().clear();
@@ -143,6 +146,7 @@ public class ItemListController implements Initializable {
 			if (res) {
 				notificationView = new NotificationView("Item deleted successfully", NotificationController.popUpType.success, NotificationController.popUpPos.BOTTOM_RIGHT);
 				ItemListController controller = DeleteConfirmationView.getRootController();
+				SidebarController.getSidebar().setDisable(false);
 				controller.getRootPane().setDisable(false);
 				Platform.runLater(() -> {
 					controller.getItemTable().getItems().remove(oldData);
@@ -170,6 +174,7 @@ public class ItemListController implements Initializable {
 		root.getChildren().remove(this.deleteItemPane);
 
 		ItemListController controller = DeleteConfirmationView.getRootController();
+		SidebarController.getSidebar().setDisable(false);
 		controller.getRootPane().setDisable(false);
 	}
 
@@ -225,6 +230,7 @@ public class ItemListController implements Initializable {
 			BorderPane root = layout.getRoot();
 			root.getChildren().remove(this.addItemPane);
 
+			SidebarController.getSidebar().setDisable(false);
 			controllerReference.getRootPane().setDisable(false);
 		}catch (Exception e) {
 			NotificationView notificationView = new NotificationView(e.getMessage(), NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -239,14 +245,22 @@ public class ItemListController implements Initializable {
 
 		ItemListController controller = AddItemView.getRootController();
 		controller.getRootPane().setDisable(false);
+		SidebarController.getSidebar().setDisable(false);
+
 	}
 
 	@FXML
 	public void handleAddItemButtonClick() throws IOException {
+		Layout layout = Layout.getInstance();
+		BorderPane root = layout.getRoot();
+
+		SidebarController.getSidebar().setDisable(true);
+		this.rootPane.setDisable(true);
+
+
 		AddItemView addItemView = new AddItemView();
 		addItemView.showAddItemView(this);
 
-		this.rootPane.setDisable(true);
 	}
 
 	public TableView<HashMap<String, String>> getItemTable() {
@@ -262,7 +276,7 @@ public class ItemListController implements Initializable {
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList(qb
-					.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
+					.select()
 					.from("db/Item.txt")
 					.joins(Supplier.class, "supplierID")
 					.get());
@@ -271,6 +285,8 @@ public class ItemListController implements Initializable {
 			columnNames.add("Item ID");
 			columnNames.add("Item Name");
 			columnNames.add("Supplier Name");
+			columnNames.add("Unit Price");
+			columnNames.add("Quantity");
 			columnNames.add("Created At");
 			columnNames.add("Updated At");
 
@@ -374,6 +390,8 @@ public class ItemListController implements Initializable {
 
 		editItemView.showEditItemPane();
 		this.rootPane.setDisable(true);
+		SidebarController.getSidebar().setDisable(true);
+
 	}
 
 	private void handleDelete(HashMap<String, String> data) throws IOException {
@@ -384,6 +402,8 @@ public class ItemListController implements Initializable {
 
 		deleteConfirmationView.showDeleteConfirmationView();
 		this.rootPane.setDisable(true);
+		SidebarController.getSidebar().setDisable(true);
+
 	}
 
 }

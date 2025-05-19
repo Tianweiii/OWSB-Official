@@ -23,4 +23,52 @@ public class PurchaseOrder implements ModelInitializable {
 		this.payableAmount = data.get("payableAmount");
 		this.POStatus = data.get("POStatus");
 	}
+
+    public String getPrOrderID() {
+        return prOrderID;
+    }
+
+    public void setPrOrderID(String prOrderID) {
+        this.prOrderID = prOrderID;
+    }
+
+    public String getPrRequisitionID() {
+        return prRequisitionID;
+    }
+
+    public void setPrRequisitionID(String prRequisitionID) {
+        this.prRequisitionID = prRequisitionID;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPayableAmount() {
+        return payableAmount;
+    }
+
+    public void setPayableAmount(String payableAmount) {
+        this.payableAmount = payableAmount;
+    }
+
+    public String getPOStatus() {
+        return POStatus;
+    }
+
+    public void setPOStatus(String POStatus) {
+        this.POStatus = POStatus;
+    }
 }

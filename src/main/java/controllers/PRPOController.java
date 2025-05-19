@@ -10,10 +10,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import models.Datas.PurchaseRequisition;
 import models.Utils.SessionManager;
+import service.PurchaseRequisitionService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class PRPOController implements Initializable {
@@ -34,6 +37,8 @@ public class PRPOController implements Initializable {
     @FXML
     private Button create_new_pr_button;
 
+    private final PurchaseRequisitionService prService = new PurchaseRequisitionService();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Get user role info
@@ -41,8 +46,8 @@ public class PRPOController implements Initializable {
         String user_role = session.getUserData().get("roleID");
 
         // Hide the PR/PO Tab based on role:
-            // Admin & Sales & Purchase = show both PR & PO Tab
-            // Inventory & Finance = show PO Tab ONLY
+        // Admin & Sales & Purchase = show both PR & PO Tab
+        // Inventory & Finance = show PO Tab ONLY
         if(user_role.equals("4") || user_role.equals("5")){
             // Hiding the PR tab and PR Pane
             request_tab.setVisible(false);
@@ -50,13 +55,13 @@ public class PRPOController implements Initializable {
             pr_pane.setVisible(false);
 
             // load data
-            loadPOData(user_role);
+            loadPOData();
 
             // initialize the PR/PO list display
             switchTab("order");
         } else {
-            loadPRData(user_role);
-            loadPOData(user_role);
+            loadPRData(null);
+            loadPOData();
             switchTab("request");
         }
 
@@ -89,8 +94,9 @@ public class PRPOController implements Initializable {
         }
     }
 
-    public void loadPOData(String user_role){
-        for(int i=0; i < 4; i++){
+    public void loadPOData() {
+        // Simulate PO Data loading (could use similar logic as PRData)
+        for (int i = 0; i < 4; i++) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PRPOBox.fxml"));
                 Parent boxPane = loader.load();
@@ -106,13 +112,13 @@ public class PRPOController implements Initializable {
         }
     }
 
-    public void switchTab(String procurement_type){
-        if(procurement_type.toLowerCase().equals("request")){
+    public void switchTab(String procurement_type) {
+        if (procurement_type.toLowerCase().equals("request")) {
             po_pane.setVisible(false);
             order_tab.getStyleClass().remove("selected");
 
             pr_pane.setVisible(true);
-            if(!request_tab.getStyleClass().contains("selected")){
+            if (!request_tab.getStyleClass().contains("selected")) {
                 request_tab.getStyleClass().add("selected");
             }
         } else {
@@ -120,13 +126,12 @@ public class PRPOController implements Initializable {
             request_tab.getStyleClass().remove("selected");
 
             po_pane.setVisible(true);
-            if(!order_tab.getStyleClass().contains("selected")){
+            if (!order_tab.getStyleClass().contains("selected")) {
                 order_tab.getStyleClass().add("selected");
             }
         }
     }
 
-    // TODO: Add the function to Create New PR
     public void createNewPR(MouseEvent mouseEvent) {
         System.out.println("clicked");
     }

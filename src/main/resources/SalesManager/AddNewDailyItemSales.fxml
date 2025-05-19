@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="root" prefHeight="320" prefWidth="480" style="-fx-background-color: white;" styleClass="white-form" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.AddNewDailyItemSalesController">
+
+   <stylesheets>
+      <URL value="@../css/sales-manager.css" />
+   </stylesheets>
+   <children>
+      <VBox fx:id="container" alignment="TOP_CENTER" layoutX="6.0" layoutY="17.0" spacing="20" styleClass="white-form" AnchorPane.bottomAnchor="18.333333333333314" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.666666666666686" AnchorPane.topAnchor="17.0">
+         <Label fx:id="titleLabel" styleClass="toolbar-title" text="Add New Item Sale" textAlignment="CENTER">
+            <font><Font size="18" /></font>
+         </Label>
+         <VBox alignment="CENTER_LEFT" maxWidth="360" spacing="5">
+            <Label styleClass="toolbar-label" text="Item:" />
+            <ComboBox fx:id="itemCombo" editable="true" prefHeight="40.0" prefWidth="392.0" promptText="Type or select an item…" />
+            <Region prefWidth="16" />
+         </VBox>
+         <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label styleClass="toolbar-label" text="Quantity:" />
+            <Button fx:id="decBtn" minWidth="30" styleClass="btn-secondary" text="–" />
+            <TextField fx:id="qtyField" alignment="CENTER" prefWidth="80" promptText="0" styleClass="dialog-input" />
+            <Button fx:id="incBtn" minWidth="30" styleClass="btn-secondary" text="+" />
+         </HBox>
+         <Region prefWidth="16" />
+         <HBox alignment="CENTER" maxWidth="360" spacing="10">
+            <Button fx:id="submitBtn" styleClass="btn-primary" text="Submit" />
+            <Region prefWidth="16" />
+            <Button fx:id="cancelBtn" styleClass="btn-secondary" text="Cancel" />
+         </HBox>
+      </VBox>
+   </children>
+</Pane>

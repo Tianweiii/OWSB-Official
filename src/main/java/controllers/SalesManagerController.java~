@@ -1,0 +1,307 @@
+package controllers;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import models.Datas.*;
+import models.Utils.QueryBuilder;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+/**
+ * SalesManagerController
+ * Controller for Sales Manager functionalities:
+ * - Manage Items (CRUD)
+ * - Manage Suppliers (CRUD)
+ * - Record Daily Sales
+ * - Create and View Purchase Requisitions
+ * - View Purchase Orders
+ */
+public class SalesManagerController implements Initializable {
+
+    // ============================ UI Components ============================
+    // Item Management
+    @FXML private TableView<Item> itemTable;
+    @FXML private TableColumn<Item, Integer> colItemId;
+    @FXML private TableColumn<Item, String> colItemName;
+    @FXML private ComboBox<Supplier> cmbItemSupplier;
+    @FXML private TextField txtItemName;
+
+    // Supplier Management
+    @FXML private TableView<Supplier> supplierTable;
+    @FXML private TableColumn<Supplier, Integer> colSupId;
+    @FXML private TableColumn<Supplier, String> colSupName;
+    @FXML private TextField txtSupName;
+    @FXML private TextField txtSupCompany;
+
+    // Daily Sales
+    @FXML private TableView<Item> salesItemTable;
+    @FXML private TableColumn<Item, Integer> colSalesItemId;
+    @FXML private TableColumn<Item, String> colSalesItemName;
+    @FXML private TextField txtSalesQty;
+
+    // Purchase Requisition
+    @FXML private ComboBox<Item> cmbPRItem;
+    @FXML private TextField txtPRQty;
+    @FXML private DatePicker dpPRDate;
+    @FXML private TableView<PurchaseRequisition> prTable;
+    @FXML private TableColumn<PurchaseRequisition, Integer> colPRId;
+    @FXML private TableColumn<PurchaseRequisition, Integer> colPRQty;
+    @FXML private TableColumn<PurchaseRequisition, String> colPRDate;
+
+    // Purchase Order
+    @FXML private TableView<PurchaseOrder> poTable;
+    @FXML private TableColumn<PurchaseOrder, Integer> colPOId;
+    @FXML private TableColumn<PurchaseOrder, Integer> colPOReqId;
+    @FXML private TableColumn<PurchaseOrder, Integer> colPOStatusId;
+
+    // ============================ Data Lists ============================
+    private final ObservableList<Item> items = FXCollections.observableArrayList();
+    private final ObservableList<Supplier> suppliers = FXCollections.observableArrayList();
+    private final ObservableList<PurchaseRequisition> requisitions = FXCollections.observableArrayList();
+    private final ObservableList<PurchaseOrder> purchaseOrders = FXCollections.observableArrayList();
+
+    // ============================ Initialization ============================
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            setupTables();
+            loadAllData();
+        } catch (Exception e) {
+            showError("Initialization Error: " + e.getMessage());
+        }
+    }
+
+    private void setupTables() {
+        // Items
+        colItemId.setCellValueFactory(new PropertyValueFactory<>("item_id"));
+        colItemName.setCellValueFactory(new PropertyValueFactory<>("item_name"));
+        itemTable.setItems(items);
+        cmbItemSupplier.setItems(suppliers);
+
+        // Suppliers
+        colSupId.setCellValueFactory(new PropertyValueFactory<>("supplier_id"));
+        colSupName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        supplierTable.setItems(suppliers);
+
+        // Sales
+        colSalesItemId.setCellValueFactory(new PropertyValueFactory<>("item_id"));
+        colSalesItemName.setCellValueFactory(new PropertyValueFactory<>("item_name"));
+        salesItemTable.setItems(items);
+
+        // Purchase Requisitions
+        colPRId.setCellValueFactory(new PropertyValueFactory<>("pr_requisition_id"));
+        colPRQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        colPRDate.setCellValueFactory(new PropertyValueFactory<>("received_by_date"));
+        prTable.setItems(requisitions);
+        cmbPRItem.setItems(items);
+
+        // Purchase Orders
+        colPOId.setCellValueFactory(new PropertyValueFactory<>("pr_order_id"));
+        colPOReqId.setCellValueFactory(new PropertyValueFactory<>("pr_requisition_id"));
+        colPOStatusId.setCellValueFactory(new PropertyValueFactory<>("pr_order_status_id"));
+        poTable.setItems(purchaseOrders);
+    }
+
+    private void loadAllData() throws Exception {
+        loadItems();
+        loadSuppliers();
+        loadRequisitions();
+        loadPurchaseOrders();
+    }
+
+    private void loadItems() throws Exception {
+        items.setAll(new QueryBuilder<>(Item.class)
+                .select()
+                .from("db/Item.txt")
+                .getAsObjects());
+    }
+
+    private void loadSuppliers() throws Exception {
+        suppliers.setAll(new QueryBuilder<>(Supplier.class)
+                .select()
+                .from("db/Supplier.txt")
+                .getAsObjects());
+    }
+
+    private void loadRequisitions() throws Exception {
+        requisitions.setAll(new QueryBuilder<>(PurchaseRequisition.class)
+                .select()
+                .from("db/PurchaseRequisition.txt")
+                .getAsObjects());
+    }
+
+    private void loadPurchaseOrders() throws Exception {
+        purchaseOrders.setAll(new QueryBuilder<>(PurchaseOrder.class)
+                .select()
+                .from("db/PurchaseOrder.txt")
+                .getAsObjects());
+    }
+
+    // ============================ Item CRUD ============================
+    @FXML
+    private void handleAddItem() {
+        String name = txtItemName.getText().trim();
+        Supplier supplier = cmbItemSupplier.getValue();
+
+        if (name.isEmpty() || supplier == null) {
+            showError("Please provide a valid item name and select a supplier.");
+            return;
+        }
+
+        try {
+            new QueryBuilder<>(Item.class)
+                    .target("db/Item.txt")
+                    .values(new String[]{name, String.valueOf(supplier.getSupplier_id())})
+                    .create();
+            loadItems();
+            clearItemFields();
+        } catch (Exception e) {
+            showError("Failed to add item: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleDeleteItem() {
+        Item selectedItem = itemTable.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            showError("Please select an item to delete.");
+            return;
+        }
+
+        try {
+            new QueryBuilder<>(Item.class)
+                    .target("db/Item.txt")
+                    .delete(String.valueOf(selectedItem.getItem_id()));
+            loadItems();
+        } catch (Exception e) {
+            showError("Failed to delete item: " + e.getMessage());
+        }
+    }
+
+    private void clearItemFields() {
+        txtItemName.clear();
+        cmbItemSupplier.setValue(null);
+    }
+
+    // ============================ Supplier CRUD ============================
+    @FXML
+    private void handleAddSupplier() {
+        String name = txtSupName.getText().trim();
+        String company = txtSupCompany.getText().trim();
+
+        if (name.isEmpty() || company.isEmpty()) {
+            showError("Supplier name and company must not be empty.");
+            return;
+        }
+
+        try {
+            new QueryBuilder<>(Supplier.class)
+                    .target("db/Supplier.txt")
+                    .values(new String[]{name, company, "", ""})
+                    .create();
+            loadSuppliers();
+            clearSupplierFields();
+        } catch (Exception e) {
+            showError("Failed to add supplier: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleDeleteSupplier() {
+        Supplier selectedSupplier = supplierTable.getSelectionModel().getSelectedItem();
+        if (selectedSupplier == null) {
+            showError("Please select a supplier to delete.");
+            return;
+        }
+
+        try {
+            new QueryBuilder<>(Supplier.class)
+                    .target("db/Supplier.txt")
+                    .delete(String.valueOf(selectedSupplier.getSupplier_id()));
+            loadSuppliers();
+        } catch (Exception e) {
+            showError("Failed to delete supplier: " + e.getMessage());
+        }
+    }
+
+    private void clearSupplierFields() {
+        txtSupName.clear();
+        txtSupCompany.clear();
+    }
+
+    // ============================ Daily Sales Entry ============================
+    @FXML
+    private void handleRecordSales() {
+        Item selectedItem = salesItemTable.getSelectionModel().getSelectedItem();
+        String quantityText = txtSalesQty.getText().trim();
+
+        if (selectedItem == null || !isPositiveInteger(quantityText)) {
+            showError("Please select an item and enter a valid quantity.");
+            return;
+        }
+
+        try {
+            int quantity = Integer.parseInt(quantityText);
+            String date = LocalDate.now().toString();
+            new QueryBuilder<>(Transaction.class)
+                    .target("db/Transaction.txt")
+                    .values(new String[]{date, date, String.valueOf(quantity), String.valueOf(selectedItem.getItem_id()), ""})
+                    .create();
+            txtSalesQty.clear();
+        } catch (Exception e) {
+            showError("Failed to record sale: " + e.getMessage());
+        }
+    }
+
+    // ============================ Purchase Requisition ============================
+    @FXML
+    private void handleCreatePR() {
+        Item selectedItem = cmbPRItem.getValue();
+        String quantityText = txtPRQty.getText().trim();
+        LocalDate date = dpPRDate.getValue();
+
+        if (selectedItem == null || !isPositiveInteger(quantityText) || date == null) {
+            showError("Please select an item, enter a valid quantity, and pick a date.");
+            return;
+        }
+
+        try {
+            int quantity = Integer.parseInt(quantityText);
+            new QueryBuilder<>(PurchaseRequisition.class)
+                    .target("db/PurchaseRequisition.txt")
+                    .values(new String[]{date.toString(), "", String.valueOf(quantity), String.valueOf(selectedItem.getItem_id())})
+                    .create();
+            loadRequisitions();
+            clearPurchaseRequisitionFields();
+        } catch (Exception e) {
+            showError("Failed to create Purchase Requisition: " + e.getMessage());
+        }
+    }
+
+    private void clearPurchaseRequisitionFields() {
+        cmbPRItem.setValue(null);
+        txtPRQty.clear();
+        dpPRDate.setValue(null);
+    }
+
+    // ============================ Utilities ============================
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.setHeaderText("Error");
+        alert.showAndWait();
+    }
+
+    private boolean isPositiveInteger(String str) {
+        try {
+            return Integer.parseInt(str) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+}

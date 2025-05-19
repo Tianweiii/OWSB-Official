@@ -9,7 +9,10 @@ import views.Inventory.StockManagementView;
 import views.LoginView;
 import views.PRPOView;
 import views.UserRegistrationView;
+import views.salesViews.DailyItemSalesView;
 import views.salesViews.ItemListView;
+import views.salesViews.SalesManagerDashboardView;
+import views.salesViews.SupplierView;
 
 import java.util.HashMap;
 
@@ -34,8 +37,11 @@ public class Navigator {
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager
-		salesRouter.addRoute("home", UserRegistrationView.class);
+		salesRouter.addRoute("home", SalesManagerDashboardView.class);
 		salesRouter.addRoute("item-list", ItemListView.class);
+		salesRouter.addRoute("supplier", SupplierView.class);
+		salesRouter.addRoute("daily-sales", DailyItemSalesView.class);
+		salesRouter.addRoute("PRPO", PRPOView.class);
 
 		// Purchase manager
 		purchaseRouter.addRoute("PRPO", PRPOView.class);

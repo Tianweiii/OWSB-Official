@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import models.Utils.Navigator;
@@ -20,6 +21,8 @@ public class SidebarController implements Initializable {
 
 	private String[] sidebarItems;
 	private String sidebarType;
+	private static AnchorPane sidebarPane;
+	@FXML private AnchorPane sidebarRoot;
 	@FXML
 	private GridPane sidebarGrid;
 	@FXML private Button logoutButton;
@@ -29,6 +32,7 @@ public class SidebarController implements Initializable {
 	public void setSidebarItems(String sidebarType, String[] sidebarItems) {
 		this.sidebarType = sidebarType;
 		this.sidebarItems = sidebarItems;
+		SidebarController.sidebarPane = sidebarRoot;
 	}
 
 	public void setText() {
@@ -53,6 +57,10 @@ public class SidebarController implements Initializable {
 		HashMap<String, String> user = session.getUserData();
 		usernameLabel.setText(user.get("username"));
 		positionLabel.setText(user.get("roleName"));
+	}
+
+	public static AnchorPane getSidebar() {
+		return SidebarController.sidebarPane;
 	}
 
 	@FXML

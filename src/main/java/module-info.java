@@ -6,6 +6,7 @@ module org.start.owsb {
     requires javafx.swing;
 	requires java.desktop;
     requires java.management;
+    requires java.prefs;
 
 
     opens org.start.owsb to javafx.fxml;

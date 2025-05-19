@@ -3,22 +3,35 @@ package models.Datas;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
+import java.time.format.DateTimeFormatter;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Item implements ModelInitializable {
-    private String itemID;
-    private String itemName;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private int alertSetting;
-    private int quantity;
+	private String itemID;
+	private String itemName;
+	private String description;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private int alertSetting;
+	private int quantity;
     private double unitPrice;
-    private String supplierID;
+	private String supplierID;
 
+	@Override
+	public void initialize(HashMap<String, String> data) {
+		this.itemID = data.get("itemID");
+		this.itemName = data.get("itemName");
+		this.description = data.get("description");
+		this.createdAt = formatDateTime(data.get("createdAt"));
+		this.updatedAt = formatDateTime(data.get("updatedAt"));
+		this.alertSetting = Integer.parseInt(data.get("alertSetting"));
+		this.quantity = Integer.parseInt(data.get("quantity"));
+        this.unitPrice = Double.parseDouble(data.get("unitPrice"));
+		this.supplierID = data.get("supplierID");
+	}
     public Item() {
     }
 
@@ -106,63 +119,65 @@ public class Item implements ModelInitializable {
         this.supplierID = supplierID;
     }
 
-    @Override
-    public void initialize(HashMap<String, String> data) {
-        this.itemID = data.get("itemID");
-        this.itemName = data.get("itemName");
-        this.createdAt = formatDateTime(data.get("createdAt"));
-        this.updatedAt = formatDateTime(data.get("updatedAt"));
-        this.alertSetting = Integer.parseInt(data.get("alertSetting"));
-        this.quantity = Integer.parseInt(data.get("quantity"));
-        this.unitPrice = Double.parseDouble(data.get("unitPrice"));
-        this.supplierID = data.get("supplierID");
-
-    }
-
     public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<Item> qb = new QueryBuilder(Item.class);
         return qb.select().from("db/Item").get();
     }
 
     public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
-        HashMap<Item, String> itemSupplierMap = new HashMap<>();
+		HashMap<Item, String> itemSupplierMap = new HashMap<>();
 
-        QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
-        String[] itemColumns = new String[]{"itemID", "itemName", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
-        ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
+		QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
+		String[] itemColumns = new String[]{"itemID", "itemName", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
+		ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
 
-        for (HashMap<String, String> itemData : items) {
-            String supplierID = itemData.get("supplierID");
+		for (HashMap<String, String> itemData : items) {
+			String supplierID = itemData.get("supplierID");
 
-            ArrayList<HashMap<String, String>> supplierResult = Supplier.getSupplierNameById(supplierID);
-            String companyName = "";
+			ArrayList<HashMap<String, String>> supplierResult = Supplier.getSupplierNameById(supplierID);
+			String companyName = "";
 
-            if (!supplierResult.isEmpty()) {
-                companyName = supplierResult.get(0).get("supplierName");
-            }
+			if (!supplierResult.isEmpty()) {
+				companyName = supplierResult.get(0).get("supplierName");
+			}
 
-            Item item = new Item(
-                    itemData.get("itemID"),
-                    itemData.get("itemName"),
-                    formatDateTime(itemData.get("createdAt")),
-                    formatDateTime(itemData.get("updatedAt")),
-                    Integer.parseInt(itemData.get("alertSetting")),
-                    Integer.parseInt(itemData.get("quantity"))
-            );
+			Item item = new Item(
+					itemData.get("itemID"),
+					itemData.get("itemName"),
+					formatDateTime(itemData.get("createdAt")),
+					formatDateTime(itemData.get("updatedAt")),
+					Integer.parseInt(itemData.get("alertSetting")),
+					Integer.parseInt(itemData.get("quantity"))
+			);
 
-            itemSupplierMap.put(item, companyName);
-        }
+			itemSupplierMap.put(item, companyName);
+		}
 
-        return itemSupplierMap;
+		return itemSupplierMap;
+	}
+		public static LocalDateTime formatDateTime(String strDatetime) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			return LocalDateTime.parse(strDatetime, formatter);
+		}
+
+		public static String stringifyDateTime(LocalDateTime localDateTime) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			return localDateTime.format(formatter);
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public void setCreatedAt(String createdAt) {
+			this.createdAt = LocalDateTime.parse(createdAt);
+		}
+
+
     }
 
-    public static LocalDateTime formatDateTime(String strDatetime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(strDatetime, formatter);
-    }
 
-    public static String stringifyDateTime(LocalDateTime localDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return localDateTime.format(formatter);
-    }
-}
