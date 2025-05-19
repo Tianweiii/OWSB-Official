@@ -31,9 +31,8 @@ public class DeleteConfirmationView implements View {
 
 	public void showDeleteConfirmationView() {
 		Layout layout = Layout.getInstance();
-		BorderPane root = layout.getRoot();
-		root.getChildren().add(deletePane);
-		Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, root, deletePane);
+		layout.getRoot().getChildren().add(deletePane);
+		Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, layout.getRoot(), deletePane);
 	}
 
 	@Override

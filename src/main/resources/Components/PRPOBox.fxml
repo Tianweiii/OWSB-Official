@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="200.0" prefHeight="200.0" prefWidth="1105.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 2, 2); -fx-background-color: #EDF0F5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PRPOBoxController">
+   <children>
+      <VBox layoutX="20.0" layoutY="14.0" spacing="16.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" style="-fx-spacing: 40;">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" style="-fx-spacing: 10;">
+                     <children>
+                        <ImageView fx:id="label_1_image" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                        <Text fx:id="label_1_text" fill="#374151" strokeType="OUTSIDE" strokeWidth="0.0" text="Label 1" textOrigin="CENTER">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" style="-fx-spacing: 10;">
+                     <children>
+                        <ImageView fx:id="label_2_image" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                        <Text fx:id="label_2_text" fill="#374151" strokeType="OUTSIDE" strokeWidth="0.0" text="Label 2" textOrigin="CENTER">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+               <children>
+                  <Text fx:id="items_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Items: ">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#1e3a8a" onMouseClicked="#view_all_item" strokeType="OUTSIDE" strokeWidth="0.0" text="[View All Item]" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <Text fx:id="total_items_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Item:" />
+                  <Text fx:id="total_quantity_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Quantity: " />
+               </children>
+            </HBox>
+            <Text fx:id="total_price_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Price: RM" />
+         </children>
+      </VBox>
+      <AnchorPane fx:id="statusbox_container" layoutX="977.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+      <AnchorPane layoutX="635.0" layoutY="155.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <HBox spacing="60.0">
+               <children>
+                  <Text fx:id="pr_creation_date_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="PR Creation Date: 5-4-2025">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="required_by_text" fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Required By: 12-4-2025">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

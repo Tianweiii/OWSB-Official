@@ -88,7 +88,8 @@ public class Helper {
     }
 
     public static String toAttrString(String input) {
-        return input.toLowerCase().replace(" ", "_");
+        String joinedInput = String.join("", input.split(" "));
+        return joinedInput.substring(0, 1).toLowerCase() + joinedInput.substring(1);
     }
 
     public static String toTableString(String input) {

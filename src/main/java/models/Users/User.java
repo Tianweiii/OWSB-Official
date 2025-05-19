@@ -5,13 +5,13 @@ import models.ModelInitializable;
 import java.util.HashMap;
 
 public class User implements ModelInitializable {
-	private String user_id;
+	private String userID;
 	private String username;
 	private String email;
 	private String password;
 	private String position;
 	private int age;
-	private int role_id;
+	private String roleID;
 
 	public User(String username, int age) {
 		this.username = username;
@@ -34,13 +34,13 @@ public class User implements ModelInitializable {
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		this.user_id = data.get("user_id");
+		this.userID = data.get("userID") != null ? data.get("userID") : "none";
 		this.username = data.get("username");
 		this.email = data.get("email");
 		this.password = data.get("password");
 		this.position = data.get("position");
 		this.age = data.get("age") != null ? Integer.parseInt(data.get("age")) : 0;
-		this.role_id = data.get("role_id") != null ? Integer.parseInt(data.get("role_id")) : 0;
+		this.roleID = data.get("roleID") != null ? data.get("roleID") : "none";
 	}
 
 	public String getName() {
@@ -64,11 +64,11 @@ public class User implements ModelInitializable {
 	}
 
 	public String getId() {
-		return this.user_id;
+		return this.userID;
 	}
 
-	public int getRole() {
-		return this.role_id;
+	public String getRole() {
+		return this.roleID;
 	}
 
 	public void setName(String username) {
@@ -92,11 +92,11 @@ public class User implements ModelInitializable {
 	}
 
 	public void setId(String id) {
-		this.user_id = id;
+		this.userID = id;
 	}
 
-	public void setRole(int role) {
-		this.role_id = role;
+	public void setRole(String role) {
+		this.roleID = role;
 	}
 
 	public void login(String[] data) {
