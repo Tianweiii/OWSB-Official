@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import models.Utils.Navigator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,6 +19,9 @@ import java.time.ZoneId;
 import java.util.*;
 
 public class FinanceHomeController implements Initializable {
+
+    private FinanceMainController mainController;
+    Navigator navigator = Navigator.getInstance();
 
     @FXML
     private BarChart<String, Number> monthlySalesChart;
@@ -84,5 +88,13 @@ public class FinanceHomeController implements Initializable {
         });
 
         monthlySalesChart.layout();
+    }
+
+    public void setMainController(FinanceMainController controller) {
+        mainController = controller;
+    }
+
+    public void onPressViewAll() {
+        mainController.viewAllSales();
     }
 }

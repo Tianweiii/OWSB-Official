@@ -191,7 +191,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="View All &gt;">
+                        <Text fill="#c1bfc4" onMouseClicked="#onPressViewAll" strokeType="OUTSIDE" strokeWidth="0.0" text="View All &gt;">
                            <font>
                               <Font name="October Tamil Black" size="12.0" />
                            </font>

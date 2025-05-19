@@ -31,14 +31,14 @@
                <children>
                   <HBox fx:id="homeNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressHomeButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0" VBox.vgrow="NEVER">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/images/home.png" />
                            </image>
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="16.0" />
                            </font>
                         </Text>
                      </children>
@@ -48,14 +48,14 @@
                   </HBox>
                   <HBox fx:id="prNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressPRButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/images/quote-request.png" />
                            </image>
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Requisitions">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="16.0" />
                            </font>
                         </Text>
                      </children>
@@ -65,14 +65,14 @@
                   </HBox>
                   <HBox fx:id="poNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressPOButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/images/checkout.png" />
                            </image>
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Orders">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="15.0" />
                            </font>
                         </Text>
                      </children>
@@ -82,14 +82,14 @@
                   </HBox>
                   <HBox fx:id="financeNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressFinanceReportButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/images/report.png" />
                            </image>
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Financial Report">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="16.0" />
                            </font>
                         </Text>
                      </children>
@@ -99,14 +99,14 @@
                   </HBox>
                   <HBox fx:id="inventoryNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressInventoryButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/images/credit-card.png" />
                            </image>
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Payments">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="16.0" />
                            </font>
                         </Text>
                      </children>
@@ -127,7 +127,7 @@
                         </ImageView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                            <font>
-                              <Font name="October Tamil Black" size="18.0" />
+                              <Font name="October Tamil Black" size="16.0" />
                            </font>
                         </Text>
                      </children>

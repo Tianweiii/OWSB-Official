@@ -14,6 +14,7 @@ import models.Datas.Payment;
 import models.Datas.Transaction;
 import models.Utils.FileIO;
 import models.Utils.Helper;
+import models.Utils.Navigator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,6 +43,7 @@ public class FinanceReportController implements Initializable {
     @FXML
     private LineChart<String, Number> lineChart;
 
+    Navigator navigator = Navigator.getInstance();
     private FinanceMainController mainController;
 
     @Override
@@ -66,11 +68,13 @@ public class FinanceReportController implements Initializable {
     }
 
     public void viewAllPayments() {
-        mainController.viewAllPayments();
+//        mainController.viewAllPayments();
+        navigator.navigate(navigator.getRouters("finance").getRoute("viewAllPayments"));
     }
 
     public void viewAllSales() {
-        mainController.viewAllSales();
+//        mainController.viewAllSales();
+        navigator.navigate(navigator.getRouters("finance").getRoute("viewAllSales"));
     }
 
     private void populatePaymentsContainer() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

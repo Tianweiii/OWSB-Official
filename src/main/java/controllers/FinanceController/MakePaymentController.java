@@ -37,6 +37,7 @@ import models.Datas.Payment;
 import models.Datas.PaymentCard;
 import models.Datas.PurchaseOrder;
 import models.Utils.Helper;
+import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import views.NotificationView;
@@ -66,6 +67,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     private Text shippingField;
     @FXML
     private Text totalField;
+
+    Navigator navigator = Navigator.getInstance();
 
     // PO data
     private PurchaseOrder currentPO = SessionManager.getCurrentPaymentPO();
@@ -139,7 +142,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     }
 
     public void onPressBack() {
-        mainController.goBack();
+//        mainController.goBack();
+        navigator.goBack();
     }
 
     private void setupGreyBackground(HBox hbox) {

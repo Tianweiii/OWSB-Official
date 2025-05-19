@@ -3,6 +3,7 @@ package org.start.owsb;
 import controllers.FinanceController.FinanceMainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.DTO.TransactionDTO;
@@ -27,12 +28,17 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
-        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
+
+//        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
 
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
-//        navigator.navigate(navigator.getRouters("all").getRoute("login"));
-        navigator.navigate(home.load());
+
+        navigator.setPrevFile(navigator.getRouters("all").getRoute("login"));
+        ArrayList<Parent> stackList = navigator.getStackList();
+        stackList.add(navigator.getRouters("all").getRoute("login"));
+        navigator.navigate(navigator.getRouters("all").getRoute("login"));
+//        navigator.navigate(home.load());
 
         Scene scene = new Scene(layout.getRoot());
         scene.getStylesheets().getClass().getResource("/css/general.css");
@@ -45,8 +51,8 @@ public class MainApplication extends Application {
 //        QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
 //        ArrayList<PurchaseRequisition> PRs = qb.select().from("db/PurchaseRequisition").getAsObjects();
 //        System.out.println(PRs.get(0).getUserID());
-        FinanceManager fm = FileIO.getIDsAsObject(FinanceManager.class, "User", "US13");
-        SessionManager.setFinanceManagerData(fm);
+//        FinanceManager fm = FileIO.getIDsAsObject(FinanceManager.class, "User", "US13");
+//        SessionManager.setFinanceManagerData(fm);
         launch();
     }
 }

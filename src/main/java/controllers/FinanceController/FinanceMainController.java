@@ -75,12 +75,14 @@ public class FinanceMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            setAnchor("/FinanceFXML/FinanceHome.fxml");
-            stackList.add(prevFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        stackList.add(prevFile);
+        loadPage("FinanceHome.fxml", false);
+//        try {
+//            setAnchor("/FinanceFXML/FinanceHome.fxml");
+//            stackList.add(prevFile);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         javafx.application.Platform.runLater(() -> {
             appHeight = mainStage.getScene().getWindow().getHeight();
@@ -100,71 +102,135 @@ public class FinanceMainController implements Initializable {
     }
 
     private void loadPage(String fxmlFile, boolean back) {
-        runTransitionGrow(() -> {
-            try {
-                // this shit so ass lmao
-                if (back) {
-                    stackList.remove(stackList.size() - 1);
-                } else {
-                    String last = stackList.get(stackList.size() - 1);
-                    if (!Objects.equals(last, prevFile)) stackList.add(prevFile);
-                }
-
-                prevFile = fxmlFile;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FinanceFXML/" + fxmlFile));
-
-                Parent page = loader.load();
-                AnchorPane.setTopAnchor(page, 0.0);
-                AnchorPane.setBottomAnchor(page, 0.0);
-                AnchorPane.setLeftAnchor(page, 0.0);
-                AnchorPane.setRightAnchor(page, 0.0);
-                contentArea.getChildren().setAll(page);
-
-//                setAnchor("/FinanceFXML/" + fxmlFile);
-
-                // this shit is horrible my bad haha
-                switch (fxmlFile) {
-                    case "FinancePayments.fxml" -> {
-                        FinancePaymentsController paymentsController = loader.getController();
-                        paymentsController.setMainController(this);
-                    }
-                    case "MakePayment.fxml" -> {
-                        MakePaymentController idkController = loader.getController();
-                        idkController.setMainController(this);
-                    }
-                    case "FinancePR.fxml" -> {
-                        FinancePRController financePRController = loader.getController();
-                        financePRController.setMainController(this);
-                    }
-                    case "PRDetails.fxml" -> {
-                        PRDetailsController prDetailsController = loader.getController();
-                        prDetailsController.setMainController(this);
-                    }
-                    case "PaymentSuccess.fxml" -> {
-                        PaymentSuccessController paymentSuccessController = loader.getController();
-                        paymentSuccessController.setMainController(this);
-                    }
-                    case "FinanceReport.fxml" -> {
-                        FinanceReportController controller = loader.getController();
-                        controller.setMainController(this);
-                    }
-                    case "ViewAllPayments.fxml" -> {
-                        ViewAllPaymentsController controller = loader.getController();
-                        controller.setMainController(this);
-                    }
-                    case "ViewAllSales.fxml" -> {
-                        ViewAllSalesController controller = loader.getController();
-                        controller.setMainController(this);
-                    }
-                }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+//        runTransitionGrow(() -> {
+//            try {
+//                // this shit so ass lmao
+//                if (back) {
+//                    stackList.remove(stackList.size() - 1);
+//                } else {
+//                    String last = stackList.get(stackList.size() - 1);
+//                    if (!Objects.equals(last, prevFile)) stackList.add(prevFile);
+//                }
+//
+//                prevFile = fxmlFile;
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FinanceFXML/" + fxmlFile));
+//
+//                Parent page = loader.load();
+//                AnchorPane.setTopAnchor(page, 0.0);
+//                AnchorPane.setBottomAnchor(page, 0.0);
+//                AnchorPane.setLeftAnchor(page, 0.0);
+//                AnchorPane.setRightAnchor(page, 0.0);
+//                contentArea.getChildren().setAll(page);
+//
+//                // this shit is horrible my bad haha
+//                switch (fxmlFile) {
+//                    case "FinanceHome.fxml" -> {
+//                        FinanceHomeController financeHomeController = loader.getController();
+//                        financeHomeController.setMainController(this);
+//                    }
+//                    case "FinancePayments.fxml" -> {
+//                        FinancePaymentsController paymentsController = loader.getController();
+//                        paymentsController.setMainController(this);
+//                    }
+//                    case "MakePayment.fxml" -> {
+//                        MakePaymentController idkController = loader.getController();
+//                        idkController.setMainController(this);
+//                    }
+//                    case "FinancePR.fxml" -> {
+//                        FinancePRController financePRController = loader.getController();
+//                        financePRController.setMainController(this);
+//                    }
+//                    case "PRDetails.fxml" -> {
+//                        PRDetailsController prDetailsController = loader.getController();
+//                        prDetailsController.setMainController(this);
+//                    }
+//                    case "PaymentSuccess.fxml" -> {
+//                        PaymentSuccessController paymentSuccessController = loader.getController();
+//                        paymentSuccessController.setMainController(this);
+//                    }
+//                    case "FinanceReport.fxml" -> {
+//                        FinanceReportController controller = loader.getController();
+//                        controller.setMainController(this);
+//                    }
+//                    case "ViewAllPayments.fxml" -> {
+//                        ViewAllPaymentsController controller = loader.getController();
+//                        controller.setMainController(this);
+//                    }
+//                    case "ViewAllSales.fxml" -> {
+//                        ViewAllSalesController controller = loader.getController();
+//                        controller.setMainController(this);
+//                    }
+//                }
+//
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            PauseTransition pause = getPauseTransition();
+//            pause.play();
+//        });
+        try {
+            // this shit so ass lmao
+            if (back) {
+                stackList.remove(stackList.size() - 1);
+            } else {
+                String last = stackList.get(stackList.size() - 1);
+                if (!Objects.equals(last, prevFile)) stackList.add(prevFile);
             }
 
-            PauseTransition pause = getPauseTransition();
-            pause.play();
-        });
+            prevFile = fxmlFile;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FinanceFXML/" + fxmlFile));
+
+            Parent page = loader.load();
+            AnchorPane.setTopAnchor(page, 0.0);
+            AnchorPane.setBottomAnchor(page, 0.0);
+            AnchorPane.setLeftAnchor(page, 0.0);
+            AnchorPane.setRightAnchor(page, 0.0);
+            contentArea.getChildren().setAll(page);
+
+            // this shit is horrible my bad haha
+            switch (fxmlFile) {
+                case "FinanceHome.fxml" -> {
+                    FinanceHomeController financeHomeController = loader.getController();
+                    financeHomeController.setMainController(this);
+                }
+                case "FinancePayments.fxml" -> {
+                    FinancePaymentsController paymentsController = loader.getController();
+                    paymentsController.setMainController(this);
+                }
+                case "MakePayment.fxml" -> {
+                    MakePaymentController idkController = loader.getController();
+                    idkController.setMainController(this);
+                }
+                case "FinancePR.fxml" -> {
+                    FinancePRController financePRController = loader.getController();
+                    financePRController.setMainController(this);
+                }
+                case "PRDetails.fxml" -> {
+                    PRDetailsController prDetailsController = loader.getController();
+                    prDetailsController.setMainController(this);
+                }
+                case "PaymentSuccess.fxml" -> {
+                    PaymentSuccessController paymentSuccessController = loader.getController();
+                    paymentSuccessController.setMainController(this);
+                }
+                case "FinanceReport.fxml" -> {
+                    FinanceReportController controller = loader.getController();
+                    controller.setMainController(this);
+                }
+                case "ViewAllPayments.fxml" -> {
+                    ViewAllPaymentsController controller = loader.getController();
+                    controller.setMainController(this);
+                }
+                case "ViewAllSales.fxml" -> {
+                    ViewAllSalesController controller = loader.getController();
+                    controller.setMainController(this);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private PauseTransition getPauseTransition() {

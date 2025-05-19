@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import models.Datas.Payment;
 import models.Utils.FileIO;
+import models.Utils.Navigator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -46,6 +47,7 @@ public class ViewAllPaymentsController extends ViewPageEssentials implements Ini
     @FXML
     private PieChart pieChart;
 
+    Navigator navigator = Navigator.getInstance();
     private ObservableList<Payment> allPayments;
     private FilteredList<Payment> filteredPayments;
     private FinanceMainController mainController;
@@ -76,7 +78,8 @@ public class ViewAllPaymentsController extends ViewPageEssentials implements Ini
     }
 
     public void onPressBack() {
-        mainController.goBack();
+//        mainController.goBack();
+        navigator.goBack();
     }
 
     private void initTable() {

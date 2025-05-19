@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import models.DTO.SalesTransactionDTO;
 import models.Datas.Item;
 import models.Datas.Sales;
+import models.Utils.Navigator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -50,6 +51,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
     @FXML
     private Text totalTransactionsField;
 
+    Navigator navigator = Navigator.getInstance();
     private FilteredList<SalesTransactionDTO> filteredSales;
     private FinanceMainController mainController;
 
@@ -75,7 +77,8 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
     }
 
     public void onPressBack() {
-        mainController.goBack();
+//        mainController.goBack();
+        navigator.goBack();
     }
 
     private void initTable() {

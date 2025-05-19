@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import models.Datas.PurchaseOrder;
 import models.Utils.FileIO;
 import models.Utils.Helper;
+import models.Utils.Navigator;
 import models.Utils.SessionManager;
 
 import java.io.BufferedReader;
@@ -48,6 +49,8 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
     @FXML private TableColumn<PurchaseOrder, String> openedByField;
     @FXML private TableColumn<PurchaseOrder, String> statusField;
     @FXML private TableColumn<PurchaseOrder, Void> actionField;
+
+    Navigator navigator = Navigator.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -88,7 +91,8 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
                     payButton.setOnAction(event -> {
                         PurchaseOrder po = getTableView().getItems().get(getIndex());
                         SessionManager.setCurrentPaymentPO(po);
-                        mainController.onPressPayment();
+//                        mainController.onPressPayment();
+                        navigator.navigate(navigator.getRouters("finance").getRoute("makePayments"));
                     });
                 }
 
