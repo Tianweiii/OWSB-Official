@@ -46,8 +46,8 @@ public class PurchaseRequisition implements ModelInitializable {
 		this.receivedByDate = LocalDate.parse(receivedByDate);
 	}
 
-	public String getCreatedDate() {
-		return createdDate.toString();
+	public LocalDate getCreatedDate() {
+		return createdDate;
 	}
 
 	public void setCreatedDate(String createdDate) {
@@ -76,7 +76,7 @@ public class PurchaseRequisition implements ModelInitializable {
 				user.getId(),
 				this.getPrRequisitionID(),
 				this.getPRStatus(),
-				this.getCreatedDate(),
+				this.getCreatedDate().toString(),
 				this.getReceivedByDate(),
 				itemList,
 				totalQuantity

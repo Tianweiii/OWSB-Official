@@ -18,7 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import models.Datas.Item;
+import models.Datas.Role;
 import models.Datas.Supplier;
+import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.QueryBuilder;
 import org.start.owsb.Layout;
@@ -32,15 +34,18 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemListController implements Initializable {
 	// Item List Page
+	private String[] columns;
 	private ItemListController instance = this;
 	@FXML private AnchorPane rootPane;
 	@FXML private Button addItemButton;
 	@FXML private Button searchButton;
 	@FXML private TextField sortByField;
 	@FXML private TextField searchField;
+	@FXML private Button clearButton;
 	@FXML private TableView<HashMap<String, String>> itemTable = new TableView<>();
 
 	// Add Item Popup
@@ -63,6 +68,40 @@ public class ItemListController implements Initializable {
 	@FXML private TextField editItemNameField = new TextField();
 	@FXML private Button saveEditItemButton;
 	@FXML private Button cancelEditItemButton;
+
+	@FXML
+	public void onClearButtonClicked() {
+		ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
+		oListItems.addAll(getLatestData());
+		this.itemTable.setItems(oListItems);
+		this.itemTable.refresh();
+		searchField.setText("");
+	}
+
+	@FXML
+	public void onSearchButtonClicked() {
+		String searchText = searchField.getText();
+		if (searchText.isEmpty()) {
+			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
+			oListItems.addAll(getLatestData());
+			this.itemTable.setItems(oListItems);
+			return;
+		}
+		ArrayList<HashMap<String, String>> data = this.itemTable
+				.getItems()
+				.stream()
+				.filter(item ->
+						Arrays.stream(columns)
+								.anyMatch(column ->
+										item.get(Helper.toAttrString(column))
+												.toLowerCase()
+												.contains(searchText.toLowerCase())
+								)
+				).collect(Collectors.toCollection(ArrayList::new));
+		ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList(data);
+		this.itemTable.setItems(oListItems);
+
+	}
 
 	@FXML
 	public void onCancelEditItemButtonClick() throws IOException {
@@ -275,22 +314,11 @@ public class ItemListController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList(qb
-					.select()
-					.from("db/Item.txt")
-					.joins(Supplier.class, "supplierID")
-					.get());
+			ObservableList<HashMap<String, String>> oListItems = getLatestData();
 
-			List<String> columnNames = new ArrayList<>();
-			columnNames.add("Item ID");
-			columnNames.add("Item Name");
-			columnNames.add("Supplier Name");
-			columnNames.add("Unit Price");
-			columnNames.add("Quantity");
-			columnNames.add("Created At");
-			columnNames.add("Updated At");
+			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
+			List<String> columnNames = List.of(this.columns);
 
-			itemTable.setRowFactory(tv -> new TableRow<>());
 			for (String columnName : columnNames) {
 				TableColumn<HashMap<String, String>, String> column = new TableColumn<>(columnName);
 
@@ -406,4 +434,19 @@ public class ItemListController implements Initializable {
 
 	}
 
+	private ObservableList<HashMap<String, String>> getLatestData() {
+		ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
+		try {
+			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
+			String className = qb.getClassName();
+			oListItems.addAll(qb
+					.select()
+					.from("db/" + className + ".txt")
+					.joins(Supplier.class, "supplierID")
+					.get());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return oListItems;
+	}
 }

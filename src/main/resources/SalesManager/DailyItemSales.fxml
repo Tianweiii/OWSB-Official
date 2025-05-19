@@ -28,7 +28,7 @@
                      <Tooltip text="Toggle Dark/Light" />
                   </tooltip>
                </ToggleButton>
-      
+
                <Button fx:id="exportBtn" prefWidth="129.0" styleClass="btn-secondary" text="⭳ Export CSV" />
                <Label text="Total:" />
                <Label fx:id="totalLabel" style="-fx-font-size:16px; -fx-font-weight:bold;" />

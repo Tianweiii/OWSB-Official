@@ -10,6 +10,7 @@ import views.LoginView;
 import views.PRPO.EditPRPOView;
 import views.PRPO.PRPOView;
 import views.UserRegistrationView;
+import views.adminViews.AdminDashboardView;
 import views.adminViews.UserListView;
 import views.salesViews.DailyItemSalesView;
 import views.salesViews.ItemListView;
@@ -34,6 +35,7 @@ public class Navigator {
 		// SIDEBAR ROUTES
 		// Ensure routes are the same order as labels in the sidebar
 		// Admin
+		adminRouter.addRoute("dashboard", AdminDashboardView.class);
 		adminRouter.addRoute("register", UserRegistrationView.class);
 		adminRouter.addRoute("user-list", UserListView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);

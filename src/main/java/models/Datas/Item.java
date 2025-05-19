@@ -58,6 +58,13 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.supplierID = supplierID;
 	}
 
+	public Item(String itemID, String itemName, int quantity){
+		this.itemID = itemID;
+		this.itemName = itemName;
+		this.quantity = quantity;
+	}
+
+
 	public String getItemID() {
 		return itemID;
 	}

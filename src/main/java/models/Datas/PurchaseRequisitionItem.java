@@ -66,34 +66,12 @@ public class PurchaseRequisitionItem implements ModelInitializable {
 		);
 	}
 
-	public PurchaseRequisitionItem() {}
-
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.prItemID = data.get("prItemID");
 		this.prRequisitionID = data.get("prRequisitionID");
 		this.itemID = data.get("itemID");
 		this.quantity = Integer.parseInt(data.get("quantity"));
-	}
-
-	public String getPrItemID() {
-		return this.prItemID;
-	}
-	public int getQuantity() {
-		return this.quantity;
-	}
-
-	public String getPrRequisitionID() {
-		return this.prRequisitionID;
-	}
-	public String getItemID() {
-		return this.itemID;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	public void setItemID(String itemID) {
-		this.itemID = itemID;
 	}
 
 	@Override

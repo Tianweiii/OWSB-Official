@@ -13,6 +13,7 @@ import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
 import views.NotificationView;
+import views.adminViews.AdminDashboardView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -68,10 +69,9 @@ public class LoginController implements Initializable {
 
 				switch (data.get(0).get("roleID")) {
 					case "1":
-						layout.initSidebar("admin", new String[]{"Register", "User Management"});
+						layout.initSidebar("admin", new String[]{"Dashboard", "Register", "User Management"});
 						// Navigate to dashboard
-						FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
-						navigator.navigate(test.load());
+						navigator.navigate(navigator.getRouters("admin").getRoute("dashboard"));
 						break;
 					case "2":
 						layout.initSidebar("sales", new String[]{"Home", "Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition"});

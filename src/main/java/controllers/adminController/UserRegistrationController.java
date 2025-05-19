@@ -32,7 +32,6 @@ public class UserRegistrationController implements Initializable {
 
 	@FXML
 	public void handleRegisterButtonClick() {
-		//TODO hash password
 		try {
 			String[] dataToAdd = new String[]{
 					usernameField.getText(),

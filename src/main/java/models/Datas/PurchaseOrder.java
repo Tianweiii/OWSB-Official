@@ -85,7 +85,7 @@ public class PurchaseOrder implements ModelInitializable {
 					this.getpoID(),
 					this.getPOStatus(),
 					this.getTitle(),
-					PR.getCreatedDate(),
+					PR.getCreatedDate().toString(),
 					PR.getReceivedByDate(),
 					itemList,
 					totalQuantity,
