@@ -22,6 +22,16 @@ public class User implements ModelInitializable {
 
 	}
 
+	public User(String user_id, String username, String email, String password, String position, int age, String role_id) {
+		this.userID = user_id;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.position = position;
+		this.age = age;
+		this.roleID = role_id;
+	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.userID = data.get("userID") != null ? data.get("userID") : "none";

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox alignment="CENTER_LEFT" prefWidth="558.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.ReportPaymentItemController">
+   <children>
+      <VBox fx:id="imageContainer" alignment="CENTER" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #c95847; -fx-background-radius: 100;">
+         <children>
+            <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/dollar.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+         </children></VBox>
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0">
+         <children>
+            <Text fx:id="POTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="PO Title" wrappingWidth="249.56000137329102">
+               <font>
+                  <Font name="Baloo Da 2 Medium" size="16.0" />
+               </font>
+            </Text>
+            <Text fx:id="username" fill="#b9b9b9" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="53.4119987487793">
+               <font>
+                  <Font name="Baloo Da 2 Medium" size="12.0" />
+               </font>
+            </Text>
+         </children>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </VBox>
+      <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
+      <Text fx:id="moneyField" fill="#c95847" strokeType="OUTSIDE" strokeWidth="0.0" text="RM 9,999">
+         <font>
+            <Font name="Baloo Bhaina 2 Medium" size="16.0" />
+         </font>
+      </Text>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</HBox>

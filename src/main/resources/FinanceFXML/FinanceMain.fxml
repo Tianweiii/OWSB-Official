@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mainStage" prefHeight="1000.0" prefWidth="1535.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.FinanceMainController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="350.0" spacing="10.0" style="-fx-background-color: #EDF0F5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" fillHeight="false" prefHeight="140.0" prefWidth="348.0" spacing="20.0" VBox.vgrow="NEVER">
+               <children>
+                  <Pane prefHeight="80.0" prefWidth="80.0" style="-fx-border-color: red;" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OSWB">
+                     <font>
+                        <Font name="October Tamil Black" size="20.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <VBox prefHeight="536.0" prefWidth="348.0" spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox fx:id="homeNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressHomeButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0" VBox.vgrow="NEVER">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/home.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                           <font>
+                              <Font name="October Tamil Black" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="prNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressPRButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/quote-request.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Requisitions">
+                           <font>
+                              <Font name="October Tamil Black" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="poNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressPOButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/checkout.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Orders">
+                           <font>
+                              <Font name="October Tamil Black" size="15.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="financeNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressFinanceReportButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/report.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Financial Report">
+                           <font>
+                              <Font name="October Tamil Black" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="inventoryNavButton" alignment="CENTER_LEFT" fillHeight="false" onMouseClicked="#onPressInventoryButton" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/credit-card.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Payments">
+                           <font>
+                              <Font name="October Tamil Black" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_LEFT" prefWidth="100.0">
+               <children>
+                  <HBox fx:id="logoutNavButton" alignment="CENTER_LEFT" fillHeight="false" prefHeight="72.0" prefWidth="346.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/logout.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                           <font>
+                              <Font name="October Tamil Black" size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="115.0" prefWidth="348.0" spacing="20.0" VBox.vgrow="NEVER">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="70.0" prefWidth="70.0" style="-fx-background-radius: 100; -fx-background-color: #6B83C6;">
+                           <children>
+                              <Text fill="WHITE" layoutX="22.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EL">
+                                 <font>
+                                    <Font name="October Tamil Black" size="28.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="214.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ethan Low IQ">
+                                 <font>
+                                    <Font name="October Tamil Black" size="20.0" />
+                                 </font>
+                              </Text>
+                              <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Finance Manager">
+                                 <font>
+                                    <Font name="October Tamil Black" size="12.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="25.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <AnchorPane fx:id="contentArea" layoutX="366.0" layoutY="281.0" prefHeight="505.0" prefWidth="1185.0" style="-fx-background-color: #eaeaf2;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <children>
+              <fx:include source="FinanceHome.fxml" />
+          </children>
+      </AnchorPane>
+      <Pane fx:id="transitionPanel1" prefHeight="0.0" prefWidth="1185.0" style="-fx-background-color: #092165;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="0.0" />
+      <Pane fx:id="transitionPanel2" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="1185.0" style="-fx-background-color: #1E3A8A;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="0.0" />
+      <Pane fx:id="transitionPanel3" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="1185.0" style="-fx-background-color: #CFDBF0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="0.0" />
+      <VBox fx:id="loaderPane" alignment="CENTER" mouseTransparent="true" prefHeight="0.0" prefWidth="0.0" style="-fx-opacity: 0;" styleClass="glassmorphism" stylesheets="@../css/general.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>

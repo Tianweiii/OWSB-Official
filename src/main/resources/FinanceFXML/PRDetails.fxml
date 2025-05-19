@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox prefHeight="1000.0" prefWidth="1185.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.PRDetailsController">
+   <children>
+      <VBox prefHeight="1000.0" prefWidth="784.0" spacing="10.0">
+         <children>
+            <VBox prefHeight="50.0" prefWidth="100.0">
+               <children>
+                  <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#onPressBack" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/back.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
+            <HBox prefWidth="627.0">
+               <children>
+                  <Text fx:id="PR_IDField" strokeType="OUTSIDE" strokeWidth="0.0" text="PR-ID goes here">
+                     <font>
+                        <Font name="Baloo 2 ExtraBold" size="32.0" />
+                     </font>
+                  </Text>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="114.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Text fx:id="statusField" strokeType="OUTSIDE" strokeWidth="0.0" text="Status goes here">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="32.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #c7c7c7;">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </VBox>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: none;" styleClass="viewport" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="itemsContainer" prefHeight="374.0" prefWidth="690.0" spacing="10.0">
+                     <children>
+                        <HBox prefHeight="65.0" prefWidth="690.0">
+                           <children>
+                              <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Detail">
+                                       <font>
+                                          <Font name="Baloo 2 Medium" size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                                 <padding>
+                                    <Insets left="30.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="110.0">
+                                 <children>
+                                    <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity">
+                                       <font>
+                                          <Font name="Baloo 2 Medium" size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="110.0">
+                                 <children>
+                                    <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                                       <font>
+                                          <Font name="Baloo 2 Medium" size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="110.0">
+                                 <children>
+                                    <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Total">
+                                       <font>
+                                          <Font name="Baloo 2 Medium" size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children></VBox>
+               </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+         <children>
+            <VBox prefHeight="50.0" prefWidth="100.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PR Details">
+               <font>
+                  <Font name="Baloo 2 ExtraBold" size="32.0" />
+               </font>
+            </Text>
+            <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #c7c7c7;">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox prefWidth="399.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="397.0" spacing="20.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="User">
+                                 <font>
+                                    <Font name="Baloo 2 SemiBold" size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <VBox prefWidth="305.0" style="-fx-background-color: #fafafa;">
+                           <children>
+                              <Text fx:id="userField" strokeType="OUTSIDE" strokeWidth="0.0" text="Username and ID">
+                                 <font>
+                                    <Font name="Baloo 2 Medium" size="20.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefWidth="399.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="397.0" spacing="20.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created Date">
+                                 <font>
+                                    <Font name="Baloo 2 SemiBold" size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <VBox prefWidth="305.0" style="-fx-background-color: #fafafa;">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Text fx:id="createdDateField" strokeType="OUTSIDE" strokeWidth="0.0" text="Date goes here">
+                                 <font>
+                                    <Font name="Baloo 2 Medium" size="20.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefWidth="399.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="397.0" spacing="20.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Receive By Date">
+                                 <font>
+                                    <Font name="Baloo 2 SemiBold" size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <VBox prefWidth="305.0" style="-fx-background-color: #fafafa;">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Text fx:id="receiveDateField" strokeType="OUTSIDE" strokeWidth="0.0" text="Date goes here">
+                                 <font>
+                                    <Font name="Baloo 2 Medium" size="20.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </VBox>
+         </children></VBox>
+   </children>
+</HBox>
