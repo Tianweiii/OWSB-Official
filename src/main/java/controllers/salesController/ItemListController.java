@@ -3,25 +3,27 @@ package controllers.salesController;
 import controllers.NotificationController;
 import controllers.SidebarController;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
+import models.DTO.ItemListDTO;
 import models.Datas.Item;
 import models.Datas.Supplier;
 import models.Utils.Helper;
 import models.Utils.QueryBuilder;
 import org.start.owsb.Layout;
+import service.ItemService;
+import service.SupplierService;
 import views.NotificationView;
 import views.salesViews.AddItemView;
 import views.salesViews.DeleteConfirmationView;
@@ -29,19 +31,21 @@ import views.salesViews.EditItemView;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ItemListController implements Initializable {
 	// Item List Page
+	private String[] columns;
 	private ItemListController instance = this;
+	private final ItemService itemListService = new ItemService();
+	private final SupplierService supplierService = new SupplierService();
 	@FXML private AnchorPane rootPane;
 	@FXML private Button addItemButton;
 	@FXML private Button searchButton;
-	@FXML private TextField sortByField;
+	@FXML private ChoiceBox<String> filterByChoiceBox;
 	@FXML private TextField searchField;
-	@FXML private TableView<HashMap<String, String>> itemTable = new TableView<>();
+	@FXML private Button clearSearchButton;
+	@FXML private TableView<ItemListDTO> itemTable = new TableView<>();
 
 	// Add Item Popup
 	@FXML
@@ -49,6 +53,7 @@ public class ItemListController implements Initializable {
 	@FXML
 	private TextField addItemNameField;
 	@FXML private ChoiceBox<Supplier> supplierChoiceBox = new ChoiceBox<>();
+	@FXML private TextField itemDescField;
 	@FXML private Button saveAddItemButton;
 	@FXML private Button cancelAddItemButton;
 
@@ -61,8 +66,68 @@ public class ItemListController implements Initializable {
 	// Edit Item Pane
 	@FXML private Pane editItemPane;
 	@FXML private TextField editItemNameField = new TextField();
+	@FXML private TextField editDescField = new TextField();
 	@FXML private Button saveEditItemButton;
 	@FXML private Button cancelEditItemButton;
+
+	// Initialize the item list filter box
+	public void initFilterItems() {
+		String[] filterList = {"All", "Alert Item"};
+		if (filterByChoiceBox != null) {
+			filterByChoiceBox.getItems().addAll(filterList);
+			filterByChoiceBox.setOnAction(event -> {
+				String selectedFilter = filterByChoiceBox.getSelectionModel().getSelectedItem();
+				if (Objects.equals(selectedFilter, "Alert Item")) {
+					ObservableList<ItemListDTO> alertItems = FXCollections.observableArrayList();
+
+					for (ItemListDTO item : itemTable.getItems()) {
+						if (item.getQuantity() < item.getAlertSetting()) {
+							alertItems.add(item);
+						}
+					}
+
+					itemTable.setItems(alertItems);
+				} else {
+					itemTable.setItems(getLatestData());
+				}
+			});
+		}
+	}
+
+	// Clears the search field and refreshes results
+	@FXML
+	public void onClear() {
+		this.searchField.clear();
+
+		this.itemTable.setItems(getLatestData());
+		this.itemTable.refresh();
+	}
+
+	// Searches for items with the contained keyword
+	@FXML
+	public void searchItems() {
+		String searchKeyword = searchField.getText().toLowerCase();
+
+		ObservableList<ItemListDTO> data = this.itemTable.getItems();
+
+		ObservableList<ItemListDTO> filteredData = data.filtered(
+				item -> {
+					if (searchKeyword.isEmpty()) {
+						return true;
+					}
+					if (searchKeyword.matches("[0-9]+")) {
+						return item.getQuantity() == Integer.parseInt(searchKeyword) |
+								item.getAlertSetting() == Integer.parseInt(searchKeyword);
+					}
+
+					return item.getItemName().toLowerCase().contains(searchKeyword) |
+							item.getDescription().toLowerCase().contains(searchKeyword) |
+							item.getSupplierName().toLowerCase().contains(searchKeyword);
+				}
+		);
+
+		itemTable.setItems(filteredData);
+	}
 
 	@FXML
 	public void onCancelEditItemButtonClick() throws IOException {
@@ -80,12 +145,15 @@ public class ItemListController implements Initializable {
 	public void onSaveEditItemButtonClick() {
 		NotificationView notificationView;
 		String changedItemName = this.editItemNameField.getText();
+		String changedItemDescription = this.editDescField.getText();
 		String itemId = EditItemView.getData().get("itemID");
 		String supplierId = EditItemView.getData().get("supplierID");
 
 		HashMap<String, String> dataToUpdate = new HashMap<>();
 		dataToUpdate.put("itemName", changedItemName);
+		dataToUpdate.put("description", changedItemDescription);
 		try {
+			//here
 			QueryBuilder<Item> checkerQb = new QueryBuilder<>(Item.class);
 			ArrayList<HashMap<String, String>> existingData = checkerQb
 					.select(new String[]{"itemName"})
@@ -100,17 +168,10 @@ public class ItemListController implements Initializable {
 				return;
 			}
 
-			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			boolean res = qb.target("db/Item.txt").update(itemId, dataToUpdate);
+			boolean res = itemListService.update(itemId, dataToUpdate);
 
 			if (res) {
-				ArrayList<HashMap<String, String>> newData = qb
-						.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
-						.from("db/Item.txt")
-						.joins(Supplier.class, "supplierID")
-						.get();
-				ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
-				oListItems.addAll(newData);
+				ObservableList<ItemListDTO> oListItems = FXCollections.observableArrayList(getLatestData());
 
 				Platform.runLater(() -> {
 					Layout layout = Layout.getInstance();
@@ -120,7 +181,7 @@ public class ItemListController implements Initializable {
 					controller.getRootPane().setDisable(false);
 					SidebarController.getSidebar().setDisable(false);
 
-					TableView<HashMap<String, String>> itemTable = controller.getItemTable();
+					TableView<ItemListDTO> itemTable = controller.getItemTable();
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
@@ -140,8 +201,7 @@ public class ItemListController implements Initializable {
 		HashMap<String, String> oldData = DeleteConfirmationView.getData();
 		String selectedId = oldData.get("itemID");
 		try {
-			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			boolean res = qb.target("db/Item.txt").delete(selectedId);
+			boolean res = itemListService.delete(selectedId);
 			NotificationView notificationView;
 			if (res) {
 				notificationView = new NotificationView("Item deleted successfully", NotificationController.popUpType.success, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -149,7 +209,9 @@ public class ItemListController implements Initializable {
 				SidebarController.getSidebar().setDisable(false);
 				controller.getRootPane().setDisable(false);
 				Platform.runLater(() -> {
-					controller.getItemTable().getItems().remove(oldData);
+					// Find the deleted item and remove it from the table
+					controller.getItemTable().getItems().stream().filter(i ->
+							i.getItemID().equals(selectedId)).findFirst().ifPresent(controller.getItemTable().getItems()::remove);
 					controller.getItemTable().refresh();
 				});
 			}else {
@@ -186,35 +248,23 @@ public class ItemListController implements Initializable {
 			NotificationView notificationView;
 			ItemListController controllerReference = AddItemView.getRootController();
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			ArrayList<HashMap<String, String>> data = qb.select(new String[]{"itemName", "supplierID"}).from("db/Item.txt").get();
+			ObservableList<ItemListDTO> data = getLatestData();
 
-			for (HashMap<String, String> item: data) {
-				if (item.get("itemName").equals(itemName) && item.get("supplierID").equals(String.valueOf(supplier.getSupplierId()))) {
+			// Check for existing items with same name and supplier
+			for (ItemListDTO item : data) {
+				if (item.getItemName().equals(itemName) && item.getSupplierID().equals(String.valueOf(supplier.getSupplierId()))) {
 					notificationView = new NotificationView("Item already exists", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 					notificationView.show();
 					return;
 				}
 			}
-			boolean res = qb.target("db/Item.txt").values(new String[]{
-					itemName,
-					LocalDate.now().format(DateTimeFormatter.ISO_DATE),
-					LocalDate.now().format(DateTimeFormatter.ISO_DATE),
-					"0",
-					"100",
-					String.valueOf(supplier.getSupplierId())
-			}).create();
+			boolean res = itemListService.add(itemName, this.itemDescField.getText(), supplier.getSupplierId());
 
 			if (res) {
-				ArrayList<HashMap<String, String>> newData = qb
-						.select(new String[]{"itemID", "itemName", "supplierName", "createdAt", "updatedAt", "supplierID"})
-						.from("db/Item.txt")
-						.joins(Supplier.class, "supplierID")
-						.get();
-				ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
-				oListItems.addAll(newData);
+				ObservableList<ItemListDTO> oListItems = getLatestData();
 
 				Platform.runLater(() -> {
-					TableView<HashMap<String, String>> itemTable = controllerReference.getItemTable();
+					TableView<ItemListDTO> itemTable = controllerReference.getItemTable();
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
@@ -251,9 +301,6 @@ public class ItemListController implements Initializable {
 
 	@FXML
 	public void handleAddItemButtonClick() throws IOException {
-		Layout layout = Layout.getInstance();
-		BorderPane root = layout.getRoot();
-
 		SidebarController.getSidebar().setDisable(true);
 		this.rootPane.setDisable(true);
 
@@ -263,7 +310,7 @@ public class ItemListController implements Initializable {
 
 	}
 
-	public TableView<HashMap<String, String>> getItemTable() {
+	public TableView<ItemListDTO> getItemTable() {
 		return this.itemTable;
 	}
 
@@ -275,45 +322,49 @@ public class ItemListController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList(qb
-					.select()
-					.from("db/Item.txt")
-					.joins(Supplier.class, "supplierID")
-					.get());
+			ObservableList<ItemListDTO> oListItems = getLatestData();
 
-			List<String> columnNames = new ArrayList<>();
-			columnNames.add("Item ID");
-			columnNames.add("Item Name");
-			columnNames.add("Description");
-			columnNames.add("Supplier Name");
-			columnNames.add("Unit Price");
-			columnNames.add("Quantity");
-			columnNames.add("Created At");
-			columnNames.add("Updated At");
+			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
+			List<String> columnNames = List.of(this.columns);
 
-			itemTable.setRowFactory(tv -> new TableRow<>());
+			// If quantity less than alert setting, color red
+			itemTable.setRowFactory(new Callback<>() {
+				@Override
+				public TableRow<ItemListDTO> call(TableView<ItemListDTO> hashMapTableView) {
+					return new TableRow<>() {
+						@Override
+						protected void updateItem(ItemListDTO item, boolean empty) {
+							super.updateItem(item, empty);
+							if (item != null && item.getQuantity() < item.getAlertSetting()) {
+								setStyle("-fx-background-color: #ff0000;");
+							} else {
+								setStyle("");
+							}
+						}
+					};
+				}
+			});
+
 			for (String columnName : columnNames) {
-				TableColumn<HashMap<String, String>, String> column = new TableColumn<>(columnName);
+				TableColumn<ItemListDTO, String> column = new TableColumn<>(columnName);
 
-				column.setCellValueFactory(cellData ->
-						new SimpleStringProperty(cellData.getValue().get(Helper.toAttrString(columnName))));
+				column.setCellValueFactory(new PropertyValueFactory<>(Helper.toAttrString(columnName)));
 
 				itemTable.getColumns().add(column);
 			}
 
-			TableColumn<HashMap<String, String>, String> optionsColumns = this.getOptionsColumns();
+			TableColumn<ItemListDTO, String> optionsColumns = this.getOptionsColumns();
 
 			itemTable.getColumns().add(optionsColumns);
 			itemTable.setItems(oListItems);
+
+			initFilterItems();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
 		try {
-			QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-			ArrayList<Supplier> suppliers = qb.select().from("db/Supplier.txt").getAsObjects();
-			ObservableList<Supplier> supplierList = FXCollections.observableArrayList(suppliers);
-
+			ObservableList<Supplier> supplierList = FXCollections.observableArrayList(supplierService.getAll());
 			StringConverter<Supplier> supplierConverter = new StringConverter<>() {
 				@Override
 				public String toString(Supplier supplier) {
@@ -340,8 +391,8 @@ public class ItemListController implements Initializable {
 
 	}
 
-	private TableColumn<HashMap<String, String>, String> getOptionsColumns() {
-		TableColumn<HashMap<String, String>, String> optionsColumns = new TableColumn<>("Actions");
+	private TableColumn<ItemListDTO, String> getOptionsColumns() {
+		TableColumn<ItemListDTO, String> optionsColumns = new TableColumn<>("Actions");
 
 		optionsColumns.setCellFactory(column -> new TableCell<>() {
 			private final MenuButton actionMenu = new MenuButton("⋮");
@@ -355,17 +406,17 @@ public class ItemListController implements Initializable {
 				MenuItem deleteItem = new MenuItem("Delete");
 
 				editItem.setOnAction(event -> {
-					HashMap<String, String> data = this.getTableView().getItems().get(this.getIndex());
+					ItemListDTO data = this.getTableView().getItems().get(this.getIndex());
 					try {
-						handleEdit(data);
+						handleEdit(data.toMap());
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
 				});
 				deleteItem.setOnAction(event -> {
-					HashMap<String, String> data = this.getTableView().getItems().get(this.getIndex());
+					ItemListDTO data = this.getTableView().getItems().get(this.getIndex());
 					try {
-						handleDelete(data);
+						handleDelete(data.toMap());
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
@@ -407,4 +458,7 @@ public class ItemListController implements Initializable {
 
 	}
 
+	private ObservableList<ItemListDTO> getLatestData() {
+		return FXCollections.observableArrayList(itemListService.getAll());
+	}
 }
