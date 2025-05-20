@@ -6,13 +6,15 @@ public class PaymentDTO {
     private double amount;
     private String item;
     private int quantity;
+    private double unitPrice;
 
-    public PaymentDTO(String PO_ID, String itemName, double amount, String item, int quantity) {
+    public PaymentDTO(String PO_ID, String itemName, double amount, String item, int quantity, double unitPrice) {
         this.PO_ID = PO_ID;
         this.itemName = itemName;
         this.amount = amount;
         this.item = item;
         this.quantity = quantity;
+        this.unitPrice = unitPrice;
     }
 
     public String getPO_ID() {
@@ -45,5 +47,9 @@ public class PaymentDTO {
 
     public void setItem(String item) {
         this.item = item;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
     }
 }

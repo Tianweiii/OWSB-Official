@@ -9,3 +9,4 @@ PO8,PR8,US6,Team uniforms,495.00,Late
 PO9,PR9,US3,Maintenance tools,630.89,Approved
 PO10,PR11,US8,Kitchen equipment,899.99,Pending
 PO11,PR4,US12,Mobile devices,1440.50,Verified
+PO12,PR12,US12,Office Equipments,1231.25,Verified

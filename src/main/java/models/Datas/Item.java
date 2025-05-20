@@ -2,13 +2,15 @@ package models.Datas;
 
 import models.ModelInitializable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Item implements ModelInitializable {
 	private String itemID;
 	private String itemName;
-	private String createdAt;
-	private String updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	private String alertSetting;
 	private int quantity;
 	private double unitPrice;
@@ -18,8 +20,8 @@ public class Item implements ModelInitializable {
 	public void initialize(HashMap<String, String> data) {
 		this.itemID = data.get("itemID");
 		this.itemName = data.get("itemName");
-		this.createdAt = data.get("createdAt");
-		this.updatedAt = data.get("updatedAt");
+		this.createdAt = LocalDateTime.parse(data.get("createdAt"));
+		this.updatedAt = LocalDateTime.parse(data.get("updatedAt"));
 		this.alertSetting = data.get("alertSetting");
 		this.quantity = Integer.parseInt(data.get("quantity"));
 		this.supplierID = data.get("supplierID");
@@ -28,8 +30,9 @@ public class Item implements ModelInitializable {
 	public Item(String[] data) {
 		itemID = data[0];
 		itemName = data[1];
-		createdAt = data[2];
-		updatedAt = data[3];
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		createdAt = LocalDateTime.parse(data[2], formatter);
+		updatedAt = LocalDateTime.parse(data[3], formatter);
 		alertSetting = data[4];
 		quantity = Integer.parseInt(data[5]);
 		unitPrice = Double.parseDouble(data[6]);

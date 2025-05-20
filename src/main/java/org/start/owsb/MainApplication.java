@@ -1,6 +1,7 @@
 package org.start.owsb;
 
 import controllers.FinanceController.FinanceMainController;
+import controllers.FinanceController.PaymentSuccessController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,7 @@ import models.Utils.FileIO;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
+import net.sf.jasperreports.engine.JRException;
 import views.UserRegistrationView;
 
 import java.io.File;
@@ -29,8 +31,6 @@ public class MainApplication extends Application {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
 
-//        FXMLLoader home = new FXMLLoader(getClass().getResource("/FinanceFXML/FinanceMain.fxml"));
-
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
 
@@ -38,7 +38,6 @@ public class MainApplication extends Application {
         ArrayList<Parent> stackList = navigator.getStackList();
         stackList.add(navigator.getRouters("all").getRoute("login"));
         navigator.navigate(navigator.getRouters("all").getRoute("login"));
-//        navigator.navigate(home.load());
 
         Scene scene = new Scene(layout.getRoot());
         scene.getStylesheets().getClass().getResource("/css/general.css");
@@ -47,12 +46,14 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws IOException, ReflectiveOperationException {
+    public static void main(String[] args) throws IOException, ReflectiveOperationException, JRException {
 //        QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
 //        ArrayList<PurchaseRequisition> PRs = qb.select().from("db/PurchaseRequisition").getAsObjects();
 //        System.out.println(PRs.get(0).getUserID());
-//        FinanceManager fm = FileIO.getIDsAsObject(FinanceManager.class, "User", "US13");
-//        SessionManager.setFinanceManagerData(fm);
+
         launch();
+//        SessionManager ins = SessionManager.getInstance();
+//        SessionManager.setCurrentPaymentPO(new PurchaseOrder("PO12", "PR12", "US12", "Office Equipments", 1231.25, "Verified"));
+//        PaymentSuccessController.pressPrintReceipt();
     }
 }

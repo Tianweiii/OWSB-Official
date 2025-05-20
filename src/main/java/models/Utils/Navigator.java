@@ -52,6 +52,7 @@ public class Navigator {
 		financeRouter.addRoute("makePayments", MakePaymentsView.class);
 		financeRouter.addRoute("viewAllSales", ViewAllSales.class);
 		financeRouter.addRoute("viewAllPayments", ViewAllPayments.class);
+		financeRouter.addRoute("paymentSuccess", PaymentSuccessView.class);
 
 		// NON SIDEBAR ROUTES
 		allRouter.addRoute("login", LoginView.class);
@@ -103,4 +104,12 @@ public class Navigator {
 	public void setPrevFile(Parent prevFile) {
 		this.prevFile = prevFile;
 	}
+
+//	public void renderLoader() {
+//		this.layout.renderLoader();
+//	}
+//
+//	public void removeLoader() {
+//		this.layout.removeLoader();
+//	}
 }

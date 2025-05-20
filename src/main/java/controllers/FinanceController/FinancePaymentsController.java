@@ -91,7 +91,6 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
                     payButton.setOnAction(event -> {
                         PurchaseOrder po = getTableView().getItems().get(getIndex());
                         SessionManager.setCurrentPaymentPO(po);
-//                        mainController.onPressPayment();
                         navigator.navigate(navigator.getRouters("finance").getRoute("makePayments"));
                     });
                 }

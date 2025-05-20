@@ -253,7 +253,7 @@ public class FinanceMainController implements Initializable {
         Circle outerRing = new Circle(25, Color.TRANSPARENT);
         outerRing.setStroke(Color.DODGERBLUE);
         outerRing.setStrokeWidth(3);
-        // Create a gap in the circle
+        // circle gap
         outerRing.getStrokeDashArray().addAll(90.0, 10.0);
 
         DropShadow glow = new DropShadow();

@@ -1,9 +1,11 @@
 package models.Users;
 
+import controllers.NotificationController;
 import models.Datas.Payment;
 import models.Datas.PurchaseOrder;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
+import views.NotificationView;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -16,10 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 public class FinanceManager extends User {
 //    private int FinanceId;
@@ -68,7 +67,6 @@ public class FinanceManager extends User {
     }
 
     public boolean verifyInventoryUpdates(String invID) {
-
         return true;
     }
 
@@ -80,7 +78,7 @@ public class FinanceManager extends User {
         return qb.target(path).update(PO_ID, target);
     }
 
-    public static String sendReceipt(String receiverEmail, String subject, String filename) {
+    public void sendReceipt(String receiverEmail, String subject, String filename) throws IOException {
 //        String senderEmail = "tootzejiat@gmail.com";
         String senderEmail = "tianweilow1003@gmail.com";
         String senderPassword = "wevy bwod yaai vnfy";
@@ -140,11 +138,16 @@ public class FinanceManager extends User {
            // actually send the shit now
            Transport.send(msg);
 
-           return "Email sent!";
+           NotificationView notificationView = new NotificationView("Successfully sent to email, please check spam folder.", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
+           notificationView.show();
 
        } catch (MessagingException e) {
-           e.printStackTrace();
+           throw new RuntimeException(e);
+       } catch (IOException e) {
+           throw new RuntimeException(e);
        }
-        return "";
+
+        NotificationView notificationView = new NotificationView("Failed to send email.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+        notificationView.show();
     }
 }
