@@ -191,6 +191,7 @@ public class SupplierController implements Initializable {
         };
 
         colActions.setCellFactory(cf);
+        colActions.setText("Actions");
     }
 
     /** Popup menu for edit/delete with red delete button */

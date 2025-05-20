@@ -1,5 +1,5 @@
 S1,Ahmad Supplies,Bumi Trading Sdn Bhd,0123456789,45 Jalan Tun Razak, Kuala Lumpur
-S2,Lee Hardware,Lee Enterprise Sdn Bhd,0138765432,12 Jalan Ampang, Kuala Lumpur
+S2,Lee Hardwares,Lee Enterprise Sdn Bhd,0138765432,12 Jalan Ampang
 S3,Ravi Distributors,Ravi & Sons Sdn Bhd,0172233445,89 Jalan Tebrau, Johor Bahru
 S4,Lim Industrial,Lim Engineering Sdn Bhd,0199988776,23 Jalan Dato Onn, Ipoh
 S5,Muhammad Supplies,Southeast Ventures,0123456789,45 Jalan Ampang Kuala Lumpur 50450

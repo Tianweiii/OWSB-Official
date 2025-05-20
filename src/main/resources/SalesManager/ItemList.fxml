@@ -43,23 +43,23 @@
                      <children>
                         <Region prefHeight="52.0" prefWidth="25.6" />
                         <GridPane alignment="CENTER_LEFT" hgap="10.0" prefHeight="52.0" prefWidth="573.0" HBox.hgrow="ALWAYS">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.99999237060547" minWidth="10.0" prefWidth="131.2" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.40000000000003" minWidth="10.0" prefWidth="182.40000000000003" />
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.99999237060547" minWidth="10.0" prefWidth="131.2" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.40000000000003" minWidth="10.0" prefWidth="182.40000000000003" />
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="94.99999999999997" minWidth="0.0" prefWidth="16.399999999999977" />
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="94.99999999999997" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints maxHeight="31.4" minHeight="10.0" prefHeight="17.4" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="54.4" minHeight="10.0" prefHeight="35.4" vgrow="SOMETIMES" />
-                           </rowConstraints>
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="31.4" minHeight="10.0" prefHeight="17.4" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="54.4" minHeight="10.0" prefHeight="35.4" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <Label text="Sort By" />
+                              <Label text="Filter By" />
                               <Label text="Search Bar" GridPane.columnIndex="1" />
-                              <TextField fx:id="sortByField" prefHeight="26.0" prefWidth="138.0" GridPane.rowIndex="1" />
                               <TextField fx:id="searchField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#onSearchButtonClicked" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <Button fx:id="clearButton" onAction="#onClearButtonClicked" mnemonicParsing="false" text="Clear" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchItems" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <ChoiceBox fx:id="filterByChoiceBox" prefWidth="150.0" GridPane.rowIndex="1" />
+                              <Button fx:id="clearSearchButton" layoutX="387.0" layoutY="32.0" mnemonicParsing="false" onAction="#onClear" text="Clear" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
                      </children>

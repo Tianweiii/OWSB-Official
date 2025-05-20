@@ -7,8 +7,10 @@ import javafx.beans.property.*;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Transaction implements ModelInitializable {
 	private String transactionID         ;
@@ -58,6 +60,16 @@ public class Transaction implements ModelInitializable {
 	public double getSubtotal()             {
 		return this.soldQuantity * this.unitPriceProperty().get();
 	}
+	
+	public String getFormattedUnitPrice() {
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		return currencyFormat.format(getUnitPrice());
+	}
+	
+	public String getFormattedSubtotal() {
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		return currencyFormat.format(getSubtotal());
+	}
 
 	// Properties for bindings
 	public StringProperty itemNameProperty()            {
@@ -103,7 +115,7 @@ public class Transaction implements ModelInitializable {
 		return "TX#" + getTransactionID()
 				+ " item=" + getItemID()
 				+ " qty=" + getSoldQuantity()
-				+ " sub=" + getSubtotal();
+				+ " sub=" + getFormattedSubtotal();
 	}
 
 	public IntegerProperty soldQuantityProperty() {

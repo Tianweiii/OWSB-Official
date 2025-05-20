@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:id="editItemPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.ItemListController">
+<Pane fx:id="editItemPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.ItemListController">
    <children>
       <VBox alignment="CENTER" layoutX="153.0" layoutY="100.0" prefHeight="200.0" prefWidth="294.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
@@ -25,7 +25,23 @@
                   </VBox>
                </children>
             </HBox>
-            <Region prefHeight="13.0" prefWidth="264.0" />
+            <HBox layoutX="25.0" layoutY="63.0" prefHeight="47.0" prefWidth="243.0">
+               <children>
+                  <VBox prefHeight="47.0" prefWidth="275.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="243.0" text="Enter a new description for this item">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="editDescField" prefHeight="26.0" prefWidth="272.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <HBox alignment="CENTER" prefHeight="48.0" prefWidth="243.0">
                <children>
                   <Button fx:id="saveEditItemButton" alignment="CENTER" mnemonicParsing="false" onAction="#onSaveEditItemButtonClick" prefHeight="26.0" prefWidth="92.0" text="Save" HBox.hgrow="ALWAYS" />
