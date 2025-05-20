@@ -44,6 +44,17 @@ public class Navigator {
 		adminRouter.addRoute("dashboard", AdminDashboardView.class);
 		adminRouter.addRoute("register", UserRegistrationView.class);
 		adminRouter.addRoute("user-list", UserListView.class);
+		adminRouter.addRoute("item-list", ItemListView.class);
+		adminRouter.addRoute("supplier", SupplierView.class);
+		adminRouter.addRoute("daily-sales", DailyItemSalesView.class);
+		adminRouter.addRoute("PRPO", PRPOView.class);
+		adminRouter.addRoute("stockManagement", StockManagementView.class);
+		adminRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
+		adminRouter.addRoute("financeReport", FinanceReportView.class);
+		adminRouter.addRoute("financePayments", FinancePaymentsView.class);
+		adminRouter.addRoute("makePayments", MakePaymentsView.class);
+		adminRouter.addRoute("viewAllSales", ViewAllSales.class);
+		adminRouter.addRoute("viewAllPayments", ViewAllPayments.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager

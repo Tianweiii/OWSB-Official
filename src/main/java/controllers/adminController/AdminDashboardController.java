@@ -103,7 +103,6 @@ public class AdminDashboardController implements Initializable {
 		this.totalUserCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("admin").getRoute("user-list")));
 		this.recentUsersCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("admin").getRoute("user-list")));
 
-		//TODO add inventory route
-		this.lowStockItemCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("inventory").getRoute("")));
+		this.lowStockItemCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("inventory").getRoute("stockManagement")));
 	}
 }
