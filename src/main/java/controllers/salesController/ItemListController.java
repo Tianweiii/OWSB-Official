@@ -36,7 +36,6 @@ import java.util.*;
 public class ItemListController implements Initializable {
 	// Item List Page
 	private String[] columns;
-	private ItemListController instance = this;
 	private final ItemService itemListService = new ItemService();
 	private final SupplierService supplierService = new SupplierService();
 	@FXML private AnchorPane rootPane;
@@ -130,7 +129,7 @@ public class ItemListController implements Initializable {
 	}
 
 	@FXML
-	public void onCancelEditItemButtonClick() throws IOException {
+	public void onCancelEditItemButtonClick(){
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
 		root.getChildren().remove(this.editItemPane);
@@ -247,7 +246,6 @@ public class ItemListController implements Initializable {
 		try {
 			NotificationView notificationView;
 			ItemListController controllerReference = AddItemView.getRootController();
-			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			ObservableList<ItemListDTO> data = getLatestData();
 
 			// Check for existing items with same name and supplier
@@ -321,7 +319,6 @@ public class ItemListController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
-			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			ObservableList<ItemListDTO> oListItems = getLatestData();
 
 			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
