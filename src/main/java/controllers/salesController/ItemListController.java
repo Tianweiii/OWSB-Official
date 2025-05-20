@@ -152,7 +152,6 @@ public class ItemListController implements Initializable {
 		dataToUpdate.put("itemName", changedItemName);
 		dataToUpdate.put("description", changedItemDescription);
 		try {
-			//here
 			QueryBuilder<Item> checkerQb = new QueryBuilder<>(Item.class);
 			ArrayList<HashMap<String, String>> existingData = checkerQb
 					.select(new String[]{"itemName"})
