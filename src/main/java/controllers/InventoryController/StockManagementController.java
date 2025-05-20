@@ -277,7 +277,7 @@ public class StockManagementController implements Initializable {
             NotificationView notificationView = new NotificationView(
                     "Error exporting data: " + ex.getMessage(),
                     NotificationController.popUpType.error,
-                    NotificationController.popUpPos.TOP);
+                    NotificationController.popUpPos.BOTTOM_RIGHT);
             notificationView.show();
         }
     }

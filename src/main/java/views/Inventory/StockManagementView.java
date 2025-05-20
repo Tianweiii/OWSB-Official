@@ -3,6 +3,7 @@ package views.Inventory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import views.View;
 
 import java.io.IOException;
