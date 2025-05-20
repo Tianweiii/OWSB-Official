@@ -10,6 +10,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 public class Helper {
@@ -147,8 +149,32 @@ public class Helper {
         return result.toString();
     }
 
-    @SafeVarargs
-    public static <T> Class<? extends T>[] createClassArray(Class<? extends T>... classes) {
-        return classes;
+    public static String capitalize(String input) {
+        if (input == null || input.isEmpty()) return input;
+
+        char firstChar = input.charAt(0);
+        if (Character.isUpperCase(firstChar)) return input;
+
+        return Character.toUpperCase(firstChar) + input.substring(1);
+    }
+
+    public static String setPRStatusText(String input) {
+        return switch (capitalize(input)) {
+            case "Rejected" -> "red";
+            case "Approved" -> "green";
+            default -> "orange";
+        };
+    }
+
+    // dd/MM/yyyy
+    public static String getTodayDate() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return today.format(formatter);
+    }
+
+    public static double toFixed2(double number) {
+        number = Math.round(number * 100);
+        return number/100;
     }
 }

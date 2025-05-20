@@ -19,6 +19,14 @@ public class Transaction implements ModelInitializable {
 	private String itemID               ;
 	private String salesID;
 
+	public Transaction(String[] data) {
+		transactionID = data[0];
+		dailySalesHistoryID = data[1];
+		soldQuantity = Integer.parseInt(data[2]);
+		itemID = data[3];
+		salesID = data[4];
+	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.transactionID = data.get("transactionID");
@@ -60,12 +68,12 @@ public class Transaction implements ModelInitializable {
 	public double getSubtotal()             {
 		return this.soldQuantity * this.unitPriceProperty().get();
 	}
-	
+
 	public String getFormattedUnitPrice() {
 		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
 		return currencyFormat.format(getUnitPrice());
 	}
-	
+
 	public String getFormattedSubtotal() {
 		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
 		return currencyFormat.format(getSubtotal());
@@ -77,12 +85,12 @@ public class Transaction implements ModelInitializable {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			return new SimpleStringProperty(
 					qb
-						.select(new String[]{"itemName"})
-						.from("db/Item.txt")
-						.where("itemID", "=", this.itemID)
-						.get()
-						.get(0)
-						.get("itemName"));
+							.select(new String[]{"itemName"})
+							.from("db/Item.txt")
+							.where("itemID", "=", this.itemID)
+							.get()
+							.get(0)
+							.get("itemName"));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -92,14 +100,14 @@ public class Transaction implements ModelInitializable {
 			QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 			return new SimpleDoubleProperty(
 					Double.parseDouble(
-						qb
-								.select(new String[]{"unitPrice"})
-								.from("db/Item.txt")
-								.where("itemID", "=", this.itemID)
-								.get()
-								.get(0)
-								.get("unitPrice"))
-					);
+							qb
+									.select(new String[]{"unitPrice"})
+									.from("db/Item.txt")
+									.where("itemID", "=", this.itemID)
+									.get()
+									.get(0)
+									.get("unitPrice"))
+			);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);

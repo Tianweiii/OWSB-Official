@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox fx:id="homePane" prefHeight="1000.0" prefWidth="1185.0" spacing="20.0" stylesheets="@../css/general.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.FinanceHomeController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="600.0" spacing="25.0" style="-fx-background-color: #dedef6; -fx-background-radius: 16;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="119.0" prefWidth="540.0" spacing="20.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="40.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/menu.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard" wrappingWidth="178.33599853515625">
+               <font>
+                  <Font name="October Tamil Black" size="32.0" />
+               </font></Text>
+            <HBox alignment="CENTER" prefHeight="178.0" prefWidth="540.0" spacing="25.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="292.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="178.0" prefWidth="400.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" prefHeight="339.0" prefWidth="575.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" VBox.vgrow="ALWAYS">
+               <children>
+                  <BarChart fx:id="monthlySalesChart">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
+               <padding>
+                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+               </padding>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="1114.0" layoutY="154.0" prefHeight="200.0" prefWidth="450.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="143.0" prefWidth="448.0" spacing="15.0">
+               <children>
+                  <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #e7e4f5; -fx-background-radius: 100;" VBox.vgrow="NEVER">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/images/user.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ethan Low IQ">
+                     <font>
+                        <Font name="October Tamil Black" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Finance Manager">
+                     <font>
+                        <Font name="October Tamil Black" size="12.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="NEVER">
+                     <children>
+                        <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: #e7e4f5; -fx-background-radius: 16;" VBox.vgrow="NEVER">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/check.png" />
+                                 </image>
+                              </ImageView>
+                           </children></VBox>
+                        <Text fill="#5650dc" strokeType="OUTSIDE" strokeWidth="0.0" text="Some">
+                           <font>
+                              <Font name="October Tamil Black" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <children>
+                        <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: #e7e4f5; -fx-background-radius: 16;">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/send.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                        <Text fill="#5650dc" strokeType="OUTSIDE" strokeWidth="0.0" text="Button">
+                           <font>
+                              <Font name="October Tamil Black" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <children>
+                        <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: #e7e4f5; -fx-background-radius: 16;">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/people.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                        <Text fill="#5650dc" strokeType="OUTSIDE" strokeWidth="0.0" text="Over">
+                           <font>
+                              <Font name="October Tamil Black" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <children>
+                        <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: #e7e4f5; -fx-background-radius: 16;">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/image-gallery.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                        <Text fill="#5650dc" strokeType="OUTSIDE" strokeWidth="0.0" text="Here">
+                           <font>
+                              <Font name="October Tamil Black" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="333.0" prefWidth="450.0" spacing="14.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="420.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recent Transactions">
+                           <font>
+                              <Font name="October Tamil Black" size="18.0" />
+                           </font>
+                        </Text>
+                        <Region prefHeight="200.0" prefWidth="200.0" />
+                        <Text fill="#c1bfc4" onMouseClicked="#onPressViewAll" strokeType="OUTSIDE" strokeWidth="0.0" text="View All &gt;">
+                           <font>
+                              <Font name="October Tamil Black" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="416.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 20; -fx-background-color: pink;" HBox.hgrow="NEVER" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Woodworks Inc.">
+                                       <font>
+                                          <Font name="October Tamil Black" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Some text">
+                                       <font>
+                                          <Font name="October Tamil Black" size="12.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Region prefHeight="83.0" prefWidth="136.0" HBox.hgrow="ALWAYS" />
+                        <Label text="+ RM25,000" textFill="#5650dc">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="416.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 20; -fx-background-color: #7fab92;" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Woodworks Inc.">
+                                       <font>
+                                          <Font name="October Tamil Black" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Some text">
+                                       <font>
+                                          <Font name="October Tamil Black" size="12.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Region prefHeight="83.0" prefWidth="136.0" HBox.hgrow="ALWAYS" />
+                        <Label text="- RM7,000" textFill="#da997b">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="416.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 20; -fx-background-color: #f39583;" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Woodworks Inc.">
+                                       <font>
+                                          <Font name="October Tamil Black" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Some text">
+                                       <font>
+                                          <Font name="October Tamil Black" size="12.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Region prefHeight="83.0" prefWidth="136.0" HBox.hgrow="ALWAYS" />
+                        <Label text="+ RM25,000" textFill="#5650dc">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="416.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 20; -fx-background-color: #5cb9e0;" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Woodworks Inc.">
+                                       <font>
+                                          <Font name="October Tamil Black" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fill="#c1bfc4" strokeType="OUTSIDE" strokeWidth="0.0" text="Some text">
+                                       <font>
+                                          <Font name="October Tamil Black" size="12.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Region prefHeight="83.0" prefWidth="136.0" HBox.hgrow="ALWAYS" />
+                        <Label text="- RM10,000" textFill="#da997b">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</HBox>

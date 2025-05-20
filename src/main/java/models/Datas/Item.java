@@ -69,6 +69,27 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		return itemID;
 	}
 
+	public Item(String[] data) {
+		itemID = data[0];
+		itemName = data[1];
+		createdAt = data[2];
+		updatedAt = data[3];
+		alertSetting = data[4];
+		quantity = Integer.parseInt(data[5]);
+		unitPrice = Double.parseDouble(data[6]);
+		supplierID = data[7];
+	}
+
+	public Item() {}
+
+	public Item(String itemID, String itemName, double unitPrice) {
+		this.itemID = itemID;
+		this.itemName = itemName;
+		this.unitPrice = unitPrice;
+    }
+
+	public String getItemID() { return this.itemID; }
+
 	public String getItemName() {
 		return itemName;
 	}
@@ -199,6 +220,11 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		}
 		return itemMap;
 	}
+
+	public String getSupplierID() {return supplierID; }
+
+	public double getUnitPrice() { return unitPrice; }
+
 }
 
 

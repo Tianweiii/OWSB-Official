@@ -16,6 +16,7 @@ public class PRItemDTO implements EditPRPOController.ItemRow  {
     private String itemName;
     private int itemQuantity;
     private double unitPrice;
+    private double total;
 
     public PRItemDTO(String itemID, String prID, String itemName, int itemQuantity, double unitPrice) {
         this.itemID = itemID;
@@ -23,6 +24,7 @@ public class PRItemDTO implements EditPRPOController.ItemRow  {
         this.itemName = itemName;
         this.itemQuantity = itemQuantity;
         this.unitPrice = unitPrice;
+        this.total = total;
     }
 
     @Override
@@ -91,5 +93,9 @@ public class PRItemDTO implements EditPRPOController.ItemRow  {
         }
 
         return prItemDTOs;
+    }
+
+    public double getTotal() {
+        return total;
     }
 }

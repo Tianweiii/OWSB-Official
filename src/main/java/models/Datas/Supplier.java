@@ -61,4 +61,13 @@ public class Supplier implements ModelInitializable {
 		this.phoneNumber = data.get("phoneNumber");
         this.address = data.get("address");
     }
+
+	// for the fileIO class init
+	public Supplier(String[] data) {
+		supplierID = data[0];
+		supplierName = data[1];
+		company = data[2];
+		phoneNumber = data[3];
+		address = data[4];
+	}
 }

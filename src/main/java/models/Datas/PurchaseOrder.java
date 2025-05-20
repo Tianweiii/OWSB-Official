@@ -2,11 +2,18 @@ package models.Datas;
 
 import models.DTO.PODataDTO;
 import models.DTO.POItemDTO;
+import models.DTO.PaymentDTO;
 import models.ModelInitializable;
 import models.Users.User;
+import models.Utils.FileIO;
+import models.Utils.QueryBuilder;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PurchaseOrder implements ModelInitializable {
 	private String poID;
@@ -102,4 +109,47 @@ public class PurchaseOrder implements ModelInitializable {
 		this.payableAmount = data.get("payableAmount");
 		this.POStatus = data.get("POStatus");
 	}
+	@Override
+	public String toString() {
+		return "PurchaseOrder{" +
+				"poID='" + poID + '\'' +
+				", prID='" + prID + '\'' +
+				", userID='" + userID + '\'' +
+				", title='" + title + '\'' +
+				", payableAmount=" + payableAmount +
+				", status='" + POStatus + '\'' +
+				'}';
+	}
+
+	public ArrayList<PurchaseOrderItem> getPurchaseOrderItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		QueryBuilder<PurchaseOrderItem> qb = new QueryBuilder<>(PurchaseOrderItem.class);
+		return qb.select().from("db/PurchaseOrderItem").where("poID", "=", poID).getAsObjects();
+	}
+
+	public Map<String, List<PaymentDTO>> getPurchaseItemList() throws IOException, ReflectiveOperationException {
+		Map<String, List<PaymentDTO>> payments = new HashMap<>();
+		// get item ids and quantity
+		HashMap<String, String> itemAndQuantity = FileIO.filterIDToHashMap("PurchaseOrderItem", 1, 2, 3, poID);
+		Set<String> itemIDs = itemAndQuantity.keySet();
+
+		// getting items of PO
+		ArrayList<Item> items = FileIO.getIDsAsObjects(Item.class, "Item", itemIDs);
+
+		for (Item i : items) {
+			String supplierID = i.getSupplierID();
+			String itemName = FileIO.getXFromID("Item", 0, 1, i.getItemID());
+			String itemID = i.getItemID();
+			int quantity = Integer.parseInt(itemAndQuantity.get(itemID));
+			double amount = quantity * i.getUnitPrice();
+
+			PaymentDTO payment = new PaymentDTO(poID, itemName, amount, itemID, quantity);
+
+			// Group by supplier ID
+			payments.computeIfAbsent(supplierID, k -> new ArrayList<>()).add(payment);
+		}
+
+		return payments;
+	}
+
+//	public HashMap<String, String> get
 }

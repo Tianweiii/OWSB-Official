@@ -83,4 +83,6 @@ public class PurchaseRequisitionItem implements ModelInitializable {
 				", itemID='" + itemID + '\'' +
 				'}';
 	}
+
+	public PurchaseRequisitionItem() {}
 }
