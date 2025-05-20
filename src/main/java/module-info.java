@@ -3,21 +3,29 @@ module org.start.owsb {
     requires javafx.fxml;
     requires net.sf.jasperreports.core;
     requires java.sql;
-    requires javafx.swing;
 	requires java.desktop;
     requires java.management;
 
+    requires java.mail;
+    requires activation;
 
-    opens org.start.owsb to javafx.fxml;
+	opens org.start.owsb to javafx.fxml;
     exports org.start.owsb;
 
     opens views to javafx.fxml;
     exports views;
 
     opens models.DTO to javafx.base;
+    exports models.DTO;
 
     opens controllers to javafx.fxml;
     exports controllers;
+
+    opens controllers.FinanceController to javafx.fxml;
+    exports controllers.FinanceController;
+
+    opens models.Datas to java.base;
+    exports models.Datas;
 
 	opens controllers.salesController to javafx.fxml;
     exports controllers.salesController;
@@ -28,7 +36,6 @@ module org.start.owsb {
     opens controllers.InventoryController to javafx.fxml;
     exports controllers.InventoryController;
 
-    opens models.Datas to javafx.base;
     exports views.Inventory;
     opens views.Inventory to javafx.fxml;
 }

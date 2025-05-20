@@ -1,0 +1,81 @@
+/* Underline-only TextField Style */
+
+.underline-textfield {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.5em 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #cccccc;
+    -fx-font-size: 14px;
+}
+
+.underline-textfield:focused {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #4d90fe;
+}
+
+.underline-textfield:hover {
+    -fx-border-color: #aaaaaa;
+}
+
+/* Dark version with white underline */
+.underline-textfield-dark {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.5em 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.underline-textfield-dark:focused {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: white;
+}
+
+.underline-textfield-dark:hover {
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Animated version with transition effects */
+.underline-textfield-animated {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.5em 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #cccccc;
+    -fx-font-size: 14px;
+    -fx-transition: border-color 0.3s, border-width 0.3s;
+}
+
+.underline-textfield-animated:focused {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #4d90fe;
+}
+
+.underline-textfield-animated:hover {
+    -fx-border-color: #aaaaaa;
+}
+
+/* Underline with label style for a complete form field */
+.form-field {
+    -fx-spacing: 5;
+}
+
+.form-field .label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #757575;
+}
+
+.form-field-dark {
+    -fx-spacing: 5;
+}
+
+.form-field-dark .label {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}

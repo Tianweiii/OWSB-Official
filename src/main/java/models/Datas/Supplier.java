@@ -8,31 +8,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Supplier implements ModelInitializable {
-    private String supplierID;
-    private String supplierName;
-    private String company;
-    private String phoneNumber;
-    private String address;
+	private String supplierID;
+	private String supplierName;
+	private String company;
+	private String phoneNumber;
+	private String address;
 
-    public String getSupplierId() {
-        return supplierID;
-    }
+	public Supplier()  {}
 
-    public String getCompanyName() {
-        return this.company;
-    }
+	public String getSupplierId() {
+		return this.supplierID;
+	}
 
-    public String getSupplierName() {
-        return this.supplierName;
-    }
+	public String getCompanyName() {
+		return this.company;
+	}
 
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
+	public String getSupplierName() {
+		return this.supplierName;
+	}
 
-    public String getAddress() {
-        return this.address;
-    }
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
+
+	public String getAddress() {
+		return this.address;
+	}
 
 	public static ArrayList<HashMap<String, String>> getSupplierNameById(String supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
@@ -48,6 +50,15 @@ public class Supplier implements ModelInitializable {
 		this.supplierName = data.get("supplierName");
 		this.company = data.get("company");
 		this.phoneNumber = data.get("phoneNumber");
-        this.address = data.get("address");
-    }
+		this.address = data.get("address");
+	}
+
+	// for the fileIO class init
+	public Supplier(String[] data) {
+		supplierID = data[0];
+		supplierName = data[1];
+		company = data[2];
+		phoneNumber = data[3];
+		address = data[4];
+	}
 }

@@ -221,6 +221,7 @@ public class StockManagementController implements Initializable {
                     item.getItemName().toLowerCase().contains(searchKeyword) ||
                     item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
                     item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
+                    String.valueOf(item.getQuantity()).contains(searchKeyword) ||
                     (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
         });
 

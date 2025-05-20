@@ -22,6 +22,12 @@ public class Item implements ModelInitializable {
     public Item() {
     }
 
+    public Item(String itemID, String itemName, double unitPrice) {
+        this.itemID = itemID;
+        this.itemName = itemName;
+        this.unitPrice = unitPrice;
+    }
+
     public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
         this.itemID = itemID;
         this.itemName = itemName;
@@ -29,6 +35,17 @@ public class Item implements ModelInitializable {
         this.updatedAt = updatedAt;
         this.alertSetting = alertSetting;
         this.quantity = quantity;
+    }
+
+    public Item(String[] data) {
+        itemID = data[0];
+        itemName = data[1];
+        createdAt = formatDateTime(data[2]);
+        updatedAt = formatDateTime(data[3]);
+        alertSetting = Integer.parseInt(data[4]);
+        quantity = Integer.parseInt(data[5]);
+        unitPrice = Double.parseDouble(data[6]);
+        supplierID = data[7];
     }
 
     public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity, double unitPrice, String supplierID) {
