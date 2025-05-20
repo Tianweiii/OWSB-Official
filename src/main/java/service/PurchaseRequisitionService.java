@@ -43,8 +43,8 @@ public class PurchaseRequisitionService extends Service<PurchaseRequisition> {
             QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
             return qb.target(DATA_FILE)
                     .values(new String[]{
-                            pr.getReceivedByDate().toString(),
-                            Optional.ofNullable(pr.getCreatedDate()).map(LocalDate::toString).orElse(""),
+                            pr.getReceivedByDate(),
+                            Optional.ofNullable(pr.getCreatedDate()).orElse(""),
                             pr.getUserID(),
                             pr.getPRStatus()
                     })
@@ -67,8 +67,8 @@ public class PurchaseRequisitionService extends Service<PurchaseRequisition> {
             QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
             return qb.target(DATA_FILE)
                     .update(id, new String[]{
-                            pr.getReceivedByDate().toString(),
-                            Optional.ofNullable(pr.getCreatedDate()).map(LocalDate::toString).orElse(""),
+                            pr.getReceivedByDate(),
+                            Optional.ofNullable(pr.getCreatedDate()).orElse(""),
                             pr.getUserID(),
                             pr.getPRStatus()
                     });
@@ -123,8 +123,8 @@ public class PurchaseRequisitionService extends Service<PurchaseRequisition> {
             pr.setPRStatus(status);
             return qb.target(DATA_FILE)
                     .update(String.valueOf(id), new String[]{
-                            pr.getReceivedByDate().toString(),
-                            Optional.ofNullable(pr.getCreatedDate()).map(LocalDate::toString).orElse(""),
+                            pr.getReceivedByDate(),
+                            Optional.ofNullable(pr.getCreatedDate()).orElse(""),
                             pr.getUserID(),
                             pr.getPRStatus()
                     });

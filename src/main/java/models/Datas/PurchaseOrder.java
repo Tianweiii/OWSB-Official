@@ -1,5 +1,6 @@
 package models.Datas;
 
+import javafx.beans.property.SimpleStringProperty;
 import models.DTO.PODataDTO;
 import models.DTO.POItemDTO;
 import models.DTO.PaymentDTO;
@@ -10,10 +11,7 @@ import models.Utils.QueryBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PurchaseOrder implements ModelInitializable {
 	private String poID;
@@ -27,6 +25,16 @@ public class PurchaseOrder implements ModelInitializable {
 
 	}
 
+
+	public PurchaseOrder(String[] data) {
+		this.poID = data[0];
+		this.prID = data[1];
+		this.userID = data[2];
+		this.title = data[3];
+		this.payableAmount = String.valueOf(Double.parseDouble(data[4]));
+		this.POStatus = data[5];
+	}
+
 	public PurchaseOrder(String poID, String prID, String userID, String title, String payableAmount, String POStatus) {
 		this.poID = poID;
 		this.prID = prID;
@@ -38,6 +46,10 @@ public class PurchaseOrder implements ModelInitializable {
 
 	public String getpoID() {
 		return poID;
+	}
+
+	public String getPoID() {
+		return this.poID;
 	}
 
 	public void setpoID(String poID) {
@@ -92,7 +104,7 @@ public class PurchaseOrder implements ModelInitializable {
 					this.getpoID(),
 					this.getPOStatus(),
 					this.getTitle(),
-					PR.getCreatedDate().toString(),
+					PR.getCreatedDate(),
 					PR.getReceivedByDate(),
 					itemList,
 					totalQuantity,

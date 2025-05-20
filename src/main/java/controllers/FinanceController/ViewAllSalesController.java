@@ -21,10 +21,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ViewAllSalesController extends ViewPageEssentials implements Initializable {
 
@@ -126,6 +123,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
+                System.out.println("parts:" + Arrays.toString(parts));
                 salesMap.put(parts[0], new Sales(parts[0], parts[1], parts[2], parts[3]));
             }
         }
@@ -149,7 +147,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
                 int quantity = Integer.parseInt(parts[2].trim());
                 double amount = priceMap.get(itemId).getUnitPrice() * quantity;
 
-                list.add(new SalesTransactionDTO(parts[0], priceMap.get(itemId).getItemName(), amount, salesMap.get(parts[4]).getCreatedAt(), salesMap.get(parts[4]).getUserID()));
+                list.add(new SalesTransactionDTO(parts[0], priceMap.get(itemId).getItemName(), amount, salesMap.get(parts[4]).getCreatedAt().toString(), salesMap.get(parts[4]).getUserID()));
             }
         }
 

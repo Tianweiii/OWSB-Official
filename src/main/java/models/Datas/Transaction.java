@@ -19,6 +19,8 @@ public class Transaction implements ModelInitializable {
 	private String itemID               ;
 	private String salesID;
 
+	public Transaction() {}
+
 	public Transaction(String[] data) {
 		transactionID = data[0];
 		dailySalesHistoryID = data[1];

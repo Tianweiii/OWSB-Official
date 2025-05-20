@@ -35,8 +35,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.supplierID = data.get("supplierID");
 
 	}
-	public Item() {
-	}
 
 	public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
 		this.itemID = itemID;
@@ -64,20 +62,16 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.quantity = quantity;
 	}
 
-
-	public String getItemID() {
-		return itemID;
-	}
-
 	public Item(String[] data) {
 		itemID = data[0];
 		itemName = data[1];
-		createdAt = data[2];
-		updatedAt = data[3];
-		alertSetting = data[4];
-		quantity = Integer.parseInt(data[5]);
-		unitPrice = Double.parseDouble(data[6]);
-		supplierID = data[7];
+		description = data[2];
+		createdAt = formatDateTime(data[3]);
+		updatedAt = formatDateTime(data[4]);
+		alertSetting = Integer.parseInt(data[5]);
+		quantity = Integer.parseInt(data[6]);
+		unitPrice = Double.parseDouble(data[7]);
+		supplierID = data[8];
 	}
 
 	public Item() {}
@@ -108,14 +102,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 
 	public int getQuantity() {
 		return quantity;
-	}
-
-	public double getUnitPrice() {
-		return unitPrice;
-	}
-
-	public String getSupplierID() {
-		return supplierID;
 	}
 
 	public void setItemID(String itemID) {
@@ -151,7 +137,7 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 	}
 
 	public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		QueryBuilder<Item> qb = new QueryBuilder(Item.class);
+		QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 		return qb.select().from("db/Item").get();
 	}
 

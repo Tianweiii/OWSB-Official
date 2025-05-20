@@ -84,5 +84,4 @@ public class PurchaseRequisitionItem implements ModelInitializable {
 				'}';
 	}
 
-	public PurchaseRequisitionItem() {}
 }

@@ -11,47 +11,45 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Sales implements ModelInitializable {
-	private final StringProperty salesID   = new SimpleStringProperty();
-	private final ObjectProperty<LocalDate> createdAt  = new SimpleObjectProperty<>();
-	private final ObjectProperty<LocalDate> updatedAt  = new SimpleObjectProperty<>();
-	private final StringProperty userID    = new SimpleStringProperty();
-
-	private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_DATE;
+	private String salesID;
+	private LocalDate createdAt;
+	private LocalDate updatedAt;
+	private String userID;
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
-		salesID.set(data.get("salesID"));
-		createdAt.set(LocalDate.parse(data.get("createdAt"), ISO));
-		updatedAt.set(LocalDate.parse(data.get("updatedAt"), ISO));
-		userID.set(data.get("userID"));
+		this.salesID = data.get("salesID");
+		this.createdAt = LocalDate.parse(data.get("createdAt"), DateTimeFormatter.ISO_DATE);
+		this.updatedAt = LocalDate.parse(data.get("updatedAt"), DateTimeFormatter.ISO_DATE);
+		this.userID = data.get("userID");
 	}
 
 	public String getSalesID() {
-		return this.salesID.get();
+		return this.salesID;
 	}
 	public StringProperty salesIDProperty() {
-		return this.salesID;
+		return new SimpleStringProperty(this.salesID);
 	}
 
 	public LocalDate getCreatedAt() {
-		return this.createdAt.get();
+		return this.createdAt;
 	}
-	public ObjectProperty<LocalDate> createdAtProperty() {
+	public LocalDate createdAtProperty() {
 		return this.createdAt;
 	}
 
 	public LocalDate getUpdatedAt() {
-		return this.updatedAt.get();
+		return this.updatedAt;
 	}
-	public ObjectProperty<LocalDate> updatedAtProperty() {
+	public LocalDate updatedAtProperty() {
 		return this.updatedAt;
 	}
 
 	public String getUserID() {
-		return this.userID.get();
+		return this.userID;
 	}
 	public StringProperty userIDProperty() {
-		return this.userID;
+		return new SimpleStringProperty(this.userID);
 	}
 
 	@Override
@@ -61,24 +59,9 @@ public class Sales implements ModelInitializable {
 
 	public Sales(String salesID, String createdAt, String updatedAt, String userID) {
 		this.salesID = salesID;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.createdAt = LocalDate.parse(createdAt, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		this.updatedAt = LocalDate.parse(updatedAt, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		this.userID = userID;
 	}
 
-	public String getSalesID() {
-		return salesID;
-	}
-
-	public String getCreatedAt() {
-		return createdAt;
-	}
-
-	public String getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public String getUserID() {
-		return userID;
-	}
 }

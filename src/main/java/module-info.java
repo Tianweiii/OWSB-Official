@@ -3,8 +3,7 @@ module org.start.owsb {
     requires javafx.controls;
     requires javafx.fxml;
     requires net.sf.jasperreports.core;
-    requires java.sql;
-    requires javafx.swing;
+//    requires javafx.swing;
 	requires java.desktop;
     requires java.management;
     requires jdk.unsupported.desktop;
@@ -23,7 +22,6 @@ module org.start.owsb {
 
     opens controllers to javafx.fxml;
     exports controllers;
-    opens controllers to javafx.fxml;
 
     opens controllers.FinanceController to javafx.fxml;
     exports controllers.FinanceController;

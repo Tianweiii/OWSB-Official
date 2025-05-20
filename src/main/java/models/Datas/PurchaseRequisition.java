@@ -53,8 +53,8 @@ public class PurchaseRequisition implements ModelInitializable {
 		this.receivedByDate = LocalDate.parse(receivedByDate);
 	}
 
-	public LocalDate getCreatedDate() {
-		return createdDate;
+	public String getCreatedDate() {
+		return createdDate.toString();
 	}
 
 	public void setCreatedDate(String createdDate) {
@@ -120,7 +120,7 @@ public class PurchaseRequisition implements ModelInitializable {
 			double unitPrice = i.getUnitPrice();
 			double amount = quantity * unitPrice;
 
-			PRItemDTO item = new PRItemDTO(supplierID, itemTitle, quantity, unitPrice, amount);
+			PRItemDTO item = new PRItemDTO(itemID, "PR1", itemTitle, quantity, unitPrice);
 
 			itemList.add(item);
 		}

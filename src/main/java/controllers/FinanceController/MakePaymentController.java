@@ -116,9 +116,11 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
         // rendering payment items
         for (var entry : paymentItems.entrySet()) {
+            System.out.println(paymentItems);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PaymentItem.fxml"));
                 Parent card = loader.load();
+                System.out.println(loader);
 
                 PaymentItemController controller = loader.getController();
                 controller.setData(entry.getKey(), entry.getValue());
@@ -241,7 +243,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                     QueryBuilder<Payment> qb = new QueryBuilder<>(Payment.class);
                     res = qb.target("db/Payment")
                             .values(new String[]{
-                                    currentPO.getPO_ID(),
+                                    currentPO.getpoID(),
                                     currentPO.getUserID(),
                                     String.valueOf(subtotal + shipping),
                                     "Credit Card",
@@ -251,8 +253,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
                     // update PO status to paid
                     QueryBuilder<PurchaseOrder> qb3 = new QueryBuilder<>(PurchaseOrder.class);
-                    qb3.update(currentPO.getPO_ID(), new String[]{
-                            currentPO.getPR_ID(),
+                    qb3.update(currentPO.getpoID(), new String[]{
+                            currentPO.getPrRequisitionID(),
                             currentPO.getUserID(),
                             currentPO.getTitle(),
                             String.valueOf(currentPO.getPayableAmount()),
