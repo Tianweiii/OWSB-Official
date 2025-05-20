@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 public class DashboardController implements Initializable {
     // UI Components
-    @FXML private AnchorPane salesManagerDashboardPane;
+    @FXML private HBox salesManagerDashboardPane;
     @FXML private VBox mainContainer;
     @FXML private HBox headerBox;
     @FXML private Text welcomeText;
@@ -467,7 +467,7 @@ public class DashboardController implements Initializable {
         LocalDate end = endDatePicker.getValue();
 
         System.out.println("transasc");
-        return new QueryBuilder<Transaction>(Transaction.class)
+        return new QueryBuilder<>(Transaction.class)
                 .select()
                 .from("db/Transaction.txt")
                 .where("transactionDate", ">=", start.toString())

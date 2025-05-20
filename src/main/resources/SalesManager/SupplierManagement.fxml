@@ -20,8 +20,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<StackPane fx:id="rootPane" styleClass="root-pane" stylesheets="@../css/sales-manager.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.SupplierController">
-
+<?import java.net.URL?>
+<StackPane fx:id="rootPane" styleClass="root-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.SupplierController">
+    <stylesheets>
+        <URL value="@../css/sales-manager.css" />
+    </stylesheets>
     <BorderPane>
         <top>
             <VBox spacing="8" BorderPane.alignment="CENTER">

@@ -284,6 +284,7 @@ public class ItemListController implements Initializable {
 			List<String> columnNames = new ArrayList<>();
 			columnNames.add("Item ID");
 			columnNames.add("Item Name");
+			columnNames.add("Description");
 			columnNames.add("Supplier Name");
 			columnNames.add("Unit Price");
 			columnNames.add("Quantity");
