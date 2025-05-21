@@ -294,7 +294,7 @@ public class InventoryViewController implements Initializable {
                             }
                         }
 
-                        String status = (currentQty < alertSetting) ? "LOW STOCK" : (currentQty == 0) ? "OUT OF STOCK" : "IN STOCK";
+                        String status = (currentQty == 0) ? "OUT OF STOCK" : (currentQty < alertSetting) ? "LOW STOCK" : "IN STOCK";
 
                         Map<String, Object> row = new HashMap<>();
                         row.put("itemID", itemID);
