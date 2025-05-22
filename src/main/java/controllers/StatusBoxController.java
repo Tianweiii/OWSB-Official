@@ -67,6 +67,7 @@ public class StatusBoxController implements Initializable {
             case "DELETED":
                 box_color = RED_BOX_COLOR;
                 text_color = RED_TEXT_COLOR;
+                break;
             default:
                 // If no status were caught, may be typos like "VERIFED"
                 box_color = UNKNOWN_BOX_COLOR;

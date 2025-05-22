@@ -14,11 +14,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import models.DTO.PODataDTO;
 import models.DTO.PRDataDTO;
+import models.Datas.PurchaseRequisition;
+import models.Utils.AccessPermission;
 import models.Utils.Navigator;
+import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -42,15 +49,17 @@ public class PRPOController implements Initializable {
     @FXML
     private Button create_new_pr_button;
 
+    private String user_role;
     private boolean viewingPRPane;
     private final ObservableList<String> PRFilterList = FXCollections.observableArrayList("ALL", "PENDING", "LATE", "APPROVED");
     private final ObservableList<String> POFilterList = FXCollections.observableArrayList("ALL", "PENDING", "APPROVED", "VERIFIED", "PAID", "RETURNED", "DELETED");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        updatePRStatus();
         // Get user role info
         SessionManager session = SessionManager.getInstance();
-        String user_role = session.getUserData().get("roleID");
+        user_role = session.getUserData().get("roleID");
 
         // Hide the PR/PO Tab based on role:
             // Admin & Sales & Purchase & Finance = show both PR & PO Tab
@@ -72,9 +81,9 @@ public class PRPOController implements Initializable {
                 switchTab("request");
             }
 
-            // Hide the Create PR Button if user is not sales manager (Only SM can create PR)
-            if(!user_role.equals("2")){
-                create_new_pr_button.setVisible(false);
+            // Show the Create PR Button if user is sales manager or admin (Only SM & Admin can create PR)
+            if(user_role.equals("2") || user_role.equals("1")){
+                create_new_pr_button.setVisible(true);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -137,7 +146,7 @@ public class PRPOController implements Initializable {
         // Prevent refetching and reloading data when clicked on the same tab
         if((procurement_type.equalsIgnoreCase("request") && viewingPRPane)
             ||
-            (procurement_type.equalsIgnoreCase("order") && !viewingPRPane)
+            (procurement_type.equalsIgnoreCase("order") && !viewingPRPane && !user_role.equals("4"))
         ){
             return;
         }
@@ -170,11 +179,12 @@ public class PRPOController implements Initializable {
         }
     }
 
-    // TODO: Add the function to Create New PR
-    public void createNewPR(MouseEvent mouseEvent) {
-        System.out.println("clicked");
+    public void createNewPR(MouseEvent mouseEvent) throws IOException {
         Navigator navigator = Navigator.getInstance();
-        navigator.navigate(navigator.getRouters("sales").getRoute("EditPRPO"));
+        FXMLLoader editPRPOLoader = new FXMLLoader(getClass().getResource("/PRPO/EditPRPO.fxml"));
+        navigator.navigate(editPRPOLoader.load());
+        EditPRPOController editPRPOcontroller = editPRPOLoader.getController();
+        editPRPOcontroller.loadPageContent(AccessPermission.AccessType.CREATE_PR, (PRDataDTO) null);
     }
 
     public void buttonMouseEntered(MouseEvent mouseEvent) {
@@ -191,5 +201,39 @@ public class PRPOController implements Initializable {
 
     public void switch_to_po(MouseEvent mouseEvent) {
         switchTab("order");
+    }
+
+    public void updatePRStatus(){
+        try {
+            QueryBuilder<PurchaseRequisition> PRqb = new QueryBuilder<>(PurchaseRequisition.class);
+            List<PurchaseRequisition> prList = PRqb.select().from("db/PurchaseRequisition.txt").getAsObjects();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate today = LocalDate.now();
+
+            ArrayList<String> targetIdList = new ArrayList<>();
+            ArrayList<String[]> writtingData = new ArrayList<>();
+
+            for(PurchaseRequisition pr : prList){
+                String status = pr.getPRStatus().trim().toLowerCase();
+                LocalDate requiredByDate = LocalDate.parse(pr.getReceivedByDate(), formatter);
+
+                if (status.equals("pending") && !today.isBefore(requiredByDate)) {
+                    targetIdList.add(pr.getPrRequisitionID());
+                    writtingData.add(new String[]{
+                        pr.getUserID(),
+                        "late",
+                        pr.getCreatedDate(),
+                        pr.getReceivedByDate()
+                    });
+                }
+            }
+
+            String[] targetIds = targetIdList.toArray(new String[0]);
+            PRqb.target("db/PurchaseRequisition.txt").updateManyParallelArr(targetIds, writtingData);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException |
+                 IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

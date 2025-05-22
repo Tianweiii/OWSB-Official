@@ -3,6 +3,9 @@ package models.Utils;
 import javafx.scene.Parent;
 import org.start.owsb.Layout;
 import routes.Router;
+import views.Inventory.InventoryView;
+import views.Inventory.InventoryUpdateRequestView;
+import views.Inventory.StockManagementView;
 import views.LoginView;
 import views.PRPO.EditPRPOView;
 import views.PRPO.PRPOView;
@@ -28,18 +31,26 @@ public class Navigator {
 		// Ensure routes are the same order as labels in the sidebar
 		// Admin
 		adminRouter.addRoute("register", UserRegistrationView.class);
+		adminRouter.addRoute("PRPO", PRPOView.class);
+		adminRouter.addRoute("edit-PRPO", EditPRPOView.class);
 //		adminRouter.addRoute("EEEE", SidebarView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager
 		salesRouter.addRoute("home", UserRegistrationView.class);
 		salesRouter.addRoute("item-list", ItemListView.class);
+		salesRouter.addRoute("PRPO", PRPOView.class);
+		salesRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Purchase manager
 		purchaseRouter.addRoute("PRPO", PRPOView.class);
 		purchaseRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Inventory manager
+		inventoryRouter.addRoute("inventoryHome", InventoryView.class);
+		inventoryRouter.addRoute("stockManagement", StockManagementView.class);
+		inventoryRouter.addRoute("PRPO", PRPOView.class);
+		inventoryRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
 
 		// Finance manage
 		financeRouter.addRoute("PRPO", PRPOView.class);

@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Supplier implements ModelInitializable {
-	private String supplierID;
-	private String supplierName;
-	private String company;
-	private String phoneNumber;
-	private String address;
+    private String supplierID;
+    private String supplierName;
+    private String company;
+    private String phoneNumber;
+    private String address;
 
 	public Supplier() {
 
@@ -29,21 +29,21 @@ public class Supplier implements ModelInitializable {
 		return supplierID;
 	}
 
-	public String getCompanyName() {
-		return this.company;
-	}
+    public String getCompanyName() {
+        return this.company;
+    }
 
-	public String getSupplierName() {
-		return this.supplierName;
-	}
+    public String getSupplierName() {
+        return this.supplierName;
+    }
 
-	public String getPhoneNumber() {
-		return this.phoneNumber;
-	}
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
 
-	public String getAddress() {
-		return this.address;
-	}
+    public String getAddress() {
+        return this.address;
+    }
 
 	public static ArrayList<HashMap<String, String>> getSupplierNameById(String supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
@@ -53,12 +53,13 @@ public class Supplier implements ModelInitializable {
 				.get();
 		return suppliers;
 	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.supplierID = data.get("supplierID");
 		this.supplierName = data.get("supplierName");
 		this.company = data.get("company");
 		this.phoneNumber = data.get("phoneNumber");
-		this.address = data.get("address");
-	}
+        this.address = data.get("address");
+    }
 }

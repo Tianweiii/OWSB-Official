@@ -41,7 +41,7 @@ public class LoginController implements Initializable {
 				superUser.put("password", SUPERUSER_PASSWORD);
 				superUser.put("roleName", "Admin");
 				session.setUserData(superUser);
-				layout.initSidebar("admin", new String[]{"Register"});
+				layout.initSidebar("admin", new String[]{"Register", "Procurement Management"});
 				// Navigate to dashboard
 				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 
@@ -68,15 +68,15 @@ public class LoginController implements Initializable {
 
 				switch (data.get(0).get("roleID")) {
 					case "1":
-						layout.initSidebar("admin", new String[]{"Register"});
+						layout.initSidebar("admin", new String[]{"Register", "Procurement Management"});
 						// Navigate to dashboard
 						FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
 						navigator.navigate(test.load());
 						break;
 					case "2":
-						layout.initSidebar("sales", new String[]{"Home", "Manage Item List"});
+						layout.initSidebar("sales", new String[]{"Home", "Manage Item List", "Procurement Management"});
 						//Navigate to dashboard
-						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
+						navigator.navigate(navigator.getRouters("sales").getRoute("PRPO"));
 						break;
 					case "3":
 						layout.initSidebar("purchase", new String[]{"Procurement Management"});
@@ -84,9 +84,9 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("purchase").getRoute("PRPO"));
 						break;
 					case "4":
-						layout.initSidebar("inventory", new String[]{"Register"});
+						layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Procurement Management", "Sales Purchase Request List"});
 						//Navigate to dashboard
-//						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
+						navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
 						break;
 					case "5":
 						layout.initSidebar("finance", new String[]{"Register"});
