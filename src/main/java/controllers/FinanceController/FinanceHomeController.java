@@ -261,7 +261,7 @@ public class FinanceHomeController implements Initializable {
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setTranslateZ(-300);
-        camera.setTranslateY(-50);
+        camera.setTranslateY(-75);
         camera.setFieldOfView(45);
         camera.setNearClip(0.1);
         camera.setFarClip(2000.0);
@@ -281,8 +281,8 @@ public class FinanceHomeController implements Initializable {
 
         root3D.getChildren().addAll(ambientLight, mainLight, fillLight);
 
-        Rotate initialRotateX = new Rotate(-20, Rotate.X_AXIS);
-        Rotate initialRotateY = new Rotate(30, Rotate.Y_AXIS);
+        Rotate initialRotateX = new Rotate(-15, Rotate.X_AXIS);
+        Rotate initialRotateY = new Rotate(10, Rotate.Y_AXIS);
         root3D.getTransforms().addAll(initialRotateX, initialRotateY);
 
         addFullscreenMouseInteraction(subScene, root3D);
@@ -306,7 +306,7 @@ public class FinanceHomeController implements Initializable {
 
         Label instructionLabel = new Label("Drag to rotate • Scroll to zoom  • Hover for 1 second for details");
         instructionLabel.setFont(Font.font("October Tamil Black", 12));
-        instructionLabel.setTextFill(Color.web("#c1bfc4"));
+        instructionLabel.setTextFill(Color.web("#adabb0"));
 
         summaryBox.getChildren().addAll(totalLabel, avgLabel, instructionLabel);
         mainContainer.getChildren().add(summaryBox);
