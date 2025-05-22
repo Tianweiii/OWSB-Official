@@ -54,6 +54,9 @@ public class InventoryViewController implements Initializable {
     private VBox pendingPurchaseOrder;
 
     @FXML
+    private StackPane stackPane;
+
+    @FXML
     private BarChart<String, Number> recentStockUpdates;
 
     @FXML
@@ -68,10 +71,11 @@ public class InventoryViewController implements Initializable {
     @FXML
     private ProgressIndicator loadingIndicator;
 
-    @FXML private Pane overlayPane;
+    @FXML
+    private Pane overlayPane;
 
     @FXML
-    private StackPane rootPane;
+    private AnchorPane rootPane;
 
     @FXML
     private AnchorPane mainContent;
@@ -182,10 +186,10 @@ public class InventoryViewController implements Initializable {
         pendingPurchaseOrder.getChildren().clear();
 
         QueryBuilder<PurchaseOrder> qb = new QueryBuilder<>(PurchaseOrder.class);
-        String[] cols = new String[]{"prOrderID", "POStatus"};
+        String[] cols = new String[]{"PR_ID", "status"};
         ArrayList<HashMap<String, String>> POList = qb.select(cols).from("db/PurchaseOrder").get();
         List<HashMap<String, String>> sortedPO = POList.stream()
-                .filter(po -> !po.get("POStatus").isEmpty() && po.get("POStatus").equalsIgnoreCase("Approved"))
+                .filter(po -> !po.get("status").isEmpty() && po.get("status").equalsIgnoreCase("Approved"))
                 .toList();
 
         if (sortedPO.isEmpty()) {
@@ -195,23 +199,23 @@ public class InventoryViewController implements Initializable {
         }
 
         for (HashMap<String, String> po : sortedPO) {
-                VBox tile = new VBox();
-                tile.setPadding(new Insets(10, 10, 10, 10));
-                tile.setSpacing(5);
-                tile.setStyle(
-                        "-fx-background-color: #D7F8D7;" +
-                                "-fx-background-radius: 10;" +
-                                "-fx-border-radius: 10;" +
-                                "-fx-border-color: #C2F5C2;" +
-                                "-fx-border-width: 1;" +
-                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);"
-                );
+            VBox tile = new VBox();
+            tile.setPadding(new Insets(10, 10, 10, 10));
+            tile.setSpacing(5);
+            tile.setStyle(
+                    "-fx-background-color: #D7F8D7;" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-border-color: #C2F5C2;" +
+                            "-fx-border-width: 1;" +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);"
+            );
 
-                Label nameLabel = new Label(po.get("prOrderID") + " " + po.get("POStatus"));
-                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+            Label nameLabel = new Label(po.get("PR_ID") + " " + po.get("status"));
+            nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-                tile.getChildren().addAll(nameLabel);
-                pendingPurchaseOrder.getChildren().add(tile);
+            tile.getChildren().addAll(nameLabel);
+            pendingPurchaseOrder.getChildren().add(tile);
         }
         pendingPurchaseOrder.setSpacing(10);
         pendingPurchaseOrder.setPadding(new Insets(10));
@@ -258,6 +262,7 @@ public class InventoryViewController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 Platform.runLater(() -> {
+                    stackPane.setVisible(true);
                     overlayPane.setVisible(true);
                     loadingIndicator.setVisible(true);
                 });
@@ -288,7 +293,7 @@ public class InventoryViewController implements Initializable {
                             }
                         }
 
-                        String status = (currentQty < alertSetting) ? "LOW STOCK" : (currentQty == 0) ? "OUT OF STOCK" : "IN STOCK";
+                        String status = (currentQty == 0) ? "OUT OF STOCK" : (currentQty < alertSetting) ? "LOW STOCK" : "IN STOCK";
 
                         Map<String, Object> row = new HashMap<>();
                         row.put("itemID", itemID);
@@ -353,6 +358,7 @@ public class InventoryViewController implements Initializable {
                     });
                 } finally {
                     Platform.runLater(() -> {
+                        stackPane.setVisible(false);
                         loadingIndicator.setVisible(false);
                         overlayPane.setVisible(false);
                     });

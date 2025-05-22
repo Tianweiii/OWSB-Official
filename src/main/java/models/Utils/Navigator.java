@@ -7,6 +7,7 @@ import views.Inventory.InventoryView;
 import views.Inventory.InventoryUpdateRequestView;
 import views.Inventory.StockManagementView;
 import views.FinanceViews.*;
+import views.Inventory.*;
 import views.LoginView;
 import views.PRPO.EditPRPOView;
 import views.PRPO.PRPOView;

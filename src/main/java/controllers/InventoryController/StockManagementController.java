@@ -221,6 +221,7 @@ public class StockManagementController implements Initializable {
                     item.getItemName().toLowerCase().contains(searchKeyword) ||
                     item.getCreatedAt().toString().toLowerCase().contains(searchKeyword) ||
                     item.getUpdatedAt().toString().toLowerCase().contains(searchKeyword) ||
+                    String.valueOf(item.getQuantity()).contains(searchKeyword) ||
                     (supplierMap.get(item) != null && supplierMap.get(item).toLowerCase().contains(searchKeyword));
         });
 
@@ -277,7 +278,7 @@ public class StockManagementController implements Initializable {
             NotificationView notificationView = new NotificationView(
                     "Error exporting data: " + ex.getMessage(),
                     NotificationController.popUpType.error,
-                    NotificationController.popUpPos.TOP);
+                    NotificationController.popUpPos.BOTTOM_RIGHT);
             notificationView.show();
         }
     }

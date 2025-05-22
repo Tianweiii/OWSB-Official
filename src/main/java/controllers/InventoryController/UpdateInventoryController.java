@@ -156,7 +156,7 @@ public class UpdateInventoryController {
                 refreshCallback.accept(item, updateSuccess);
             }
         } catch (NumberFormatException e) {
-            NotificationView notificationView = new NotificationView("Please enter numbers only", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+            NotificationView notificationView = new NotificationView("Please enter whole numbers only", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
             notificationView.show();
         }
     }

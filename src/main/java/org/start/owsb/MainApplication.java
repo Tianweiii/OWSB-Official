@@ -38,6 +38,7 @@ public class MainApplication extends Application {
         navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
         Scene scene = new Scene(layout.getRoot());
+        stage.setTitle("OWSB Purchase Order Management System");
         scene.getStylesheets().getClass().getResource("/css/general.css");
         stage.setTitle("OWSB Purchase Order Management System");
         stage.setScene(scene);

@@ -8,6 +8,10 @@ import java.time.format.DateTimeFormatter;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +25,10 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 	private int quantity;
 	private double unitPrice;
 	private String supplierID;
+
+	public Item() {
+
+	}
 
 	@Override
 	public void initialize(HashMap<String, String> data) {
@@ -62,6 +70,12 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.quantity = quantity;
 	}
 
+    public Item(String itemID, String itemName, double unitPrice) {
+        this.itemID = itemID;
+        this.itemName = itemName;
+        this.unitPrice = unitPrice;
+    }
+
 	public Item(String[] data) {
 		itemID = data[0];
 		itemName = data[1];
@@ -74,15 +88,9 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		supplierID = data[8];
 	}
 
-	public Item() {}
-
-	public Item(String itemID, String itemName, double unitPrice) {
-		this.itemID = itemID;
-		this.itemName = itemName;
-		this.unitPrice = unitPrice;
+    public String getItemID() {
+        return itemID;
     }
-
-	public String getItemID() { return this.itemID; }
 
 	public String getItemName() {
 		return itemName;
@@ -104,42 +112,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		return quantity;
 	}
 
-	public void setItemID(String itemID) {
-		this.itemID = itemID;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public void setAlertSetting(int alertSetting) {
-		this.alertSetting = alertSetting;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public void setUnitPrice(double unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-
-	public void setSupplierID(String supplierID) {
-		this.supplierID = supplierID;
-	}
-
-	public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-		return qb.select().from("db/Item").get();
-	}
     @Override
     public String toString() {
         return itemID + " - " + itemName;
@@ -177,15 +149,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 
 		return itemSupplierMap;
 	}
-	public static LocalDateTime formatDateTime(String strDatetime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		return LocalDateTime.parse(strDatetime, formatter);
-	}
-
-	public static String stringifyDateTime(LocalDateTime localDateTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		return localDateTime.format(formatter);
-	}
 
 	public String getDescription() {
 		return description;
@@ -212,10 +175,92 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		return itemMap;
 	}
 
-	public String getSupplierID() {return supplierID; }
+    public double getUnitPrice() {
+        return unitPrice;
+    }
 
-	public double getUnitPrice() { return unitPrice; }
+    public String getSupplierID() {
+        return supplierID;
+    }
 
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setAlertSetting(int alertSetting) {
+        this.alertSetting = alertSetting;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
+    }
+
+    public static ArrayList<HashMap<String, String>> getItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        QueryBuilder<Item> qb = new QueryBuilder(Item.class);
+        return qb.select().from("db/Item").get();
+    }
+
+    public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
+        HashMap<Item, String> itemSupplierMap = new HashMap<>();
+
+        QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
+        String[] itemColumns = new String[]{"itemID", "itemName", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
+        ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
+
+        for (HashMap<String, String> itemData : items) {
+            String supplierID = itemData.get("supplierID");
+
+            ArrayList<HashMap<String, String>> supplierResult = Supplier.getSupplierNameById(supplierID);
+            String companyName = "";
+
+            if (!supplierResult.isEmpty()) {
+                companyName = supplierResult.get(0).get("supplierName");
+            }
+
+            Item item = new Item(
+                    itemData.get("itemID"),
+                    itemData.get("itemName"),
+                    formatDateTime(itemData.get("createdAt")),
+                    formatDateTime(itemData.get("updatedAt")),
+                    Integer.parseInt(itemData.get("alertSetting")),
+                    Integer.parseInt(itemData.get("quantity"))
+            );
+
+            itemSupplierMap.put(item, companyName);
+        }
+
+        return itemSupplierMap;
+    }
+
+    public static LocalDateTime formatDateTime(String strDatetime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(strDatetime, formatter);
+    }
+
+    public static String stringifyDateTime(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return localDateTime.format(formatter);
+    }
 }
 
 
