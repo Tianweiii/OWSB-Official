@@ -327,7 +327,7 @@ public class EditPRPOController implements Initializable {
             statusBoxController.setStatus(prData.getStatus());
 
             // Parsing string to LocalDate
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
             LocalDate date = LocalDate.parse(prData.getReceivedByDate(), formatter);
             datepicker.setValue(date);
         }
@@ -343,7 +343,6 @@ public class EditPRPOController implements Initializable {
                 save_change_button_container.setVisible(false);
                 action_button_1.setVisible(false);
                 action_button_2.setVisible(false);
-
                 if(poData != null){
                     po_title_container.setVisible(true);
                     po_title_text_field.setText(poData.getTitle());
@@ -356,7 +355,7 @@ public class EditPRPOController implements Initializable {
             case CREATE_PR -> {
                 addActionButtons();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
                 String todayDate = LocalDate.now().format(formatter);
 
                 title_text.setText("New Purchase Request");
@@ -742,7 +741,7 @@ public class EditPRPOController implements Initializable {
         if(originalPRDate == null){
             return;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
         String formattedDate = datepicker.getValue().format(formatter);
         save_change_button_container.setVisible(!originalPRDate.equals(formattedDate));
     }
@@ -762,7 +761,7 @@ public class EditPRPOController implements Initializable {
             if(currentAccess == AccessPermission.AccessType.EDIT_AND_APPROVE_PR){
                 // TODO: to be continued
                 // Table, or date
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
                 String formattedDate = datepicker.getValue().format(formatter);
                 if(isTableModified() || !originalPRDate.equals(formattedDate)){
                     notification = new NotificationView("Please save your changes before approving PR.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
@@ -834,7 +833,7 @@ public class EditPRPOController implements Initializable {
 
     public void createNewPR(){
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
 
             if(tableData.isEmpty()){
                 notification = new NotificationView("Failed to create new Purchase Request. The PR is Empty.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
@@ -1063,7 +1062,7 @@ public class EditPRPOController implements Initializable {
             }
 
             // Check for valid "Required Date" input
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
             LocalDate selectedDate = datepicker.getValue();
 
             if(selectedDate.isBefore(LocalDate.now())){

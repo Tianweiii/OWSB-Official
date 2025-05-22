@@ -77,7 +77,7 @@ public class PRPOBoxController implements Initializable {
 
         // Setup label's image
         Image cargoIconImage = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/image/cargo_icon.png")),
+                Objects.requireNonNull(getClass().getResourceAsStream("/Assets/icon/cargo_icon.png")),
                 20, 20,
                 false,  // preserveRatio
                 true    // smooth scaling
@@ -113,13 +113,13 @@ public class PRPOBoxController implements Initializable {
 
         // Setup label's image
         Image cargoIconImage = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/image/cargo_icon.png")),
+                Objects.requireNonNull(getClass().getResourceAsStream("/Assets/icon/cargo_icon.png")),
                 20, 20,
                 false,  // preserveRatio
                 true    // smooth scaling
         );
         Image userIconImage = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/image/user_icon_blue.png")),
+                Objects.requireNonNull(getClass().getResourceAsStream("/Assets/icon/user_icon_blue.png")),
                 20, 20,
                 false,  // preserveRatio
                 true    // smooth scaling

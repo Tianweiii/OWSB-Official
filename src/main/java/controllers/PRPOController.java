@@ -208,7 +208,7 @@ public class PRPOController implements Initializable {
             QueryBuilder<PurchaseRequisition> PRqb = new QueryBuilder<>(PurchaseRequisition.class);
             List<PurchaseRequisition> prList = PRqb.select().from("db/PurchaseRequisition.txt").getAsObjects();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
             LocalDate today = LocalDate.now();
 
             ArrayList<String> targetIdList = new ArrayList<>();

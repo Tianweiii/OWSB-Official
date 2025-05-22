@@ -186,10 +186,10 @@ public class InventoryViewController implements Initializable {
         pendingPurchaseOrder.getChildren().clear();
 
         QueryBuilder<PurchaseOrder> qb = new QueryBuilder<>(PurchaseOrder.class);
-        String[] cols = new String[]{"PR_ID", "status"};
+        String[] cols = new String[]{"prID", "POStatus"};
         ArrayList<HashMap<String, String>> POList = qb.select(cols).from("db/PurchaseOrder").get();
         List<HashMap<String, String>> sortedPO = POList.stream()
-                .filter(po -> !po.get("status").isEmpty() && po.get("status").equalsIgnoreCase("Approved"))
+                .filter(po -> !po.get("POStatus").isEmpty() && po.get("POStatus").equalsIgnoreCase("Approved"))
                 .toList();
 
         if (sortedPO.isEmpty()) {
@@ -211,7 +211,7 @@ public class InventoryViewController implements Initializable {
                             "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);"
             );
 
-            Label nameLabel = new Label(po.get("PR_ID") + " " + po.get("status"));
+            Label nameLabel = new Label(po.get("prID") + " " + po.get("POStatus"));
             nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
             tile.getChildren().addAll(nameLabel);

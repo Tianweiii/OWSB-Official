@@ -220,38 +220,6 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
         return qb.select().from("db/Item").get();
     }
 
-    public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
-        HashMap<Item, String> itemSupplierMap = new HashMap<>();
-
-        QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
-        String[] itemColumns = new String[]{"itemID", "itemName", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
-        ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
-
-        for (HashMap<String, String> itemData : items) {
-            String supplierID = itemData.get("supplierID");
-
-            ArrayList<HashMap<String, String>> supplierResult = Supplier.getSupplierNameById(supplierID);
-            String companyName = "";
-
-            if (!supplierResult.isEmpty()) {
-                companyName = supplierResult.get(0).get("supplierName");
-            }
-
-            Item item = new Item(
-                    itemData.get("itemID"),
-                    itemData.get("itemName"),
-                    formatDateTime(itemData.get("createdAt")),
-                    formatDateTime(itemData.get("updatedAt")),
-                    Integer.parseInt(itemData.get("alertSetting")),
-                    Integer.parseInt(itemData.get("quantity"))
-            );
-
-            itemSupplierMap.put(item, companyName);
-        }
-
-        return itemSupplierMap;
-    }
-
     public static LocalDateTime formatDateTime(String strDatetime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(strDatetime, formatter);

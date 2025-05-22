@@ -169,7 +169,7 @@ public class Helper {
     // dd/MM/yyyy
     public static String getTodayDate() {
         LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
         return today.format(formatter);
     }
 

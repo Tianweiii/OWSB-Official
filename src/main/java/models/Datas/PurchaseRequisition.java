@@ -21,10 +21,10 @@ import java.util.*;
 
 public class PurchaseRequisition implements ModelInitializable {
 	private String prRequisitionID;
-	private LocalDate receivedByDate;
-	private LocalDate createdDate;
 	private String userID;
 	private String PRStatus;
+	private LocalDate createdDate;
+	private LocalDate receivedByDate;
 
 	public PurchaseRequisition() {
 	}
@@ -93,10 +93,10 @@ public class PurchaseRequisition implements ModelInitializable {
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.prRequisitionID = data.get("prRequisitionID");
-		this.receivedByDate = parseDate(data.get("receivedByDate"));
-		this.createdDate = parseDate(data.get("createdDate"));
 		this.userID = data.get("userID");
 		this.PRStatus = data.get("PRStatus");
+		this.createdDate = parseDate(data.get("createdDate"));
+		this.receivedByDate = parseDate(data.get("receivedByDate"));
 	}
 
 //	public ArrayList<PRItemDTO> getPurchaseRequisitionItems() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -132,6 +132,7 @@ public class PurchaseRequisition implements ModelInitializable {
 		if (dateStr == null || dateStr.isEmpty()) {
 			return null;
 		}
+		System.out.println(dateStr);
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
 		return LocalDate.parse(dateStr, formatter);
 	}
