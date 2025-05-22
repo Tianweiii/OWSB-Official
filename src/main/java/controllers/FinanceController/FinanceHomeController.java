@@ -57,6 +57,12 @@ public class FinanceHomeController implements Initializable {
     private LineChart<String, Number> lineChart;
     @FXML
     private VBox chartContainer;
+    @FXML
+    private Text totalCostField;
+    @FXML
+    private Text totalNetProfitField;
+    @FXML
+    private Text totalRevenueField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -419,35 +425,6 @@ public class FinanceHomeController implements Initializable {
         }
     }
 
-    // windsurf
-    // 3 containers on top
-    // 2 more graphs at the bottom
-
-    //
-    public void initSecondRow() {
-//        double paymentsThisMonth = FileIO.
-    }
-
-    public double getThisMonthTotalPayments() throws IOException {
-        DateTimeFormatter dateFormatter =  DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate currentDate = LocalDate.now();
-        double count = 0;
-
-        // get total where the month is this month
-        try (BufferedReader paymentsReader = new BufferedReader(new FileReader("src/main/java/db/Payment.txt"))) {
-             String line;
-             while ((line = paymentsReader.readLine()) != null ) {
-                 String[] parts = line.split(",");
-                 LocalDate date = LocalDate.parse(parts[5], dateFormatter);
-                 if (date.getMonth() == currentDate.getMonth() && date.getYear() == currentDate.getYear()) {
-                     count += Double.parseDouble(parts[3]);
-                 }
-             }
-        }
-
-        return count;
-    }
-
     public void getMonthlyGPM() throws IOException {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM yyyy");
@@ -457,6 +434,10 @@ public class FinanceHomeController implements Initializable {
         // cost of goods sold is total payments per month
         Map<String, Double> revenueMap = new HashMap<>();
         Map<String, Double> costMap = new HashMap<>();
+
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
+        String formattedDate = today.format(formatter);
 
         // get prices
         Map<String, Double> priceMap = new HashMap<>();
@@ -507,6 +488,13 @@ public class FinanceHomeController implements Initializable {
             }
         }
 
+        double thisMonthRevenue = revenueMap.getOrDefault(formattedDate, 0.00);
+        double thisMonthCost = costMap.getOrDefault(formattedDate, 0.00);
+
+        totalRevenueField.setText("RM " + String.format("%.2f", thisMonthRevenue));
+        totalCostField.setText("RM " + String.format("%.2f", thisMonthCost));
+        totalNetProfitField.setText("RM " + String.format("%.2f", thisMonthRevenue - thisMonthCost));
+
         XYChart.Series<String, Number> gpmSeries = new XYChart.Series<>();
         gpmSeries.setName("Gross Profit Margin (%)");
 
@@ -525,7 +513,6 @@ public class FinanceHomeController implements Initializable {
         lineChart.getXAxis().setLabel("Month");
         lineChart.getYAxis().setLabel("GPM (%)");
         lineChart.setLegendVisible(false);
-//        lineChart.setAnimated(true);
 
         lineChart.getData().add(gpmSeries);
     }

@@ -19,19 +19,46 @@
          <children>
             <HBox alignment="CENTER_RIGHT" minHeight="150.0" prefHeight="119.0" prefWidth="540.0" spacing="20.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" spacing="5.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                        <Text fx:id="totalRevenueField" strokeType="OUTSIDE" strokeWidth="0.0" text="Amount here">
+                           <font>
+                              <Font name="October Tamil Black" size="20.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Revenue">
+                           <font>
+                              <Font name="October Tamil Black" size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" spacing="5.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                        <Text fx:id="totalCostField" strokeType="OUTSIDE" strokeWidth="0.0" text="Amount here">
+                           <font>
+                              <Font name="October Tamil Black" size="20.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Cost">
+                           <font>
+                              <Font name="October Tamil Black" size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" spacing="5.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Some shit here" />
+                        <Text fx:id="totalNetProfitField" strokeType="OUTSIDE" strokeWidth="0.0" text="Amount here">
+                           <font>
+                              <Font name="October Tamil Black" size="20.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Net Profit">
+                           <font>
+                              <Font name="October Tamil Black" size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                   </VBox>
                </children>
@@ -42,7 +69,15 @@
                </font></Text>
             <HBox alignment="CENTER" prefHeight="300.0" prefWidth="575.0" spacing="25.0">
                <children>
-                  <VBox fx:id="firstContainer" alignment="CENTER" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" />
+                  <VBox fx:id="firstContainer" alignment="CENTER" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Profit Margin">
+                           <font>
+                              <Font name="October Tamil Black" size="14.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
                   <VBox fx:id="secondContainer" alignment="CENTER" prefHeight="178.0" prefWidth="400.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
                      <children>
                         <LineChart fx:id="lineChart" VBox.vgrow="ALWAYS">
