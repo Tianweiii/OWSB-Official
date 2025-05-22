@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -956,7 +957,7 @@ public class EditPRPOController implements Initializable {
                 newDataList.add(new String[]{
                         targetItem.getItemName(),
                         stringifyDateTime(targetItem.getCreatedAt()),
-                        stringifyDateTime(targetItem.getUpdatedAt()),
+                        stringifyDateTime(LocalDateTime.now()),
                         String.valueOf(targetItem.getAlertSetting()),
                         String.valueOf(newQuantity),
                         String.valueOf(targetItem.getUnitPrice()),
