@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import models.Datas.Role;
 import models.Users.User;
 import models.Utils.Helper;
@@ -15,12 +17,14 @@ import org.start.owsb.Layout;
 import views.NotificationView;
 import views.adminViews.AdminDashboardView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
+	@FXML private AnchorPane rootPane;
 	@FXML private Button loginButton;
 	@FXML private TextField usernameField = new TextField();
 	@FXML private TextField passwordField = new TextField();
@@ -103,12 +107,22 @@ public class LoginController implements Initializable {
 				notificationView.show();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			NotificationView notificationView = null;
+			try {
+				notificationView = new NotificationView(e.getMessage(), NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+			}
+			notificationView.show();
 		}
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-
+		this.rootPane.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				this.loginButton.fire();
+			}
+		});
 	}
 }

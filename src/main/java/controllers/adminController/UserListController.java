@@ -72,18 +72,44 @@ public class UserListController implements Initializable {
 		searchField.setText("");
 	}
 
-	public void filterItems() {
-		String[] filterList = {"All", "Alert Item"};
+	public void setupFilter() {
+		String[] filterList = {"All", "Admin", "Sales Manager", "Inventory Manager", "Finance Manager", "Purchase Manager" };
 		filterComboBox.getItems().addAll(filterList);
 		filterComboBox.setOnAction(event -> {
 			String selectedFilter = filterComboBox.getSelectionModel().getSelectedItem();
-			if (Objects.equals(selectedFilter, "Alert Item")) {
-//				ObservableList<Item> alertItems = FXCollections.observableArrayList();
-				System.out.println("filtering...");
-//				tableView.setItems(null);
+			ObservableList<HashMap<String, String>> oListItems = FXCollections.observableArrayList();
+			if (selectedFilter.equals("All")) {
+				oListItems.addAll(getLatestData());
+				tableView.setItems(oListItems);
+				tableView.refresh();
 			} else {
-//				tableView.setItems(null);
-				System.out.println("normal");
+				switch (selectedFilter) {
+					case "Admin":
+						oListItems.addAll(getLatestData().stream().filter(item -> item.get("roleID").equals("1")).toList());
+						tableView.setItems(oListItems);
+						tableView.refresh();
+						break;
+					case "Sales Manager":
+						oListItems.addAll(getLatestData().stream().filter(item -> item.get("roleID").equals("2")).toList());
+						tableView.setItems(oListItems);
+						tableView.refresh();
+						break;
+					case "Purchase Manager":
+						oListItems.addAll(getLatestData().stream().filter(item -> item.get("roleID").equals("3")).toList());
+						tableView.setItems(oListItems);
+						tableView.refresh();
+						break;
+					case "Inventory Manager":
+						oListItems.addAll(getLatestData().stream().filter(item -> item.get("roleID").equals("4")).toList());
+						tableView.setItems(oListItems);
+						tableView.refresh();
+						break;
+					case "Finance Manager":
+						oListItems.addAll(getLatestData().stream().filter(item -> item.get("roleID").equals("5")).toList());
+						tableView.setItems(oListItems);
+						tableView.refresh();
+						break;
+				}
 			}
 		});
 	}
@@ -111,6 +137,8 @@ public class UserListController implements Initializable {
 
 			this.tableView.getColumns().add(optionsColumns);
 			this.tableView.setItems(oListItems);
+
+			this.setupFilter();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

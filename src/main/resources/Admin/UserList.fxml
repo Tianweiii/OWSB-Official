@@ -48,7 +48,7 @@
                     <FlowPane layoutX="48.0" layoutY="163.0" prefHeight="47.0" prefWidth="883.0">
                         <children>
                             <ComboBox fx:id="filterComboBox" prefHeight="40.0" prefWidth="148.0" promptText="All" style="-fx-background-color: white; -fx-border-radius: 5; -fx-border-color: #707070;" />
-                            <TextField fx:id="searchField" prefHeight="40.0" prefWidth="387.0" promptText="Search for item or supplier name..." style="-fx-border-color: #707070;">
+                            <TextField fx:id="searchField" prefHeight="40.0" prefWidth="387.0" promptText="Search for item or supplier name..." style="-fx-border-color: #707070; -fx-border-radius: 5;">
                                 <FlowPane.margin>
                                     <Insets left="48.0" />
                                 </FlowPane.margin>

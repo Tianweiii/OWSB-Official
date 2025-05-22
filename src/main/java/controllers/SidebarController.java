@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Paint;
 import models.Utils.Navigator;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
@@ -35,6 +36,7 @@ public class SidebarController implements Initializable {
 	@FXML private Button logoutButton;
 	@FXML private Label usernameLabel;
 	@FXML private Label positionLabel;
+	@FXML private Label userIcon;
 
 	public void setSidebarItems(String sidebarType, String[] sidebarItems) {
 		this.sidebarType = sidebarType;
@@ -75,6 +77,10 @@ public class SidebarController implements Initializable {
 		HashMap<String, String> user = session.getUserData();
 		usernameLabel.setText(user.get("username"));
 		positionLabel.setText(user.get("roleName"));
+
+		userIcon.setText(user.get("username").substring(0, 2).toUpperCase());
+		userIcon.setTextFill(Paint.valueOf("#092165"));
+		userIcon.setStyle("-fx-font-weight: bold; -fx-background-color: #CFDBF0; -fx-background-radius: 50;");
 	}
 
 	public static AnchorPane getSidebar() {
