@@ -53,6 +53,7 @@ public class Supplier implements ModelInitializable {
 				.get();
 		return suppliers;
 	}
+
 	@Override
 	public void initialize(HashMap<String, String> data) {
 		this.supplierID = data.get("supplierID");

@@ -47,7 +47,6 @@ public class Navigator {
 		adminRouter.addRoute("item-list", ItemListView.class);
 		adminRouter.addRoute("supplier", SupplierView.class);
 		adminRouter.addRoute("daily-sales", DailyItemSalesView.class);
-		adminRouter.addRoute("PRPO", PRPOView.class);
 		adminRouter.addRoute("stockManagement", StockManagementView.class);
 		adminRouter.addRoute("inventoryUpdateRequestView", InventoryUpdateRequestView.class);
 		adminRouter.addRoute("financeReport", FinanceReportView.class);
@@ -55,6 +54,9 @@ public class Navigator {
 		adminRouter.addRoute("makePayments", MakePaymentsView.class);
 		adminRouter.addRoute("viewAllSales", ViewAllSales.class);
 		adminRouter.addRoute("viewAllPayments", ViewAllPayments.class);
+		adminRouter.addRoute("PRPO", PRPOView.class);
+		adminRouter.addRoute("edit-PRPO", EditPRPOView.class);
+//		adminRouter.addRoute("EEEE", SidebarView.class);
 //		adminRouter.addRoute("fffff", UserRegistrationView.class);
 
 		// Sales manager
@@ -63,6 +65,7 @@ public class Navigator {
 		salesRouter.addRoute("supplier", SupplierView.class);
 		salesRouter.addRoute("daily-sales", DailyItemSalesView.class);
 		salesRouter.addRoute("PRPO", PRPOView.class);
+		salesRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Purchase manager
 		purchaseRouter.addRoute("PRPO", PRPOView.class);

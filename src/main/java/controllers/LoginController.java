@@ -46,7 +46,7 @@ public class LoginController implements Initializable {
 				superUser.put("password", SUPERUSER_PASSWORD);
 				superUser.put("roleName", "Admin");
 				session.setUserData(superUser);
-				layout.initSidebar("admin", new String[]{"Register, User Management"});
+				layout.initSidebar("admin", new String[]{"Register"});
 				// Navigate to dashboard
 				navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 

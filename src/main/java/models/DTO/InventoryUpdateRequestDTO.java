@@ -108,7 +108,7 @@ public class InventoryUpdateRequestDTO {
         }
 
         for (InventoryUpdateRequest request : requests) {
-            User user = userMapping.get(request.getUserID());
+        User user = userMapping.get(request.getUserID());
             Item item = itemMapping.get(request.getItemID());
 
             InventoryUpdateRequestDTO dto = request.toURDTO(user, item);

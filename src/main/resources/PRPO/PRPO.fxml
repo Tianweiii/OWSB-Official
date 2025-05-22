@@ -32,7 +32,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Button fx:id="create_new_pr_button" layoutX="561.0" layoutY="93.0" mnemonicParsing="false" onMouseClicked="#createNewPR" onMouseEntered="#buttonMouseEntered" onMouseExited="#buttonMouseExited" style="-fx-background-color: #1E3A8A;" text="CREATE NEW PR +" textFill="WHITE" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+            <Button fx:id="create_new_pr_button" layoutX="561.0" layoutY="93.0" mnemonicParsing="false" onMouseClicked="#createNewPR" onMouseEntered="#buttonMouseEntered" onMouseExited="#buttonMouseExited" style="-fx-background-color: #1E3A8A;" text="CREATE NEW PR +" textFill="WHITE" visible="false" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

@@ -150,7 +150,6 @@ public class PRPOBoxController implements Initializable {
         String userRole = SessionManager.getInstance().getUserData().get("roleID");
 
         if(prData == null & poData == null){
-            System.out.println("Both PR and PO data is null, something went wrong");
             return;
         }
 

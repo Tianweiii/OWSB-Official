@@ -3,14 +3,13 @@ package views.Inventory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import views.View;
 
 import java.io.IOException;
 
 public class InventoryView implements View {
 
-    private StackPane homePane;
+    private AnchorPane homePane;
 
     public InventoryView() throws IOException {
 

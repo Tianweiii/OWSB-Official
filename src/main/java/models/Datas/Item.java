@@ -140,8 +140,13 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
 		return qb.select().from("db/Item").get();
 	}
+    @Override
+    public String toString() {
+        return itemID + " - " + itemName;
+    }
 
-	public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
+
+    public static HashMap<Item, String> getItems(boolean withSupplier) throws Exception {
 		HashMap<Item, String> itemSupplierMap = new HashMap<>();
 
 		QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);

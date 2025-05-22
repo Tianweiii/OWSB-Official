@@ -109,7 +109,6 @@ public class InventoryViewController implements Initializable {
 
     private void loadTotalQuantityInStock(ArrayList<HashMap<String, String>> itemList) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int totalQty = 0;
-
         for (HashMap<String, String> item : itemList) {
             if (item.get("quantity") == null) continue;
             totalQty += Integer.parseInt(item.get("quantity"));
