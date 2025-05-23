@@ -1,6 +1,7 @@
 package controllers.salesController;
 
 import controllers.SidebarController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,10 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import models.Datas.Supplier;
-import models.Utils.QueryBuilder;
 import org.start.owsb.Layout;
 import service.SupplierService;
-import views.NotificationView;
 import views.salesViews.DeleteSupplierView;
 
 import java.net.URL;
@@ -33,7 +32,7 @@ public class DeleteSupplierController implements Initializable {
     public void onDeleteSupplierButtonClick() {
         Supplier supplier = DeleteSupplierView.getSupplier();
         svc.delete(supplier.getSupplierId());
-        refreshTable();
+        Platform.runLater(this::refreshTable);
 
         Layout layout = Layout.getInstance();
         BorderPane root = layout.getRoot();
@@ -60,6 +59,7 @@ public class DeleteSupplierController implements Initializable {
         masterList.setAll(newData);
         DeleteSupplierView.getRootController().getTable().setItems(masterList);
         DeleteSupplierView.getRootController().getTable().refresh();
+        DeleteSupplierView.getRootController().updateSupplierCount(masterList.size());
     }
 
 

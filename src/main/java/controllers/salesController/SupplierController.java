@@ -123,8 +123,13 @@ public class SupplierController implements Initializable {
         this.table.refresh();
     }
 
+//    private void removeAddFormListeners() {
+//        this.addNameField.textProperty()dd();
+//    }
+//
     /** Hide the "add" panel with animation */
     @FXML private void hideAddForm() {
+//        this.removeAddFormListeners();
         hidePane(addFormPane);
     }
 
@@ -187,10 +192,12 @@ public class SupplierController implements Initializable {
 
     /** Refresh table data */
     private void refreshTable() {
-        masterList.setAll(svc.getAll());
-        table.setItems(masterList);
-        table.refresh();
-        updateSupplierCount(masterList.size());
+        Platform.runLater(() -> {
+            masterList.setAll(svc.getAll());
+            table.setItems(masterList);
+            table.refresh();
+            updateSupplierCount(masterList.size());
+        });
     }
 
     /** Add "⋮" Actions column */
@@ -290,7 +297,7 @@ public class SupplierController implements Initializable {
         return table;
     }
 
-    private void updateSupplierCount(int count) {
+    public void updateSupplierCount(int count) {
         if (totalSupplierLabel != null) {
             Platform.runLater(() -> totalSupplierLabel.setText(String.format("Total Suppliers: %d", count)));
         }
@@ -299,6 +306,12 @@ public class SupplierController implements Initializable {
     private void setupFormValidation() {
         // Add Form Validation
         addNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                addNameField.setStyle("");
+                validateAddForm();
+                return;
+            }
+
             if (!Validation.isValidName(newValue)) {
                 addNameField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
@@ -310,6 +323,12 @@ public class SupplierController implements Initializable {
         });
 
         addPhoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                addPhoneField.setStyle("");
+                validateAddForm();
+                return;
+            }
+
             if (!Validation.isValidPhone(newValue)) {
                 addPhoneField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
@@ -321,7 +340,13 @@ public class SupplierController implements Initializable {
         });
 
         addCompanyField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.trim().isEmpty()) {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                addCompanyField.setStyle("");
+                validateAddForm();
+                return;
+            }
+
+            if (!Validation.isValidName(newValue)) {
                 addCompanyField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
                 showNotification("Company name cannot be empty", NotificationController.popUpType.error);
@@ -329,6 +354,22 @@ public class SupplierController implements Initializable {
                 addCompanyField.setStyle("");
                 validateAddForm();
             }
+        });
+
+        addAddressField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                addAddressField.setStyle("");
+                validateAddForm();
+                return;
+            }
+
+            if (!Validation.isValidName(newValue)) {
+                addAddressField.setStyle("-fx-border-color: red;");
+                addSubmitBtn.setDisable(true);
+                showNotification("Invalid address format", NotificationController.popUpType.error);
+            }
+            addAddressField.setStyle("");
+            validateAddForm();
         });
 
         // Edit Form Validation
@@ -364,23 +405,34 @@ public class SupplierController implements Initializable {
                 validateEditForm();
             }
         });
+
+        editAddressField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Validation.isValidName(newValue)) {
+                editAddressField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Invalid address format", NotificationController.popUpType.error);
+            } else {
+                editAddressField.setStyle("");
+                validateEditForm();
+            }
+        });
     }
 
     private void validateAddForm() {
         boolean isValid = Validation.isValidName(addNameField.getText()) &&
                          Validation.isValidPhone(addPhoneField.getText()) &&
-                         !addCompanyField.getText().trim().isEmpty();
+                         !addCompanyField.getText().trim().isEmpty() && !addAddressField.getText().trim().isEmpty();
         addSubmitBtn.setDisable(!isValid);
     }
 
     private void validateEditForm() {
         boolean isValid = Validation.isValidName(editNameField.getText()) &&
                          Validation.isValidPhone(editPhoneField.getText()) &&
-                         !editCompanyField.getText().trim().isEmpty();
+                         !editCompanyField.getText().trim().isEmpty() && !editAddressField.getText().trim().isEmpty();
         editSaveBtn.setDisable(!isValid);
     }
 
-    @FXML public void onSaveAddItemButtonClick() {
+    @FXML public void onSaveAddSupplierButtonClick() {
         try {
             // Validate form fields
             if (addNameField.getText().trim().isEmpty()) {
@@ -405,14 +457,14 @@ public class SupplierController implements Initializable {
             // Create new supplier
             HashMap<String, String> supplierData = new HashMap<>();
             supplierData.put("supplierName", addNameField.getText());
-            supplierData.put("phoneNumber", addPhoneField.getText());
             supplierData.put("companyName", addCompanyField.getText());
+            supplierData.put("phoneNumber", addPhoneField.getText());
             supplierData.put("address", addAddressField.getText());
 
             boolean success = svc.add(
                 addNameField.getText(),
-                addPhoneField.getText(),
                 addCompanyField.getText(),
+                addPhoneField.getText(),
                 addAddressField.getText()
             );
             if (success) {
@@ -453,15 +505,15 @@ public class SupplierController implements Initializable {
             // Update supplier
             HashMap<String, String> supplierData = new HashMap<>();
             supplierData.put("supplierName", editNameField.getText());
-            supplierData.put("phoneNumber", editPhoneField.getText());
             supplierData.put("companyName", editCompanyField.getText());
+            supplierData.put("phoneNumber", editPhoneField.getText());
             supplierData.put("address", editAddressField.getText());
 
             boolean success = svc.update(
                 editingSupplier.getSupplierId(),
                 editNameField.getText(),
-                editPhoneField.getText(),
                 editCompanyField.getText(),
+                editPhoneField.getText(),
                 editAddressField.getText()
             );
             if (success) {

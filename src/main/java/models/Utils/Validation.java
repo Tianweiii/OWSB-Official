@@ -9,7 +9,7 @@ public class Validation {
     public static final Pattern PERCENTAGE_PATTERN = Pattern.compile("^(100|[1-9]?[0-9])(\\.\\d{1,2})?%?$");
 
     // Text patterns
-    public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z\\s]{2,50}$");
+    public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9 ]+$");
     public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
     public static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]\\d{0,14}$");
 
