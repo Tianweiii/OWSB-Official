@@ -38,8 +38,8 @@ public class AdminDashboardController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		this.setUpListViews();
 		this.setUpCards();
+		
 		try {
-
 			QueryBuilder<User> qb = new QueryBuilder<>(User.class);
 			ArrayList<HashMap<String, String>> userData = qb
 					.select()
