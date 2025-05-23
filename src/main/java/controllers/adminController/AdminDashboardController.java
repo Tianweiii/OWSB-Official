@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import models.DTO.ItemListDTO;
 import models.Datas.Item;
@@ -14,6 +15,7 @@ import models.Datas.Supplier;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import org.start.owsb.Layout;
 import views.adminViews.ItemInfoPaneView;
 
 import java.net.URL;
@@ -99,10 +101,12 @@ public class AdminDashboardController implements Initializable {
 			}
 		});
 
+		Pane placeholderPane = new Pane();
 		this.lowStockItemList.setOnMouseClicked(mouseEvent -> {
 			Item selectedItem = this.lowStockItemList.getFocusModel().getFocusedItem();
 			ItemInfoPaneView itemInfoPaneView = new ItemInfoPaneView(this.getItemDTO(selectedItem.getItemID()), this);
-			this.itemInfoPane.setCenter(itemInfoPaneView.getView());
+			this.itemInfoPane.setCenter(placeholderPane);
+			Layout.setCenterWithScaleTransition(this.itemInfoPane, itemInfoPaneView.getView(), 150);
 		});
 	}
 

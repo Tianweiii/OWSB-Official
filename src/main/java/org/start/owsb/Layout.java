@@ -27,10 +27,10 @@ public class Layout {
 	}
 
 	public void setView(Parent view) {
-		this.setCenterWithScaleTransition(root, view);
+		setCenterWithScaleTransition(root, view, 200);
 	}
 
-	public void setCenterWithScaleTransition(BorderPane borderPane, Node newCenter) {
+	public static void setCenterWithScaleTransition(BorderPane borderPane, Node newCenter, double duration) {
 		Node currentCenter = borderPane.getCenter();
 
 		if (currentCenter != null) {
@@ -40,7 +40,7 @@ public class Layout {
 			currentCenter.getTransforms().add(scaleTransform);
 
 			Timeline scaleOut = new Timeline(
-					new KeyFrame(Duration.millis(200),
+					new KeyFrame(Duration.millis(duration),
 							new KeyValue(scaleTransform.xProperty(), 0.0),
 							new KeyValue(scaleTransform.yProperty(), 0.0)
 					)
@@ -59,7 +59,7 @@ public class Layout {
 				newCenter.getTransforms().add(newScaleTransform);
 
 				Timeline scaleIn = new Timeline(
-						new KeyFrame(Duration.millis(200),
+						new KeyFrame(Duration.millis(duration),
 								new KeyValue(newScaleTransform.xProperty(), 1.0),
 								new KeyValue(newScaleTransform.yProperty(), 1.0)
 						)
@@ -78,6 +78,18 @@ public class Layout {
 		}
 	}
 
+	public static void fadeIn(BorderPane root, Parent paneToAdd) {
+		paneToAdd.setOpacity(0);
+
+		root.setCenter(paneToAdd);
+
+		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), paneToAdd);
+		fadeIn.setFromValue(0.0);
+		fadeIn.setToValue(1.0);
+		fadeIn.play();
+	}
+
+	// FOR MODALS
 	public static void fadeScaleIn(BorderPane root, Node paneToAdd) {
 		paneToAdd.setOpacity(0);
 		paneToAdd.setScaleX(0.8);
