@@ -4,26 +4,30 @@ import controllers.NotificationController;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Callback;
 import models.Datas.Supplier;
-import org.start.owsb.Layout;
 import service.SupplierService;
 import views.NotificationView;
-import views.salesViews.DeleteConfirmationView;
 import views.salesViews.DeleteSupplierView;
-import views.salesViews.SupplierView;
+import models.Utils.Validation;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.HashMap;
 
 public class SupplierController implements Initializable {
 
@@ -34,8 +38,10 @@ public class SupplierController implements Initializable {
     @FXML private TableColumn<Supplier, String> colPhone;
     @FXML private TableColumn<Supplier, String> colCompany;
     @FXML private TableColumn<Supplier, Void> colActions;
+    @FXML private Label totalSupplierLabel;
 
     @FXML private TextField txtSearch;
+    @FXML private Button clearSearchButton;
     @FXML private ComboBox<String> cmbSort;
 
     @FXML private Button deleteButton;
@@ -66,50 +72,42 @@ public class SupplierController implements Initializable {
         addActionsColumn();
 
         masterList = FXCollections.observableArrayList(svc.getAll());
+        updateSupplierCount(masterList.size());
         table.setItems(masterList);
 
-        cmbSort.getItems().setAll("Alphabetical Ascending", "Alphabetical Descending");
-        cmbSort.setOnAction(e -> applySort());
+        setupFilters();
+        setupFormValidation();
+        setupListeners();
 
-        addCancelBtn.setOnAction(e -> hideAddForm());
-        addSubmitBtn.setOnAction(e -> {
-            svc.add(
-                    addNameField.getText().trim(),
-                    addCompanyField.getText().trim(),
-                    addPhoneField.getText().trim(),
-                    addAddressField.getText().trim()
-            );
-            hideAddForm();
-            refreshTable();
-            try {
-                NotificationView notificationView = new NotificationView("Supplier created successfully", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
-                notificationView.show();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        editCancelBtn.setOnAction(e -> hideEditForm());
-        editSaveBtn.setOnAction(e -> {
-            svc.update(
-                    editingSupplier.getSupplierId(),
-                    editNameField.getText(),
-                    editCompanyField.getText(),
-                    editPhoneField.getText(),
-                    editAddressField.getText()
-            );
-            hideEditForm();
-            refreshTable();
-            try {
-                NotificationView notificationView = new NotificationView("Supplier updated", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
-                notificationView.show();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+        // Add listener for masterList changes
+        masterList.addListener((ListChangeListener<Supplier>) change -> {
+            while (change.next()) {
+                updateSupplierCount(masterList.size());
             }
         });
     }
 
-    /** Show the “add” panel with animation */
+    private void setupFilters() {
+        if (cmbSort != null) {
+            cmbSort.getItems().setAll("Name (A-Z)", "Name (Z-A)", "Company (A-Z)", "Company (Z-A)");
+            cmbSort.getSelectionModel().selectFirst();
+            cmbSort.setOnAction(e -> applySort());
+        }
+    }
+
+    private void setupListeners() {
+        if (addCancelBtn != null) {
+            addCancelBtn.setOnAction(e -> hideAddForm());
+        }
+        if (editCancelBtn != null) {
+            editCancelBtn.setOnAction(e -> hideEditForm());
+        }
+        if (clearSearchButton != null) {
+            clearSearchButton.setOnAction(e -> onClear());
+        }
+    }
+
+    /** Show the "add" panel with animation */
     @FXML private void showAddForm() {
         showPane(addFormPane);
         addNameField.clear();
@@ -118,12 +116,19 @@ public class SupplierController implements Initializable {
         addAddressField.clear();
     }
 
-    /** Hide the “add” panel with animation */
+    @FXML
+    public void onClear() {
+        this.txtSearch.clear();
+        this.table.setItems(this.masterList);
+        this.table.refresh();
+    }
+
+    /** Hide the "add" panel with animation */
     @FXML private void hideAddForm() {
         hidePane(addFormPane);
     }
 
-    /** Show the “edit” panel with animation */
+    /** Show the "edit" panel with animation */
     private void showEditForm(Supplier s) {
         editingSupplier = s;
         editNameField.setText(s.getSupplierName());
@@ -133,7 +138,7 @@ public class SupplierController implements Initializable {
         showPane(editFormPane);
     }
 
-    /** Hide the “edit” panel with animation */
+    /** Hide the "edit" panel with animation */
     @FXML private void hideEditForm() {
         hidePane(editFormPane);
     }
@@ -144,17 +149,40 @@ public class SupplierController implements Initializable {
         table.setItems(
                 txt.isEmpty()
                         ? masterList
-                        : masterList.filtered(s -> s.getSupplierName().toLowerCase().contains(txt))
+                        : masterList.filtered(s ->
+                            s.getSupplierName().toLowerCase().contains(txt) ||
+                            s.getCompanyName().toLowerCase().contains(txt) ||
+                            s.getPhoneNumber().contains(txt))
         );
+        updateSupplierCount(table.getItems().size());
     }
 
     /** Sort handler */
     private void applySort() {
         String choice = cmbSort.getValue();
+        if (choice == null) return;
+
         FXCollections.sort(table.getItems(), (a, b) -> {
-            int cmp = a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
-            return "Alphabetical Descending".equals(choice) ? -cmp : cmp;
+            int cmp;
+            switch (choice) {
+                case "Name (A-Z)":
+                    cmp = a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
+                    break;
+                case "Name (Z-A)":
+                    cmp = b.getSupplierName().compareToIgnoreCase(a.getSupplierName());
+                    break;
+                case "Company (A-Z)":
+                    cmp = a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
+                    break;
+                case "Company (Z-A)":
+                    cmp = b.getCompanyName().compareToIgnoreCase(a.getCompanyName());
+                    break;
+                default:
+                    cmp = 0;
+            }
+            return cmp;
         });
+        table.refresh();
     }
 
     /** Refresh table data */
@@ -162,32 +190,37 @@ public class SupplierController implements Initializable {
         masterList.setAll(svc.getAll());
         table.setItems(masterList);
         table.refresh();
+        updateSupplierCount(masterList.size());
     }
 
     /** Add "⋮" Actions column */
     private void addActionsColumn() {
         Callback<TableColumn<Supplier, Void>, TableCell<Supplier, Void>> cf = col -> new TableCell<>() {
-            final HBox hBox = new HBox();
-            final Button btn = new Button("⋮");
+            private final Button actionButton = new Button("⋮");
             {
-                btn.getStyleClass().add("action-button");
-                btn.setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY) {
+                actionButton.getStyleClass().addAll("action-button-table");
+                actionButton.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #f0f0f0; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
+                actionButton.setCursor(javafx.scene.Cursor.HAND);
+
+                actionButton.setOnAction(e -> {
+                    if (getIndex() >= 0 && getIndex() < getTableView().getItems().size()) {
                         Supplier s = getTableView().getItems().get(getIndex());
-                        showContextMenu(s, btn);
+                        showContextMenu(s, actionButton);
                     }
                 });
-                setPrefHeight(Region.USE_COMPUTED_SIZE);
-                hBox.getChildren().add(btn);
-                setGraphic(hBox);
+
+                setAlignment(Pos.CENTER);
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : btn);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(actionButton);
+                }
             }
-
         };
 
         colActions.setCellFactory(cf);
@@ -195,11 +228,22 @@ public class SupplierController implements Initializable {
     }
 
     /** Popup menu for edit/delete with red delete button */
-    private void showContextMenu(Supplier s, Button anchor) {
+    private void showContextMenu(Supplier s, Node anchor) {
         ContextMenu menu = new ContextMenu();
         MenuItem edit = new MenuItem("Edit");
         MenuItem del = new MenuItem("Delete");
         del.setStyle("-fx-text-fill:red;");
+
+        // Add icons to menu items
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
+        editIcon.setFitWidth(16);
+        editIcon.setFitHeight(16);
+        edit.setGraphic(editIcon);
+
+        ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png")));
+        deleteIcon.setFitWidth(16);
+        deleteIcon.setFitHeight(16);
+        del.setGraphic(deleteIcon);
 
         // Edit action
         edit.setOnAction(e -> showEditForm(s));
@@ -207,11 +251,10 @@ public class SupplierController implements Initializable {
         del.setOnAction(e -> {
             // Delete confirmation
             try {
-                DeleteSupplierView deleteSupplierView = new DeleteSupplierView(this);
                 DeleteSupplierView.setSupplier(s);
+                DeleteSupplierView deleteSupplierView = new DeleteSupplierView(this);
                 deleteSupplierView.show();
                 this.rootPane.setDisable(true);
-
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -245,5 +288,213 @@ public class SupplierController implements Initializable {
 
     public TableView<Supplier> getTable() {
         return table;
+    }
+
+    private void updateSupplierCount(int count) {
+        if (totalSupplierLabel != null) {
+            Platform.runLater(() -> totalSupplierLabel.setText(String.format("Total Suppliers: %d", count)));
+        }
+    }
+
+    private void setupFormValidation() {
+        // Add Form Validation
+        addNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Validation.isValidName(newValue)) {
+                addNameField.setStyle("-fx-border-color: red;");
+                addSubmitBtn.setDisable(true);
+                showNotification("Invalid name format", NotificationController.popUpType.error);
+            } else {
+                addNameField.setStyle("");
+                validateAddForm();
+            }
+        });
+
+        addPhoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Validation.isValidPhone(newValue)) {
+                addPhoneField.setStyle("-fx-border-color: red;");
+                addSubmitBtn.setDisable(true);
+                showNotification("Invalid phone number format", NotificationController.popUpType.error);
+            } else {
+                addPhoneField.setStyle("");
+                validateAddForm();
+            }
+        });
+
+        addCompanyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().isEmpty()) {
+                addCompanyField.setStyle("-fx-border-color: red;");
+                addSubmitBtn.setDisable(true);
+                showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+            } else {
+                addCompanyField.setStyle("");
+                validateAddForm();
+            }
+        });
+
+        // Edit Form Validation
+        editNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Validation.isValidName(newValue)) {
+                editNameField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Invalid name format", NotificationController.popUpType.error);
+            } else {
+                editNameField.setStyle("");
+                validateEditForm();
+            }
+        });
+
+        editPhoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Validation.isValidPhone(newValue)) {
+                editPhoneField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Invalid phone number format", NotificationController.popUpType.error);
+            } else {
+                editPhoneField.setStyle("");
+                validateEditForm();
+            }
+        });
+
+        editCompanyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().isEmpty()) {
+                editCompanyField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+            } else {
+                editCompanyField.setStyle("");
+                validateEditForm();
+            }
+        });
+    }
+
+    private void validateAddForm() {
+        boolean isValid = Validation.isValidName(addNameField.getText()) &&
+                         Validation.isValidPhone(addPhoneField.getText()) &&
+                         !addCompanyField.getText().trim().isEmpty();
+        addSubmitBtn.setDisable(!isValid);
+    }
+
+    private void validateEditForm() {
+        boolean isValid = Validation.isValidName(editNameField.getText()) &&
+                         Validation.isValidPhone(editPhoneField.getText()) &&
+                         !editCompanyField.getText().trim().isEmpty();
+        editSaveBtn.setDisable(!isValid);
+    }
+
+    @FXML public void onSaveAddItemButtonClick() {
+        try {
+            // Validate form fields
+            if (addNameField.getText().trim().isEmpty()) {
+                showNotification("Supplier name cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+            if (addPhoneField.getText().trim().isEmpty()) {
+                showNotification("Phone number cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+            if (addCompanyField.getText().trim().isEmpty()) {
+                showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+
+            // Check for duplicate supplier
+            if (isDuplicateSupplier(addNameField.getText(), addCompanyField.getText())) {
+                showNotification("Supplier with same name and company already exists", NotificationController.popUpType.error);
+                return;
+            }
+
+            // Create new supplier
+            HashMap<String, String> supplierData = new HashMap<>();
+            supplierData.put("supplierName", addNameField.getText());
+            supplierData.put("phoneNumber", addPhoneField.getText());
+            supplierData.put("companyName", addCompanyField.getText());
+            supplierData.put("address", addAddressField.getText());
+
+            boolean success = svc.add(
+                addNameField.getText(),
+                addPhoneField.getText(),
+                addCompanyField.getText(),
+                addAddressField.getText()
+            );
+            if (success) {
+                refreshTable();
+                hideAddForm();
+                showNotification("Supplier added successfully", NotificationController.popUpType.success);
+            } else {
+                showNotification("Failed to add supplier", NotificationController.popUpType.error);
+            }
+        } catch (Exception e) {
+            showNotification("Error: " + e.getMessage(), NotificationController.popUpType.error);
+        }
+    }
+
+    @FXML public void onSaveEditButtonClick() {
+        try {
+            // Validate form fields
+            if (editNameField.getText().trim().isEmpty()) {
+                showNotification("Supplier name cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+            if (editPhoneField.getText().trim().isEmpty()) {
+                showNotification("Phone number cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+            if (editCompanyField.getText().trim().isEmpty()) {
+                showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+                return;
+            }
+
+            // Check for duplicate supplier excluding current one
+            if (isDuplicateSupplierExcludingCurrent(editingSupplier.getSupplierId(),
+                editNameField.getText(), editCompanyField.getText())) {
+                showNotification("Supplier with same name and company already exists", NotificationController.popUpType.error);
+                return;
+            }
+
+            // Update supplier
+            HashMap<String, String> supplierData = new HashMap<>();
+            supplierData.put("supplierName", editNameField.getText());
+            supplierData.put("phoneNumber", editPhoneField.getText());
+            supplierData.put("companyName", editCompanyField.getText());
+            supplierData.put("address", editAddressField.getText());
+
+            boolean success = svc.update(
+                editingSupplier.getSupplierId(),
+                editNameField.getText(),
+                editPhoneField.getText(),
+                editCompanyField.getText(),
+                editAddressField.getText()
+            );
+            if (success) {
+                refreshTable();
+                hideEditForm();
+                showNotification("Supplier updated successfully", NotificationController.popUpType.success);
+            } else {
+                showNotification("Failed to update supplier", NotificationController.popUpType.error);
+            }
+        } catch (Exception e) {
+            showNotification("Error: " + e.getMessage(), NotificationController.popUpType.error);
+        }
+    }
+
+    private void showNotification(String message, NotificationController.popUpType type) {
+        try {
+            NotificationView notificationView = new NotificationView(message, type, NotificationController.popUpPos.TOP);
+            notificationView.show();
+        } catch (IOException ex) {
+            System.err.println("Failed to show notification: " + ex.getMessage());
+        }
+    }
+
+    private boolean isDuplicateSupplier(String name, String company) {
+        return masterList.stream().anyMatch(s ->
+            s.getSupplierName().equalsIgnoreCase(name) &&
+            s.getCompanyName().equalsIgnoreCase(company));
+    }
+
+    private boolean isDuplicateSupplierExcludingCurrent(String currentId, String name, String company) {
+        return masterList.stream().anyMatch(s ->
+            !s.getSupplierId().equals(currentId) &&
+            s.getSupplierName().equalsIgnoreCase(name) &&
+            s.getCompanyName().equalsIgnoreCase(company));
     }
 }

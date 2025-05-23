@@ -1,14 +1,10 @@
 package models.Datas;
 
-import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.*;
 import models.ModelInitializable;
 import models.Utils.QueryBuilder;
 
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -60,6 +56,10 @@ public class Transaction implements ModelInitializable {
 	public double getSubtotal()             {
 		return this.soldQuantity * this.unitPriceProperty().get();
 	}
+
+	public double getMarkedUpSubtotal() {
+		return this.soldQuantity * this.getMarkedUpPrice();
+	}
 	
 	public String getFormattedUnitPrice() {
 		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
@@ -109,6 +109,10 @@ public class Transaction implements ModelInitializable {
 	{
 		return new SimpleDoubleProperty(this.getSubtotal());
 	}
+	public DoubleProperty markedUpSubtotalProperty()
+	{
+		return new SimpleDoubleProperty(this.getMarkedUpSubtotal());
+	}
 
 	@Override
 	public String toString() {
@@ -116,6 +120,18 @@ public class Transaction implements ModelInitializable {
 				+ " item=" + getItemID()
 				+ " qty=" + getSoldQuantity()
 				+ " sub=" + getFormattedSubtotal();
+	}
+
+	public void setUnitPrice(double unitPrice) {
+		this.unitPriceProperty().set(unitPrice);
+	}
+
+	public double getMarkedUpPrice() {
+		return this.unitPriceProperty().get() * 1.15;
+	}
+
+	public SimpleDoubleProperty markedUpPriceProperty() {
+		return new SimpleDoubleProperty(this.getMarkedUpPrice());
 	}
 
 	public IntegerProperty soldQuantityProperty() {

@@ -1,6 +1,8 @@
 package views.salesViews;
 
 import controllers.NotificationController;
+import controllers.SidebarController;
+import controllers.salesController.DeleteSupplierController;
 import controllers.salesController.SupplierController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,6 +25,9 @@ public class DeleteSupplierView implements View {
         FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/DeleteSupplier.fxml"));
         this.deletePane = loader.load();
         DeleteSupplierView.controller = controller;
+
+        DeleteSupplierController controller1 = loader.getController();
+        controller1.setDeleteLabel(supplier.getSupplierName());
     }
 
     public static SupplierController getRootController() {
@@ -33,6 +38,7 @@ public class DeleteSupplierView implements View {
         Layout layout = Layout.getInstance();
         BorderPane root = layout.getRoot();
         root.getChildren().add(this.deletePane);
+        SidebarController.getSidebar().setDisable(true);
 
         Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, layout.getRoot(), this.deletePane);
     }

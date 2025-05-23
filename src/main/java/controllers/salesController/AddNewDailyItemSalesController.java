@@ -2,7 +2,6 @@ package controllers.salesController;
 
 import controllers.SidebarController;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +20,7 @@ import service.DailySalesService;
 import controllers.NotificationController;
 import views.NotificationView;
 import views.salesViews.AddNewDailyItemSalesView;
+import models.Utils.Validation;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -109,15 +109,27 @@ public class AddNewDailyItemSalesController implements Initializable {
 	}
 
 	private void bindValidation() {
-		submitBtn.disableProperty().bind(
-				Bindings.createBooleanBinding(
-						() -> itemCombo.getValue() == null || parseQuantity() <= 0,
-						itemCombo.valueProperty(),
-						qtyField.textProperty()
-				)
-		);
+		qtyField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!Validation.isValidQuantity(newValue)) {
+				qtyField.setStyle("-fx-border-color: red;");
+				submitBtn.setDisable(true);
+			} else {
+				qtyField.setStyle("");
+				validateForm();
+			}
+		});
+
+		itemCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+			validateForm();
+		});
 
 		submitBtn.setOnAction(e -> onSubmit());
+	}
+
+	private void validateForm() {
+		boolean isValid = Validation.isValidQuantity(qtyField.getText()) &&
+						 itemCombo.getValue() != null;
+		submitBtn.setDisable(!isValid);
 	}
 
 	private void onSubmit() {
@@ -128,6 +140,7 @@ public class AddNewDailyItemSalesController implements Initializable {
 			if (mode == AddNewDailyItemSalesView.Mode.FIRST) {
 				service.recordSale(selectedItem, quantity, selectedDate);
 				notify("Sale entry added successfully", NotificationController.popUpType.success);
+				DailyItemSalesController.setSelectedDate(selectedDate);
 				Navigator.getInstance().navigate(Navigator.getInstance().getRouters("sales").getRoute("daily-sales"));
 			} else if (mode == AddNewDailyItemSalesView.Mode.NEW) {
 				service.recordSale(selectedItem, quantity, selectedDate);

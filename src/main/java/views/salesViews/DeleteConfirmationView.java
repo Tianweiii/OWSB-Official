@@ -18,11 +18,15 @@ public class DeleteConfirmationView implements View {
 	private final Pane deletePane;
 	private static HashMap<String, String> data;
 	private static ItemListController rootController;
+	private final ItemListController itemListController;
 
 	public DeleteConfirmationView(ItemListController rootController) throws IOException {
 		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/Components/DeleteConfirmationWindow.fxml"));
 		this.deletePane = loader.load();
+		this.itemListController = loader.getController();
+
 		DeleteConfirmationView.rootController = rootController;
+		rootController.setItemToBeDeleted(data.get("itemName"));
 	}
 
 	public static ItemListController getRootController() {
@@ -32,8 +36,11 @@ public class DeleteConfirmationView implements View {
 	public void showDeleteConfirmationView() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
+
+		itemListController.setItemToBeDeleted(data.get("itemName"));
+
 		root.getChildren().add(deletePane);
-		Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, root, deletePane);
+		models.Utils.Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, root, deletePane);
 	}
 
 	@Override
