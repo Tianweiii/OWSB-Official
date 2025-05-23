@@ -31,7 +31,7 @@
                         </HBox>
                         <HBox prefHeight="147.0" prefWidth="600.0" spacing="10.0">
                            <children>
-                              <VBox fx:id="totalUserCard" prefHeight="167.0" prefWidth="264.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+                              <VBox fx:id="totalUserCard" prefHeight="167.0" prefWidth="264.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="248.0">
                                        <children>
@@ -59,10 +59,10 @@
                                     <Insets />
                                  </HBox.margin>
                                  <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                  </padding>
                               </VBox>
-                              <VBox fx:id="recentUsersCard" prefHeight="167.0" prefWidth="368.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+                              <VBox fx:id="recentUsersCard" prefHeight="167.0" prefWidth="368.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="248.0">
                                        <children>
@@ -82,7 +82,7 @@
                                     <Insets />
                                  </HBox.margin>
                                  <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                  </padding>
                               </VBox>
                            </children>
@@ -92,7 +92,7 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox fx:id="lowStockItemCard" prefHeight="186.0" prefWidth="307.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+                              <VBox fx:id="lowStockItemCard" prefHeight="186.0" prefWidth="307.0" style="-fx-background-radius: 10; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="248.0">
                                        <children>
@@ -110,10 +110,13 @@
                                     </HBox>
                                  </children>
                                  <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                  </padding>
                               </VBox>
-                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <BorderPane fx:id="itemInfoPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                 </children></VBox>
                            </children>
                            <VBox.margin>
                               <Insets />

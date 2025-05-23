@@ -5,12 +5,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import models.DTO.ItemListDTO;
 import models.Datas.Item;
 import models.Datas.Role;
+import models.Datas.Supplier;
 import models.Users.User;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import views.adminViews.ItemInfoPaneView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,9 +33,7 @@ public class AdminDashboardController implements Initializable {
 	@FXML private VBox lowStockItemCard;
 	@FXML private ListView<Item> lowStockItemList;
 
-	@FXML private VBox recentSalesCard;
-	@FXML private ListView<Item> recentSalesList;
-
+	@FXML private BorderPane itemInfoPane;
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		this.setUpListViews();
@@ -96,6 +98,12 @@ public class AdminDashboardController implements Initializable {
 				}
 			}
 		});
+
+		this.lowStockItemList.setOnMouseClicked(mouseEvent -> {
+			Item selectedItem = this.lowStockItemList.getFocusModel().getFocusedItem();
+			ItemInfoPaneView itemInfoPaneView = new ItemInfoPaneView(this.getItemDTO(selectedItem.getItemID()), this);
+			this.itemInfoPane.setCenter(itemInfoPaneView.getView());
+		});
 	}
 
 	private void setUpCards() {
@@ -104,5 +112,40 @@ public class AdminDashboardController implements Initializable {
 		this.recentUsersCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("admin").getRoute("user-list")));
 
 		this.lowStockItemCard.setOnMouseClicked(e -> navigator.navigate(navigator.getRouters("inventory").getRoute("stockManagement")));
+	}
+
+	private ItemListDTO getItemDTO(String id) {
+		try {
+			QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
+			ArrayList<HashMap<String, String>> item = itemQb
+					.select()
+					.from("db/Item.txt")
+					.where("itemID", "=", id)
+					.joins(Supplier.class, "supplierID")
+					.get();
+			if (item.isEmpty()) {
+				return null;
+			}
+			HashMap<String, String> selectedItemInfo = item.get(0);
+			return new ItemListDTO(
+					selectedItemInfo.get("itemID"),
+					selectedItemInfo.get("itemName"),
+					selectedItemInfo.get("description"),
+					Item.formatDateTime(selectedItemInfo.get("createdAt")),
+					Item.formatDateTime(selectedItemInfo.get("updatedAt")),
+					Integer.parseInt(selectedItemInfo.get("alertSetting")),
+					Integer.parseInt(selectedItemInfo.get("quantity")),
+					Double.parseDouble(selectedItemInfo.get("unitPrice")),
+					selectedItemInfo.get("supplierID"),
+					selectedItemInfo.get("supplierName")
+					);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	public BorderPane getItemInfoPane() {
+		return itemInfoPane;
 	}
 }

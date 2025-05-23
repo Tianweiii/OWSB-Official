@@ -130,7 +130,7 @@ public class UpdateInventoryController {
                 return;
             }
 
-            QueryBuilder<Item> qb = new QueryBuilder(Item.class);
+            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
             ArrayList<HashMap<String, String>> itemResult = qb.select().from("db/Item").where("itemID", "=", String.valueOf(item.getItemID())).get();
 
             HashMap<String, String> fullItemMap = itemResult.get(0);
@@ -142,6 +142,7 @@ public class UpdateInventoryController {
 
             String[] values = new String[]{
                     item.getItemName(),
+                    item.getDescription(),
                     stringifyDateTime(item.getCreatedAt()),
                     stringifyDateTime(LocalDateTime.now()),
                     String.valueOf(newAlertLevel),

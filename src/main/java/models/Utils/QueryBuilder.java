@@ -238,7 +238,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 			//Joins
 			if (!this.joins.isEmpty() && !allData.isEmpty()) {
 				for (Class<? extends ModelInitializable> join: this.joins) {
-					String joinName = join.getSimpleName().toLowerCase();
+					String joinName = Helper.toAttrString(join.getSimpleName());
 					String joinTextFileName = joinName + ".txt";
 
 					if (allData.get(0).get(joinName+"_id") == null && allData.get(0).get(joinName+"ID") == null) {

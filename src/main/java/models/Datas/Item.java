@@ -8,10 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,9 +40,10 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 
 	}
 
-	public Item(String itemID, String itemName, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
+	public Item(String itemID, String itemName,String description, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {
 		this.itemID = itemID;
 		this.itemName = itemName;
+		this.description = description;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.alertSetting = alertSetting;
@@ -122,7 +119,7 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		HashMap<Item, String> itemSupplierMap = new HashMap<>();
 
 		QueryBuilder<Item> itemQb = new QueryBuilder<>(Item.class);
-		String[] itemColumns = new String[]{"itemID", "itemName", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
+		String[] itemColumns = new String[]{"itemID", "itemName", "description", "createdAt", "updatedAt", "alertSetting", "quantity", "supplierID"};
 		ArrayList<HashMap<String, String>> items = itemQb.select(itemColumns).from("db/Item").get();
 
 		for (HashMap<String, String> itemData : items) {
@@ -138,6 +135,7 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 			Item item = new Item(
 					itemData.get("itemID"),
 					itemData.get("itemName"),
+					itemData.get("description"),
 					formatDateTime(itemData.get("createdAt")),
 					formatDateTime(itemData.get("updatedAt")),
 					Integer.parseInt(itemData.get("alertSetting")),

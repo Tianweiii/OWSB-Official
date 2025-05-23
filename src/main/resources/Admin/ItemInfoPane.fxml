@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="itemInfoRoot" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminController.ItemInfoController">
+   <children>
+      <HBox prefHeight="45.0" prefWidth="306.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="itemNameLabel" maxWidth="1.7976931348623157E308" prefHeight="52.0" prefWidth="325.0" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox prefHeight="285.0" prefWidth="286.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" text="Description" underline="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label fx:id="descriptionLabel" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" wrapText="true" HBox.hgrow="ALWAYS" />
+                     </children>
+                    </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" text="Quantity" underline="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="44.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label fx:id="quantityLabel" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" wrapText="true" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="79.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" text="Alert Setting" underline="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="113.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label fx:id="alertSettingLabel" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" wrapText="true" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="148.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" text="Supplier" underline="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="182.0" prefHeight="34.0" prefWidth="286.0">
+                     <children>
+                        <Label fx:id="supplierLabel" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="286.0" wrapText="true" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="286.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButtonClick" prefHeight="35.0" prefWidth="75.0" text="Close" />
+            <Region prefHeight="42.0" prefWidth="50.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="navigateButton" mnemonicParsing="false" onAction="#onNavigateButtonClick" prefHeight="35.0" prefWidth="160.0" text="Go to Stock Management" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+</VBox>
