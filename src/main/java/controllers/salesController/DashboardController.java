@@ -256,16 +256,20 @@ public class DashboardController implements Initializable {
 
             for (Transaction tx : transactions) {
                 // Revenue from marked-up price in Transaction
-                double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
-                totalRevenue += revenue;
+                DailySalesHistory history = salesService.getDailySalesHistory(tx.getDailySalesHistoryID());
+                if (history != null) {
+                    double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
+                    totalRevenue += revenue;
 
-                // Cost from original price in Item
-                Item item = itemMap.get(tx.getItemID());
-                if (item != null) {
-                    double originalCost = item.getUnitPrice() * tx.getSoldQuantity();
-                    double profit = revenue - originalCost;
-                    totalProfit += profit;
+                    // Cost from original price in Item
+                    Item item = itemMap.get(tx.getItemID());
+                    if (item != null) {
+                        double originalCost = item.getUnitPrice() * tx.getSoldQuantity();
+                        double profit = revenue - originalCost;
+                        totalProfit += profit;
+                    }
                 }
+
             }
 
             double profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
