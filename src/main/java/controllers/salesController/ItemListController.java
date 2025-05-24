@@ -187,7 +187,7 @@ public class ItemListController implements Initializable {
 		dataToUpdate.put("itemName", changedItemName);
 		dataToUpdate.put("description", changedItemDescription);
 		dataToUpdate.put("quantity", changedItemQuantity);
-		dataToUpdate.put("price", changedItemPrice);
+		dataToUpdate.put("unitPrice", changedItemPrice);
 		dataToUpdate.put("supplierID", changedSupplierID);
 		try {
 			boolean res = itemListService.update(itemId, dataToUpdate);
