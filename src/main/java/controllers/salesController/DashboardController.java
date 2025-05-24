@@ -213,7 +213,6 @@ public class DashboardController implements Initializable {
                     System.out.println(e.getMessage());
                 }
 
-                // Store final references for lambda
                 final List<Transaction> finalTransactions = transactions;
                 final List<Item> finalItems = items;
                 final Map<String, Item> itemMap = finalItems.stream()
@@ -271,7 +270,6 @@ public class DashboardController implements Initializable {
 
             double profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
 
-            // Update KPI labels with null checks
             double finalTotalRevenue = totalRevenue;
             double finalTotalProfit = totalProfit;
             Platform.runLater(() -> {
@@ -288,7 +286,6 @@ public class DashboardController implements Initializable {
                     lblProfitMargin.setText(String.format("%.1f%%", profitMargin));
                 }
 
-        // Update progress bars
                 if (revenueProgress != null) {
                     revenueProgress.setProgress(Math.min(finalTotalRevenue / 10000.0, 1.0));
                 }
@@ -355,8 +352,7 @@ public class DashboardController implements Initializable {
     private void updateProductMix(List<Transaction> transactions) {
         Map<String, Double> productMetrics = new HashMap<>();
         double totalRevenue = 0;
-        
-        // First pass: calculate total revenue and product metrics
+
             for (Transaction t : transactions) {
             Item item = getItem(t.getItemID());
             if (item == null) continue;
@@ -645,19 +641,38 @@ public class DashboardController implements Initializable {
             File file = fileChooser.showSaveDialog(salesManagerDashboardPane.getScene().getWindow());
             if (file != null) {
                 try (PrintWriter writer = new PrintWriter(file)) {
-                    writer.println("Date,Revenue,Profit,Orders,Margin %");
+                    writer.write('\ufeff');
 
-                    LocalDate start = startDatePicker.getValue();
-                    LocalDate end = endDatePicker.getValue();
+                    writer.println("OWSB Sales Performance Dashboard Report");
+                    writer.println("==========================================");
+                    writer.println("Generated on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    writer.println("Report Period: " + startDatePicker.getValue().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) + 
+                                 " to " + endDatePicker.getValue().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")));
+                    writer.println();
+
+                    writer.println("1. EXECUTIVE SUMMARY");
+                    writer.println("------------------");
+                    writer.println("Total Revenue (Period)," + lblTotalRevenue.getText().replace("$", ""));
+                    writer.println("Total Profit (Period)," + lblTotalProfit.getText().replace("$", ""));
+                    writer.println("Total Orders (Period)," + lblTotalOrders.getText());
+                    writer.println("Overall Profit Margin," + lblProfitMargin.getText());
+                    writer.println("Active Suppliers," + lblSupplierCount.getText());
+                    writer.println();
+
+                    writer.println("2. DAILY PERFORMANCE METRICS");
+                    writer.println("-------------------------");
+                    writer.println("Date,Revenue,Profit,Orders,Average Order Value,Profit Margin %,Target Achievement %,Growth Rate %");
+
                     List<Transaction> transactions = loadTransactionsForCharting();
                     Map<String, Item> itemMap = loadItems().stream()
                         .collect(Collectors.toMap(Item::getItemID, item -> item));
 
-                    Map<String, DailyMetrics> dailyMetrics = new TreeMap<>();
+                    Map<LocalDate, DailyMetrics> dailyMetrics = new TreeMap<>();
+                    double previousDayRevenue = 0;
 
                     for (Transaction tx : transactions) {
-                        String date = tx.getDailySalesHistoryID();
-                        double revenue = tx.getSoldQuantity() * tx.getUnitPrice();
+                        LocalDate date = salesService.getDailySalesHistory(tx.getDailySalesHistoryID()).getCreatedAt();
+                        double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
                         double profit = 0;
 
                         Item item = itemMap.get(tx.getItemID());
@@ -670,18 +685,117 @@ public class DashboardController implements Initializable {
                             .add(revenue, profit);
                     }
 
-                    dailyMetrics.forEach((date, metrics) -> {
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+                    for (Map.Entry<LocalDate, DailyMetrics> entry : dailyMetrics.entrySet()) {
+                        DailyMetrics metrics = entry.getValue();
                         double margin = metrics.revenue > 0 ? (metrics.profit / metrics.revenue) * 100 : 0;
-                        writer.printf("%s,%.2f,%.2f,%d,%.1f%n",
-                            date, metrics.revenue, metrics.profit, metrics.orders, margin);
-                    });
+                        double avgOrderValue = metrics.orders > 0 ? metrics.revenue / metrics.orders : 0;
+                        double targetAchievement = (metrics.revenue / 10000.0) * 100;
+                        double growthRate = previousDayRevenue > 0 ? 
+                            ((metrics.revenue - previousDayRevenue) / previousDayRevenue) * 100 : 0;
+
+                        writer.printf("%s,%.2f,%.2f,%d,%.2f,%.1f,%.1f,%.1f%n",
+                            entry.getKey().format(dateFormat),
+                            metrics.revenue,
+                            metrics.profit,
+                            metrics.orders,
+                            avgOrderValue,
+                            margin,
+                            targetAchievement,
+                            growthRate
+                        );
+
+                        previousDayRevenue = metrics.revenue;
+                    }
+                    writer.println();
+
+                    writer.println("3. PRODUCT PERFORMANCE ANALYSIS");
+                    writer.println("-----------------------------");
+                    writer.println("Product Name,Total Revenue,Total Units Sold,Profit Contribution %,Average Price,Profit per Unit,Performance Status");
+                    
+                    Map<String, ProductMetrics> productPerformance = new HashMap<>();
+                    double finalTotalRevenue = 0;
+
+                    for (Transaction tx : transactions) {
+                        Item item = itemMap.get(tx.getItemID());
+                        if (item != null) {
+                            String productName = item.getItemName();
+                            double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
+                            double cost = item.getUnitPrice() * tx.getSoldQuantity();
+                            productPerformance.computeIfAbsent(productName, k -> new ProductMetrics())
+                                .add(revenue, tx.getSoldQuantity(), cost);
+                            finalTotalRevenue += revenue;
+                        }
+                    }
+
+                    double finalTotalRevenue1 = finalTotalRevenue;
+                    productPerformance.entrySet().stream()
+                        .sorted((e1, e2) -> Double.compare(e2.getValue().revenue, e1.getValue().revenue))
+                        .forEach(entry -> {
+                            ProductMetrics metrics = entry.getValue();
+                            double contribution = (metrics.revenue / finalTotalRevenue1) * 100;
+                            double avgPrice = metrics.unitsSold > 0 ? metrics.revenue / metrics.unitsSold : 0;
+                            double profitPerUnit = metrics.unitsSold > 0 ? (metrics.revenue - metrics.cost) / metrics.unitsSold : 0;
+                            String status = getPerformanceStatus(contribution);
+
+                            writer.printf("%s,%.2f,%d,%.1f,%.2f,%.2f,%s%n",
+                                entry.getKey(),
+                                metrics.revenue,
+                                metrics.unitsSold,
+                                contribution,
+                                avgPrice,
+                                profitPerUnit,
+                                status
+                            );
+                        });
+
+                    writer.println();
+                    writer.println("4. PERFORMANCE INDICATORS");
+                    writer.println("------------------------");
+                    writer.println("Metric,Value,Status");
+                    writer.printf("Average Daily Revenue,%.2f,%s%n", 
+                        finalTotalRevenue / dailyMetrics.size(),
+                        getMetricStatus(finalTotalRevenue / dailyMetrics.size(), 5000));
+                    writer.printf("Average Order Value,%.2f,%s%n",
+                        finalTotalRevenue / Integer.parseInt(lblTotalOrders.getText()),
+                        getMetricStatus(finalTotalRevenue / Integer.parseInt(lblTotalOrders.getText()), 100));
+                    writer.printf("Profit Margin,%.1f%%,%s%n",
+                        Double.parseDouble(lblProfitMargin.getText().replace("%", "")),
+                        getMetricStatus(Double.parseDouble(lblProfitMargin.getText().replace("%", "")), 30));
 
                     showNotification("Data exported successfully", NotificationController.popUpType.success);
                 }
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error exporting data: " + e.getMessage());
             showNotification("Error exporting data", NotificationController.popUpType.error);
+        }
+    }
+
+    private String getPerformanceStatus(double contribution) {
+        if (contribution >= 20) return "Top Performer";
+        if (contribution >= 10) return "Strong Performer";
+        if (contribution >= 5) return "Moderate Performer";
+        return "Under Performer";
+    }
+
+    private String getMetricStatus(double value, double target) {
+        double percentage = (value / target) * 100;
+        if (percentage >= 120) return "Exceptional";
+        if (percentage >= 100) return "On Target";
+        if (percentage >= 80) return "Near Target";
+        return "Below Target";
+    }
+
+    private static class ProductMetrics {
+        double revenue = 0;
+        int unitsSold = 0;
+        double cost = 0;
+
+        void add(double revenue, int units, double cost) {
+            this.revenue += revenue;
+            this.unitsSold += units;
+            this.cost += cost;
         }
     }
 
@@ -795,11 +909,9 @@ public class DashboardController implements Initializable {
             });
             
             footer.getChildren().addAll(exportButton, markReadButton);
-            
-            // Add all components to panel
+
             notificationPanel.getChildren().addAll(header, scrollPane, footer);
-            
-            // Show with slide animation
+
             notificationOverlay.setVisible(true);
             notificationPanel.setTranslateX(notificationPanel.getWidth());
             
@@ -873,28 +985,120 @@ public class DashboardController implements Initializable {
             File file = fileChooser.showSaveDialog(salesManagerDashboardPane.getScene().getWindow());
             if (file != null) {
                 try (PrintWriter writer = new PrintWriter(file)) {
-                    writer.println("Alert Type,Item Name,Details,Date");
+                    writer.write('\ufeff');
+
+                    writer.println("OWSB Inventory Alerts Report");
+                    writer.println("===========================");
+                    writer.println("Generated on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    writer.println();
+
+                    writer.println("1. ALERT SUMMARY");
+                    writer.println("--------------");
+                    int criticalCount = 0, lowCount = 0, reorderCount = 0;
+                    for (String notification : notifications) {
+                        if (notification.contains("CRITICAL")) criticalCount++;
+                        else if (notification.contains("LOW")) lowCount++;
+                        else reorderCount++;
+                    }
+                    writer.println("Critical Alerts," + criticalCount);
+                    writer.println("Low Stock Alerts," + lowCount);
+                    writer.println("Reorder Alerts," + reorderCount);
+                    writer.println("Total Alerts," + notifications.size());
+                    writer.println();
+
+                    writer.println("2. DETAILED ALERT REPORT");
+                    writer.println("----------------------");
+                    writer.println("Priority,Alert Type,Item Name,Current Stock,Alert Threshold,Status,Action Required,Risk Level,Estimated Reorder Time,Last Updated");
+
+                    Map<String, Item> itemMap = loadItems().stream()
+                        .collect(Collectors.toMap(Item::getItemID, item -> item));
+
                     LocalDateTime now = LocalDateTime.now();
-                    
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
                     for (String notification : notifications) {
                         String type = notification.contains("CRITICAL") ? "CRITICAL" :
                                     notification.contains("REORDER") ? "REORDER" : "LOW";
-                        
-                        String[] parts = notification.split(":");
-                        if (parts.length >= 2) {
-                            writer.printf("%s,%s,%s,%s%n",
-                                type,
-                                parts[1].trim().split("\\(")[0].trim(),
-                                parts[1].trim(),
-                                now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                            );
+
+                        String itemName = "";
+                        int currentStock = 0;
+                        int threshold = 0;
+
+                        if (notification.contains("Low stock alert:")) {
+                            String[] parts = notification.split("Low stock alert: ");
+                            if (parts.length > 1) {
+                                String[] details = parts[1].split("\\(Qty: ");
+                                itemName = details[0].trim();
+                                if (details.length > 1) {
+                                    String[] stockInfo = details[1].replace(")", "").split("/");
+                                    if (stockInfo.length > 1) {
+                                        currentStock = Integer.parseInt(stockInfo[0].trim());
+                                        threshold = Integer.parseInt(stockInfo[1].trim());
+                                    }
+                                }
+                            }
                         }
+
+                        String priority = type.equals("CRITICAL") ? "1-High" :
+                                        type.equals("REORDER") ? "2-Medium" : "3-Low";
+
+                        String status = currentStock == 0 ? "OUT OF STOCK" :
+                                      currentStock <= threshold * 0.25 ? "CRITICAL" :
+                                      currentStock <= threshold * 0.5 ? "LOW" : "REORDER";
+
+                        String action = status.equals("OUT OF STOCK") ? "Immediate Reorder Required" :
+                                      status.equals("CRITICAL") ? "Place Order ASAP" :
+                                      status.equals("LOW") ? "Review and Reorder" : "Monitor Stock";
+
+                        String riskLevel = getRiskLevel(currentStock, threshold);
+                        String estimatedReorder = getEstimatedReorderTime(status);
+
+                        writer.printf("%s,%s,%s,%d,%d,%s,%s,%s,%s,%s%n",
+                            priority,
+                            type,
+                            itemName,
+                            currentStock,
+                            threshold,
+                            status,
+                            action,
+                            riskLevel,
+                            estimatedReorder,
+                            now.format(dtf)
+                        );
                     }
+
+                    writer.println();
+                    writer.println("3. RISK ASSESSMENT");
+                    writer.println("----------------");
+                    writer.println("Risk Level,Description,Recommended Action");
+                    writer.println("High Risk,Stock levels critical or depleted,Immediate action required within 24 hours");
+                    writer.println("Medium Risk,Stock levels below optimal threshold,Action required within 3-5 days");
+                    writer.println("Low Risk,Stock levels approaching reorder point,Review within 1 week");
+
                     showNotification("Alerts exported successfully", NotificationController.popUpType.success);
                 }
             }
         } catch (Exception e) {
+            System.err.println("Error exporting alerts: " + e.getMessage());
             showNotification("Error exporting alerts", NotificationController.popUpType.error);
+        }
+    }
+
+    private String getRiskLevel(int currentStock, int threshold) {
+        if (currentStock == 0 || currentStock <= threshold * 0.25) return "High Risk";
+        if (currentStock <= threshold * 0.5) return "Medium Risk";
+        return "Low Risk";
+    }
+
+    private String getEstimatedReorderTime(String status) {
+        switch (status) {
+            case "OUT OF STOCK":
+            case "CRITICAL":
+                return "24 hours";
+            case "LOW":
+                return "3-5 days";
+            default:
+                return "7 days";
         }
     }
 
