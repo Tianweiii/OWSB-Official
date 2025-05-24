@@ -59,22 +59,12 @@ public class DashboardController implements Initializable {
     @FXML private BarChart<String, Number> lowStockChart;
 
     // KPI Components
-    @FXML private Label lblTotalRevenue;
-    @FXML private Label lblTotalProfit;
-    @FXML private Label lblTotalOrders;
-    @FXML private Label lblProfitMargin;
-    @FXML private ProgressBar revenueProgress;
-    @FXML private ProgressBar profitProgress;
-    @FXML private ProgressBar ordersProgress;
-    @FXML private ProgressBar marginProgress;
-    @FXML private Label lblSupplierCount;
-    @FXML private ProgressBar supplierProgress;
+    @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount;
+    @FXML private ProgressBar revenueProgress, profitProgress, ordersProgress, marginProgress, supplierProgress;
 
     // Filter Components
-    @FXML private DatePicker startDatePicker;
-    @FXML private DatePicker endDatePicker;
-    @FXML private ComboBox<String> statusFilter;
-    @FXML private ComboBox<String> analyticsViewFilter;
+    @FXML private DatePicker startDatePicker, endDatePicker;
+    @FXML private ComboBox<String> statusFilter, analyticsViewFilter;
 
     // Chart Components
     @FXML private StackedAreaChart<String, Number> trendChart;
@@ -1123,27 +1113,5 @@ public class DashboardController implements Initializable {
             this.profit += profit;
             this.orders++;
         }
-    }
-
-    public static class ProductPerformance {
-        private final String productName;
-        private double revenue = 0;
-        private double profit = 0;
-        private double margin = 0;
-
-        public ProductPerformance(String productName) {
-            this.productName = productName;
-        }
-
-        public void addSale(double revenue, double profit) {
-            this.revenue += revenue;
-            this.profit += profit;
-            this.margin = this.revenue > 0 ? this.profit / this.revenue : 0;
-        }
-
-        public String getProductName() { return productName; }
-        public double getRevenue() { return revenue; }
-        public double getProfit() { return profit; }
-        public double getMargin() { return margin; }
     }
 }
