@@ -52,8 +52,6 @@ public class DashboardController implements Initializable {
     @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount,lowStockCountLabel;
     @FXML private ProgressBar revenueProgress, profitProgress, ordersProgress, marginProgress, supplierProgress;
 
-    @FXML private DatePicker startDatePicker, endDatePicker;
-
     @FXML private StackedAreaChart<String, Number> trendChart;
     @FXML private PieChart ordersChart;
     @FXML private LineChart<String, Number> revenueAnalysisChart;
@@ -80,7 +78,6 @@ public class DashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
         setupUI();
-        setupFilters();
         setupCharts();
         setupNotifications();
         updateWelcomeMessage();
@@ -104,23 +101,10 @@ public class DashboardController implements Initializable {
 
     private void setupUI() {
         try {
-        // Initialize date pickers
-        startDatePicker.setValue(LocalDate.now().minusDays(30));
-        endDatePicker.setValue(LocalDate.now());
-
             currentPage.addListener((obs, oldVal, newVal) -> refreshData());
         } catch (Exception e) {
             System.err.println("Error in setupUI: " + e.getMessage());
             System.out.println(e.getMessage());
-        }
-    }
-
-    private void setupFilters() {
-        if (startDatePicker != null) {
-        startDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
-        }
-        if (endDatePicker != null) {
-        endDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
         }
     }
 
@@ -332,18 +316,18 @@ public class DashboardController implements Initializable {
             DailySalesHistory history = salesService.getDailySalesHistory(tx.getDailySalesHistoryID());
             if (history != null) {
                 LocalDate date = history.getCreatedAt();
-                String formattedDate = date.format(DateTimeFormatter.ISO_DATE);
-                double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
-                double profit = 0;
+            String formattedDate = date.format(DateTimeFormatter.ISO_DATE);
+            double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
+            double profit = 0;
 
-                Item item = itemMap.get(tx.getItemID());
-                if (item != null) {
-                    double cost = item.getUnitPrice() * tx.getSoldQuantity();
-                    profit = revenue - cost;
-                }
+            Item item = itemMap.get(tx.getItemID());
+            if (item != null) {
+                double cost = item.getUnitPrice() * tx.getSoldQuantity();
+                profit = revenue - cost;
+            }
 
-                dailyMetrics.computeIfAbsent(formattedDate, k -> new DailyMetrics())
-                        .add(revenue, profit);
+            dailyMetrics.computeIfAbsent(formattedDate, k -> new DailyMetrics())
+                .add(revenue, profit);
             }
 
         }
@@ -360,7 +344,7 @@ public class DashboardController implements Initializable {
     private void updateProductMix(List<Transaction> transactions) {
         Map<String, Double> productMetrics = new HashMap<>();
         double totalRevenue = 0;
-
+        
             for (Transaction t : transactions) {
             Item item = getItem(t.getItemID());
             if (item == null) continue;
@@ -580,14 +564,9 @@ public class DashboardController implements Initializable {
     }
 
     private List<Transaction> loadTransactions() throws Exception {
-        LocalDate start = startDatePicker.getValue();
-        LocalDate end = endDatePicker.getValue();
-
         return new QueryBuilder<>(Transaction.class)
                 .select()
                 .from("db/Transaction.txt")
-                .where("transactionDate", ">=", start.toString())
-                .and("transactionDate", "<=", end.plusDays(1).toString())
                 .getAsObjects();
     }
 
@@ -654,8 +633,6 @@ public class DashboardController implements Initializable {
                     writer.println("OWSB Sales Performance Dashboard Report");
                     writer.println("==========================================");
                     writer.println("Generated on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                    writer.println("Report Period: " + startDatePicker.getValue().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) + 
-                                 " to " + endDatePicker.getValue().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")));
                     writer.println();
 
                     writer.println("1. EXECUTIVE SUMMARY");
@@ -917,9 +894,9 @@ public class DashboardController implements Initializable {
             });
             
             footer.getChildren().addAll(exportButton, markReadButton);
-
+            
             notificationPanel.getChildren().addAll(header, scrollPane, footer);
-
+            
             notificationOverlay.setVisible(true);
             notificationPanel.setTranslateX(notificationPanel.getWidth());
             
@@ -1023,11 +1000,11 @@ public class DashboardController implements Initializable {
 
                     LocalDateTime now = LocalDateTime.now();
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+                    
                     for (String notification : notifications) {
                         String type = notification.contains("CRITICAL") ? "CRITICAL" :
                                     notification.contains("REORDER") ? "REORDER" : "LOW";
-
+                        
                         String itemName = "";
                         int currentStock = 0;
                         int threshold = 0;
@@ -1063,7 +1040,7 @@ public class DashboardController implements Initializable {
 
                         writer.printf("%s,%s,%s,%d,%d,%s,%s,%s,%s,%s%n",
                             priority,
-                            type,
+                                type,
                             itemName,
                             currentStock,
                             threshold,

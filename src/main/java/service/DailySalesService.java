@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Service layer for Daily Item Sales, purely file‐based.
- */
 public class DailySalesService {
     private static final Logger LOG = Logger.getLogger(DailySalesService.class.getName());
     private static final String TRANS_FILE = "db/Transaction.txt";
@@ -174,11 +171,6 @@ public class DailySalesService {
     }
 
     /**
-     * Complete sales report - enhanced version that:
-     * 1. Creates a more detailed CSV
-     * 2. Creates inventory update requests
-     * 3. Updates sales history status to "Completed"
-     * 
      * @param date The date for which to complete the sales report
      * @return The full path to the exported report file
      */

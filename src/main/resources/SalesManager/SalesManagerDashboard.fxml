@@ -45,8 +45,6 @@
 
                         <!-- Filter Section -->
             <HBox spacing="15" styleClass="filter-container">
-                <DatePicker fx:id="startDatePicker" promptText="Start Date" />
-                <DatePicker fx:id="endDatePicker" promptText="End Date" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="btnExport" onAction="#handleExport" styleClass="action-button">
                     <graphic>
