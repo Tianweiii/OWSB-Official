@@ -33,10 +33,7 @@ public class SupplierController implements Initializable {
 
     @FXML private StackPane rootPane;
     @FXML private TableView<Supplier> table;
-    @FXML private TableColumn<Supplier, String> colId;
-    @FXML private TableColumn<Supplier, String> colName;
-    @FXML private TableColumn<Supplier, String> colPhone;
-    @FXML private TableColumn<Supplier, String> colCompany;
+    @FXML private TableColumn<Supplier, String> colId,colName,colPhone,colCompany;
     @FXML private TableColumn<Supplier, Void> colActions;
     @FXML private Label totalSupplierLabel;
 
@@ -44,8 +41,7 @@ public class SupplierController implements Initializable {
     @FXML private Button clearSearchButton;
     @FXML private ComboBox<String> cmbSort;
 
-    @FXML private Button deleteButton;
-    @FXML private Button cancelDeleteItemButton;
+    @FXML private Button deleteButton, cancelDeleteItemButton;
 
     @FXML private AnchorPane addFormPane;
     @FXML private TextField addNameField, addPhoneField, addCompanyField, addAddressField;

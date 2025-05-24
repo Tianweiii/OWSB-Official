@@ -39,30 +39,23 @@ public class ItemListController implements Initializable {
 	private final ItemService itemListService = new ItemService();
 	private final SupplierService supplierService = new SupplierService();
 	@FXML private AnchorPane rootPane;
-	@FXML private Button addItemButton;
-	@FXML private Button searchButton;
+	@FXML private Button addItemButton,searchButton, clearSearchButton, deleteButton, cancelDeleteItemButton, saveEditItemButton, cancelEditItemButton, saveAddItemButton, cancelAddItemButton;
 	@FXML private ChoiceBox<String> filterByChoiceBox;
 	@FXML private TextField searchField;
-	@FXML private Button clearSearchButton;
 	@FXML private TableView<ItemListDTO> itemTable = new TableView<>();
 	@FXML private ComboBox<String> filterComboBox;
 	@FXML private Label totalItemsLabel;
 
 	@FXML
-	Pane addItemPane;
+	Pane addItemPane, deleteItemPane;
+
 	@FXML
 	private TextField addItemNameField;
-	@FXML private TextField addItemPriceField;
-	@FXML private TextField addItemQuantityField;
+	@FXML private TextField addItemPriceField, addItemQuantityField, itemDescField;
 	@FXML private ComboBox<Supplier> supplierComboBox = new ComboBox<>();
-	@FXML private TextField itemDescField;
-	@FXML private Button saveAddItemButton;
-	@FXML private Button cancelAddItemButton;
 
-	@FXML private Pane deleteItemPane;
+
 	@FXML private VBox deletePane;
-	@FXML private Button deleteButton;
-	@FXML private Button cancelDeleteItemButton;
 	@FXML private Label itemToBeDeleted = new Label();
 
 	@FXML private Pane editItemPane;
@@ -71,8 +64,6 @@ public class ItemListController implements Initializable {
 	@FXML private TextField editItemQuantityField = new TextField();
 	@FXML private TextField editItemPriceField = new TextField();
 	@FXML private ComboBox<Supplier> editSupplierComboBox = new ComboBox<>();
-	@FXML private Button saveEditItemButton;
-	@FXML private Button cancelEditItemButton;
 
 	// Clears the search field and refreshes results
 	public void onClear() {

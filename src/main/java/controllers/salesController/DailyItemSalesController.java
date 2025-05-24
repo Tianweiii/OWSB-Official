@@ -43,19 +43,13 @@ public class DailyItemSalesController implements Initializable {
 	public DailyItemSalesController controller = this;
 	@FXML private DatePicker datePicker;
 	@FXML private TextField txtSearch;
-	@FXML private Button clearSearchButton;
-	@FXML private ProgressIndicator loadingIndicator;
-	@FXML private Button completeSalesReportBtn;
-	@FXML private Button addBtn;
-	@FXML private Button editBtn;
-	@FXML private Button delBtn;
-	@FXML private Button deleteAllButton;
-	@FXML private Label totalLabel;
+	@FXML private Button clearSearchButton, completeSalesReportBtn, addBtn,editBtn,delBtn,deleteAllButton;
+	@FXML private Label totalLabel,subHeadingLabel;
 	@FXML private StackPane contentStack;
 	@FXML private BorderPane rootPane;
 	@FXML private TableView<Transaction> table;
-	@FXML private Label subHeadingLabel;
 	@FXML private Label totalDailyItemSalesLabel;
+	@FXML private ProgressIndicator loadingIndicator;
 
 	private static LocalDate selectedDate;
 	private Pagination pagination;

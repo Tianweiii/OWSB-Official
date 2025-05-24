@@ -19,17 +19,9 @@ import java.util.function.Consumer;
 
 public class DeleteDailyItemSalesController implements Initializable {
 
-    @FXML private Pane rootPane;
-
-    @FXML private Pane deletePane;
-    @FXML private Label deleteLabel;
-    @FXML private Button confirmDeleteButton;
-    @FXML private Button cancelDeleteButton;
-
-    @FXML private Pane dailyDeletePane;
-    @FXML private Label dailyDeleteLabel;
-    @FXML private Button confirmDailyDeleteButton;
-    @FXML private Button cancelDailyDeleteButton;
+    @FXML private Pane rootPane, deletePane, dailyDeletePane;
+    @FXML private Label deleteLabel, dailyDeleteLabel;
+    @FXML private Button confirmDeleteButton, cancelDeleteButton, confirmDailyDeleteButton, cancelDailyDeleteButton;
 
     private final DailySalesService service = new DailySalesService();
 
@@ -37,8 +29,7 @@ public class DeleteDailyItemSalesController implements Initializable {
 
     private Transaction transactionToDelete;
     private DailySalesHistory dailySalesHistoryToDelete;
-    private Runnable onDeleteCallback;
-    private Runnable onCancelCallback;
+    private Runnable onDeleteCallback, onCancelCallback;
 
     @FXML
     private void onConfirmDeleteClicked() {

@@ -38,15 +38,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-/**
- * Controller for the Sales Manager Dashboard
- * Handles displaying sales metrics, charts, and forecasting
- */
 public class DashboardController implements Initializable {
-    // Constants
+
     private static final int ITEMS_PER_PAGE = 10;
 
-    // FXML Components
     @FXML private HBox salesManagerDashboardPane;
     @FXML private VBox mainContainer;
     @FXML private HBox headerBox;
@@ -55,32 +50,26 @@ public class DashboardController implements Initializable {
     @FXML private Circle notificationBadge;
     @FXML private BarChart<String, Number> lowStockChart;
 
-    // KPI Components
-    @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount;
+    @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount,lowStockCountLabel;
     @FXML private ProgressBar revenueProgress, profitProgress, ordersProgress, marginProgress, supplierProgress;
 
-    // Filter Components
     @FXML private DatePicker startDatePicker, endDatePicker;
 
-    // Chart Components
     @FXML private StackedAreaChart<String, Number> trendChart;
     @FXML private PieChart ordersChart;
     @FXML private LineChart<String, Number> revenueAnalysisChart;
 
-    // Services
     private final DailySalesService salesService;
     private final SupplierService supplierService;
     private final ItemService itemService;
 
-    // Data Management
     private final IntegerProperty totalRecords = new SimpleIntegerProperty(0);
     private final IntegerProperty currentPage = new SimpleIntegerProperty(0);
     private final IntegerProperty itemsPerPage = new SimpleIntegerProperty(ITEMS_PER_PAGE);
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final List<String> notifications = new ArrayList<>();
     private final BooleanProperty hasUnreadNotifications = new SimpleBooleanProperty(false);
-    
-    @FXML private Label lowStockCountLabel;
+
     @FXML private StackPane notificationOverlay;
     @FXML private VBox notificationPanel;
     
@@ -165,14 +154,12 @@ public class DashboardController implements Initializable {
 
     private void setupCharts() {
         try {
-            // Configure sales trend chart
             if (trendChart != null) {
                 trendChart.setAnimated(false);
                 trendChart.getXAxis().setLabel("Date");
                 trendChart.getYAxis().setLabel("Amount ($)");
             }
 
-            // Configure low stock chart
             if (lowStockChart != null) {
                 lowStockChart.setAnimated(false);
                 lowStockChart.setTitle("Inventory Alerts");
@@ -206,10 +193,8 @@ public class DashboardController implements Initializable {
         System.out.println("Loading dashboard data...");
         new Thread(() -> {
             try {
-                // Load suppliers
                 List<Supplier> suppliers = supplierService.getAll();
 
-                // Update supplier count on UI thread
                 Platform.runLater(() -> {
                     if (lblSupplierCount != null) {
                         lblSupplierCount.setText(String.valueOf(suppliers.size()));
@@ -219,7 +204,6 @@ public class DashboardController implements Initializable {
                     }
                 });
 
-                // Initialize empty lists to prevent null pointer exceptions
                 List<Transaction> transactions = new ArrayList<>();
                 List<Item> items = new ArrayList<>();
 
@@ -417,12 +401,10 @@ public class DashboardController implements Initializable {
                 );
             })
             .collect(Collectors.toCollection(FXCollections::observableArrayList));
-            
-        // Update the pie chart
+
         ordersChart.setData(pieData);
         ordersChart.setTitle(String.format("Total Revenue: $%.2f", totalRevenue));
-        
-        // Style the pie chart
+
         String[] colors = {
             "#2ecc71", "#3498db", "#9b59b6", "#e74c3c", 
             "#f1c40f", "#1abc9c", "#e67e22", "#34495e"
@@ -431,8 +413,7 @@ public class DashboardController implements Initializable {
         for (int i = 0; i < pieData.size(); i++) {
             PieChart.Data data = pieData.get(i);
             data.getNode().setStyle("-fx-pie-color: " + colors[i % colors.length] + ";");
-            
-            // Add hover effect and tooltip
+
             Tooltip tooltip = new Tooltip(String.format(
                 "%s\nRevenue: $%.2f\nShare: %.1f%%",
                 data.getName().split("\n")[0],
@@ -440,8 +421,7 @@ public class DashboardController implements Initializable {
                 (data.getPieValue() / finalTotalRevenue) * 100
             ));
             Tooltip.install(data.getNode(), tooltip);
-            
-            // Add hover effect
+
             data.getNode().setOnMouseEntered(e -> 
                 data.getNode().setStyle("-fx-pie-color: derive(" + colors[pieData.indexOf(data) % colors.length] + ", 30%);")
             );
@@ -466,8 +446,7 @@ public class DashboardController implements Initializable {
             
             XYChart.Series<String, Number> lowSeries = new XYChart.Series<>();
             lowSeries.setName("Low Stock");
-            
-            // Get items with low stock and categorize them
+
             List<Item> stockAlerts = items.stream()
                 .filter(item -> {
                     int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
@@ -500,12 +479,10 @@ public class DashboardController implements Initializable {
                     System.out.println("Low: " + item.getItemName() + " (" + quantity + "/" + alertThreshold + ")");
                 }
             }
-            
-            // Add series to chart if they have data
+
             if (!criticalSeries.getData().isEmpty()) lowStockChart.getData().add(criticalSeries);
             if (!lowSeries.getData().isEmpty()) lowStockChart.getData().add(lowSeries);
-            
-            // Style the series
+
             criticalSeries.getData().forEach(data -> {
                 if (data.getNode() != null) {
                     data.getNode().setStyle("-fx-bar-fill: #ff4444;"); // Red for critical
@@ -528,7 +505,6 @@ public class DashboardController implements Initializable {
                         (!criticalSeries.getData().isEmpty() ? "#ff4444" : "#ffa726") + ";");
                 }
 
-                // Update notifications list
                 notifications.clear();
                 for (Item item : stockAlerts) {
                     int quantity = item.getQuantity();
@@ -544,8 +520,6 @@ public class DashboardController implements Initializable {
                         alertThreshold
                     ));
                 }
-                
-                // Update notification badge
                 hasUnreadNotifications.set(!stockAlerts.isEmpty());
             });
             
@@ -578,7 +552,6 @@ public class DashboardController implements Initializable {
         XYChart.Series<String, Number> profitMargin = new XYChart.Series<>();
         profitMargin.setName("Profit Margin");
 
-        // Group by date and calculate metrics
         Map<LocalDate, RevenueMetrics> dailyMetrics = new TreeMap<>();
 
         try {
@@ -837,19 +810,16 @@ public class DashboardController implements Initializable {
                 notificationPanel.setPrefWidth(1000);
                 notificationPanel.setMaxHeight(600);
                 notificationPanel.setPickOnBounds(true);
-                
-                // Position the panel on the right side with proper margins
+
                 StackPane.setAlignment(notificationPanel, Pos.CENTER_RIGHT);
                 StackPane.setMargin(notificationPanel, new Insets(20, 20, 20, 20));
                 notificationOverlay.getChildren().add(notificationPanel);
-                
-                // Add to scene if not already added
+
                 if (!salesManagerDashboardPane.getChildren().contains(notificationOverlay)) {
                     salesManagerDashboardPane.getChildren().add(notificationOverlay);
                 }
             }
-            
-            // Clear previous content
+
             notificationPanel.getChildren().clear();
             
             // Header
@@ -1047,7 +1017,6 @@ public class DashboardController implements Initializable {
 
     private void updateWelcomeMessage() {
         try {
-            // Get username from SessionManager if available
             String username = "User";
             try {
                 username = models.Utils.SessionManager.getInstance().getUserData().get("username");

@@ -21,8 +21,7 @@ public class CompleteSalesReportController implements Initializable {
 
     @FXML private Pane rootPane;
     @FXML private VBox confirmPane;
-    @FXML private Label confirmLabel;
-    @FXML private Label noteLabel;
+    @FXML private Label confirmLabel, noteLabel;
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
 
