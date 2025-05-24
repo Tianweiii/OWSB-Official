@@ -435,8 +435,9 @@ public class DashboardController implements Initializable {
         Map<String, DailyMetrics> dailyMetrics = new TreeMap<>();
 
         for (Transaction tx : transactions) {
-            String date = tx.getDailySalesHistoryID();
-            double revenue = tx.getSoldQuantity() * tx.getUnitPrice();
+            LocalDate date = salesService.getDailySalesHistory(tx.getDailySalesHistoryID()).getCreatedAt();
+            String formattedDate = date.format(DateTimeFormatter.ISO_DATE);
+            double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
             double profit = 0;
 
             Item item = itemMap.get(tx.getItemID());
@@ -445,7 +446,7 @@ public class DashboardController implements Initializable {
                 profit = revenue - cost;
             }
 
-            dailyMetrics.computeIfAbsent(date, k -> new DailyMetrics())
+            dailyMetrics.computeIfAbsent(formattedDate, k -> new DailyMetrics())
                 .add(revenue, profit);
         }
 

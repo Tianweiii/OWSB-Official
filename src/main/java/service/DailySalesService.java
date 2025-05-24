@@ -223,27 +223,7 @@ public class DailySalesService {
 
         String ds = date.format(ISO);
         List<Transaction> txs = getTransactionsFor(date);
-        String userID = SessionManager.getInstance().getUserData().get("userID");
-        try {
-            QueryBuilder<InventoryUpdateRequest> qb = new QueryBuilder<>(InventoryUpdateRequest.class);
-            for (Transaction tx : txs) {
-                boolean res = qb
-                    .target("db/InventoryUpdateRequest.txt")
-                    .values(new String[]{
-                            tx.getItemID(),
-                            userID,
-                            String.valueOf(tx.getSoldQuantity()),
-                            "Pending",
-                    })
-                    .create("REQ");
-                if (!res) {
-                    LOG.log(Level.SEVERE, "Failed to create inventory update request for transaction " + tx.getTransactionID());
-                }
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to create inventory update requests", e);
-        }
-        
+
         if (txs.isEmpty()) {
             LOG.warning("No transactions found for date: " + ds);
             return null;
@@ -314,46 +294,24 @@ public class DailySalesService {
     /**
      * Create inventory update request for a transaction
      */
-    private void createInventoryUpdateRequest(Transaction transaction) {
+    private void createInventoryUpdateRequest(Transaction tx) {
+        String userID = SessionManager.getInstance().getUserData().get("userID");
         try {
-            // Create timestamp for the request
-            String timestamp = LocalDateTime.now().format(DATETIME_FORMAT);
-            
-            // Query to create inventory update request
-            // Assuming the structure of InventoryUpdateRequest has:
-            // - requestID (auto-generated)
-            // - itemID
-            // - quantity
-            // - requestType (e.g., "SALES_DEDUCTION")
-            // - status (e.g., "PENDING")
-            // - createdAt
-            // - transactionID (reference back to the sales transaction)
-            
-            // Check if the InventoryUpdateRequest.txt file exists, create if not
-            Path invReqPath = Paths.get(INV_UPDATE_REQUEST_FILE);
-            if (!Files.exists(invReqPath.getParent())) {
-                Files.createDirectories(invReqPath.getParent());
+            QueryBuilder<InventoryUpdateRequest> qb = new QueryBuilder<>(InventoryUpdateRequest.class);
+            boolean res = qb
+                    .target(INV_UPDATE_REQUEST_FILE)
+                    .values(new String[]{
+                            tx.getItemID(),
+                            userID,
+                            String.valueOf(tx.getSoldQuantity()),
+                            "Pending",
+                    })
+                    .create("REQ");
+            if (!res) {
+                LOG.log(Level.SEVERE, "Failed to create inventory update request for transaction " + tx.getTransactionID());
             }
-            if (!Files.exists(invReqPath)) {
-                Files.createFile(invReqPath);
-            }
-            
-            // Using a simplified approach here since we don't have the actual InventoryUpdateRequest model
-            // In a real implementation, you'd use the appropriate QueryBuilder for this model
-            try (FileWriter writer = new FileWriter(INV_UPDATE_REQUEST_FILE, true)) {
-                String requestLine = String.format("%s,%s,%d,%s,%s,%s\n",
-                        transaction.getItemID(),
-                        transaction.getSoldQuantity(),
-                        "SALES_DEDUCTION",
-                        "PENDING",
-                        timestamp,
-                        transaction.getTransactionID());
-                writer.write(requestLine);
-            }
-            
-            LOG.info("Created inventory update request for transaction: " + transaction.getTransactionID());
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to create inventory update request", e);
+            LOG.log(Level.SEVERE, "Failed to create inventory update requests", e);
         }
     }
 
@@ -373,6 +331,21 @@ public class DailySalesService {
             LOG.info("Updated sales history status to " + status + " for ID: " + historyId);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to update sales history status", e);
+        }
+    }
+
+    public DailySalesHistory getDailySalesHistory(String dailySalesHistoryID) {
+        try {
+            QueryBuilder<DailySalesHistory> qb = new QueryBuilder<>(DailySalesHistory.class);
+            ArrayList<DailySalesHistory> dailySalesHistories = qb
+                    .select()
+                    .from(HIST_FILE)
+                    .where("dailySalesHistoryID", "=", dailySalesHistoryID)
+                    .getAsObjects();
+            return dailySalesHistories.isEmpty() ? null : dailySalesHistories.get(0);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to get daily sales history", e);
+            return null;
         }
     }
 
