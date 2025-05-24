@@ -27,7 +27,6 @@ import javafx.application.Platform;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.HashMap;
 
 public class SupplierController implements Initializable {
 
@@ -158,25 +157,12 @@ public class SupplierController implements Initializable {
         String choice = cmbSort.getValue();
         if (choice == null) return;
 
-        FXCollections.sort(table.getItems(), (a, b) -> {
-            int cmp;
-            switch (choice) {
-                case "Name (A-Z)":
-                    cmp = a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
-                    break;
-                case "Name (Z-A)":
-                    cmp = b.getSupplierName().compareToIgnoreCase(a.getSupplierName());
-                    break;
-                case "Company (A-Z)":
-                    cmp = a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
-                    break;
-                case "Company (Z-A)":
-                    cmp = b.getCompanyName().compareToIgnoreCase(a.getCompanyName());
-                    break;
-                default:
-                    cmp = 0;
-            }
-            return cmp;
+        FXCollections.sort(table.getItems(), (a, b) -> switch (choice) {
+	        case "Name (A-Z)" -> a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
+	        case "Name (Z-A)" -> b.getSupplierName().compareToIgnoreCase(a.getSupplierName());
+	        case "Company (A-Z)" -> a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
+	        case "Company (Z-A)" -> b.getCompanyName().compareToIgnoreCase(a.getCompanyName());
+	        default -> 0;
         });
         table.refresh();
     }
@@ -445,13 +431,6 @@ public class SupplierController implements Initializable {
                 return;
             }
 
-            // Create new supplier
-            HashMap<String, String> supplierData = new HashMap<>();
-            supplierData.put("supplierName", addNameField.getText());
-            supplierData.put("companyName", addCompanyField.getText());
-            supplierData.put("phoneNumber", addPhoneField.getText());
-            supplierData.put("address", addAddressField.getText());
-
             boolean success = svc.add(
                 addNameField.getText(),
                 addCompanyField.getText(),
@@ -492,13 +471,6 @@ public class SupplierController implements Initializable {
                 showNotification("Supplier with same name and company already exists", NotificationController.popUpType.error);
                 return;
             }
-
-            // Update supplier
-            HashMap<String, String> supplierData = new HashMap<>();
-            supplierData.put("supplierName", editNameField.getText());
-            supplierData.put("companyName", editCompanyField.getText());
-            supplierData.put("phoneNumber", editPhoneField.getText());
-            supplierData.put("address", editAddressField.getText());
 
             boolean success = svc.update(
                 editingSupplier.getSupplierId(),

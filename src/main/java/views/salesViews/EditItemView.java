@@ -5,9 +5,6 @@ import controllers.salesController.ItemListController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import models.ModelInitializable;
-import models.Utils.Helper;
-import models.Utils.QueryBuilder;
 import org.start.owsb.Layout;
 import views.View;
 
@@ -38,6 +35,7 @@ public class EditItemView implements View {
 
 	public void showEditItemPane() {
 		itemListController.prefillEditFields(data);
+		itemListController.setupFormValidation("edit");
 		Layout layout = Layout.getInstance();
 		layout.getRoot().getChildren().add(editItemPane);
 		models.Utils.Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, layout.getRoot(), editItemPane);

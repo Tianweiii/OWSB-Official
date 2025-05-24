@@ -56,24 +56,16 @@ public class MissingDailySalesController implements Initializable {
 			SidebarController.getSidebar().setDisable(true);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			try {
 				new NotificationView(
 						"Unable to open entry form",
 						NotificationController.popUpType.error,
 						NotificationController.popUpPos.BOTTOM_RIGHT
 				).show();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
 			}
-		}
-	}
-
-
-	public void notifyEntryCreated() {
-		missingDailySalesPane.setDisable(false);
-		if (onCreateCallback != null) {
-			onCreateCallback.run();
 		}
 	}
 
@@ -87,10 +79,6 @@ public class MissingDailySalesController implements Initializable {
 
 	public Button getCreateButton() {
 		return createNewSalesEntryButton;
-	}
-
-	public void reload() {
-
 	}
 
 	public void setSalesDate(LocalDate salesDate) {

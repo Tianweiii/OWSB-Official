@@ -5,7 +5,6 @@ import controllers.SidebarController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -17,10 +16,8 @@ import javafx.scene.layout.*;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import models.DTO.ItemListDTO;
-import models.Datas.Item;
 import models.Datas.Supplier;
 import models.Utils.Helper;
-import models.Utils.QueryBuilder;
 import models.Utils.Validation;
 import org.start.owsb.Layout;
 import service.ItemService;
@@ -125,7 +122,7 @@ public class ItemListController implements Initializable {
 				notificationView = new NotificationView("Item name cannot be empty", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 			return;
 		}
@@ -135,7 +132,7 @@ public class ItemListController implements Initializable {
 				notificationView = new NotificationView("Please select a supplier", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 			return;
 		}
@@ -155,11 +152,11 @@ public class ItemListController implements Initializable {
 				notificationView = new NotificationView("Price must be a valid number", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				System.out.println(ex.getMessage());
 			}
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			return;
 		}
 		
@@ -176,22 +173,21 @@ public class ItemListController implements Initializable {
 				notificationView = new NotificationView("Quantity must be a valid number", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				System.out.println(ex.getMessage());
 			}
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			return;
 		}
 		
 		String itemId = EditItemView.getData().get("itemID");
-		String supplierId = EditItemView.getData().get("supplierID");
 
 		HashMap<String, String> dataToUpdate = new HashMap<>();
 		dataToUpdate.put("itemName", changedItemName);
 		dataToUpdate.put("description", changedItemDescription);
 		dataToUpdate.put("quantity", changedItemQuantity);
-		dataToUpdate.put("price", changedItemPrice);
+		dataToUpdate.put("unitPrice", changedItemPrice);
 		dataToUpdate.put("supplierID", changedSupplierID);
 		try {
 			boolean res = itemListService.update(itemId, dataToUpdate);
@@ -211,7 +207,6 @@ public class ItemListController implements Initializable {
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
-					updateItemCount(oListItems.size());
 				});
 				notificationView = new NotificationView("Item has been successfully changed", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
 			}else {
@@ -239,7 +234,7 @@ public class ItemListController implements Initializable {
 					controller.getItemTable().getItems().stream().filter(i ->
 							i.getItemID().equals(selectedId)).findFirst().ifPresent(controller.getItemTable().getItems()::remove);
 					controller.getItemTable().refresh();
-					updateItemCount(controller.getItemTable().getItems().size());
+					controller.updateItemCount(controller.getItemTable().getItems().size());
 				});
 			}else {
 				notificationView = new NotificationView("Item deletion failed", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -336,7 +331,7 @@ public class ItemListController implements Initializable {
 				}
 			}
 			
-			boolean res = itemListService.add(itemName, this.itemDescField.getText(), itemQuantity, itemPrice, supplier.getSupplierId());
+			boolean res = itemListService.add(itemName, itemDescription, itemQuantity, itemPrice, supplier.getSupplierId());
 
 			if (res) {
 				ObservableList<ItemListDTO> oListItems = getLatestData();
@@ -346,8 +341,7 @@ public class ItemListController implements Initializable {
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
-					updateItemCount(oListItems.size());
-
+					controllerReference.updateItemCount(oListItems.size());
 				});
 				notificationView = new NotificationView("Item added successfully", NotificationController.popUpType.success, NotificationController.popUpPos.BOTTOM_RIGHT);
 			} else {
@@ -406,13 +400,6 @@ public class ItemListController implements Initializable {
 			setupListeners();
 			updateItemCount(oListItems.size());
 
-			// Add listener for table items changes
-			itemTable.getItems().addListener((ListChangeListener<ItemListDTO>) change -> {
-				while (change.next()) {
-					updateItemCount(itemTable.getItems().size());
-				}
-			});
-
 			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
 			List<String> columnNames = List.of(this.columns);
 
@@ -464,16 +451,16 @@ public class ItemListController implements Initializable {
 
 	private void setupListeners() {
 		if (searchButton != null) {
-			searchButton.setOnAction(e -> searchItems());
+			searchButton.setOnAction(_ -> searchItems());
 		}
 
 		if (filterComboBox != null) {
 			// Add sorting functionality
-			filterComboBox.setOnAction(e -> applySorting());
+			filterComboBox.setOnAction(_ -> applySorting());
 		}
 
 		if (clearSearchButton != null) {
-			clearSearchButton.setOnAction(e -> onClear());
+			clearSearchButton.setOnAction(_ -> onClear());
 		}
 	}
 
@@ -554,7 +541,7 @@ public class ItemListController implements Initializable {
 
 	private void updateItemCount(int count) {
 		if (totalItemsLabel != null) {
-			Platform.runLater(() -> totalItemsLabel.setText(String.format("Total Items: %d", count)));
+			totalItemsLabel.setText(String.format("Total Items: %d", count));
 		}
 	}
 
@@ -587,7 +574,7 @@ public class ItemListController implements Initializable {
 					deleteIcon.setFitHeight(16);
 					deleteItem.setGraphic(deleteIcon);
 
-					editItem.setOnAction(e -> {
+					editItem.setOnAction(_ -> {
 						try {
 							handleEdit(data.toMap());
 						} catch (IOException ex) {
@@ -595,7 +582,7 @@ public class ItemListController implements Initializable {
 						}
 					});
 					
-					deleteItem.setOnAction(e -> {
+					deleteItem.setOnAction(_ -> {
 						try {
 							handleDelete(data.toMap());
 						} catch (IOException ex) {
@@ -642,6 +629,7 @@ public class ItemListController implements Initializable {
 
 		EditItemView.setData(data);
 		editItemView.showEditItemPane();
+
 		this.rootPane.setDisable(true);
 		SidebarController.getSidebar().setDisable(true);
 	}
@@ -665,68 +653,72 @@ public class ItemListController implements Initializable {
 		return FXCollections.observableArrayList(itemListService.getAll());
 	}
 
-	private void setupFormValidation() {
+	public void setupFormValidation(String type) {
 		// Add Form Validation
-		addItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidName(newValue)) {
-				addItemNameField.setStyle("-fx-border-color: red;");
-				saveAddItemButton.setDisable(true);
-			} else {
-				addItemNameField.setStyle("");
-				validateAddForm();
-			}
-		});
+		if (type.equals("add")) {
+			addItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidName(newValue)) {
+					addItemNameField.setStyle("-fx-border-color: red;");
+					saveAddItemButton.setDisable(true);
+				} else {
+					addItemNameField.setStyle("");
+					validateAddForm();
+				}
+			});
 
-		addItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidCurrency(newValue)) {
-				addItemPriceField.setStyle("-fx-border-color: red;");
-				saveAddItemButton.setDisable(true);
-			} else {
-				addItemPriceField.setStyle("");
-				validateAddForm();
-			}
-		});
+			addItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidCurrency(newValue)) {
+					addItemPriceField.setStyle("-fx-border-color: red;");
+					saveAddItemButton.setDisable(true);
+				} else {
+					addItemPriceField.setStyle("");
+					validateAddForm();
+				}
+			});
 
-		addItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidQuantity(newValue)) {
-				addItemQuantityField.setStyle("-fx-border-color: red;");
-				saveAddItemButton.setDisable(true);
-			} else {
-				addItemQuantityField.setStyle("");
-				validateAddForm();
-			}
-		});
+			addItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidQuantity(newValue)) {
+					addItemQuantityField.setStyle("-fx-border-color: red;");
+					saveAddItemButton.setDisable(true);
+				} else {
+					addItemQuantityField.setStyle("");
+					validateAddForm();
+				}
+			});
 
-		// Edit Form Validation
-		editItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidName(newValue)) {
-				editItemNameField.setStyle("-fx-border-color: red;");
-				saveEditItemButton.setDisable(true);
-			} else {
-				editItemNameField.setStyle("");
-				validateEditForm();
-			}
-		});
+		} else {
+			// Edit Form Validation
+			editItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidName(newValue)) {
+					editItemNameField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+				} else {
+					editItemNameField.setStyle("");
+					validateEditForm();
+				}
+			});
 
-		editItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidCurrency(newValue)) {
-				editItemPriceField.setStyle("-fx-border-color: red;");
-				saveEditItemButton.setDisable(true);
-			} else {
-				editItemPriceField.setStyle("");
-				validateEditForm();
-			}
-		});
+			editItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidCurrency(newValue)) {
+					editItemPriceField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+				} else {
+					editItemPriceField.setStyle("");
+					validateEditForm();
+				}
+			});
 
-		editItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!Validation.isValidQuantity(newValue)) {
-				editItemQuantityField.setStyle("-fx-border-color: red;");
-				saveEditItemButton.setDisable(true);
-			} else {
-				editItemQuantityField.setStyle("");
-				validateEditForm();
-			}
-		});
+			editItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Validation.isValidQuantity(newValue)) {
+					editItemQuantityField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+				} else {
+					editItemQuantityField.setStyle("");
+					validateEditForm();
+				}
+			});
+		}
+
 	}
 
 	private void validateAddForm() {

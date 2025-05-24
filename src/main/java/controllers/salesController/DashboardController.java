@@ -21,7 +21,6 @@ import models.Datas.*;
 import models.Utils.QueryBuilder;
 import javafx.scene.chart.NumberAxis;
 import service.DailySalesService;
-import service.ItemService;
 import service.SupplierService;
 import controllers.NotificationController;
 import views.NotificationView;
@@ -61,7 +60,6 @@ public class DashboardController implements Initializable {
 
     private final DailySalesService salesService;
     private final SupplierService supplierService;
-    private final ItemService itemService;
 
     private final IntegerProperty totalRecords = new SimpleIntegerProperty(0);
     private final IntegerProperty currentPage = new SimpleIntegerProperty(0);
@@ -76,13 +74,11 @@ public class DashboardController implements Initializable {
     public DashboardController() {
         this.salesService = new DailySalesService();
         this.supplierService = new SupplierService();
-        this.itemService = new ItemService();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            System.out.println("Initializing dashboard...");
         setupUI();
         setupFilters();
         setupCharts();
@@ -91,9 +87,8 @@ public class DashboardController implements Initializable {
         loadDashboardData();
         setupAutoRefresh();
         setupCleanup();
-        System.out.println("Dashboard initialization complete");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             System.err.println("Error initializing dashboard: " + e.getMessage());
         }
     }
@@ -116,7 +111,7 @@ public class DashboardController implements Initializable {
             currentPage.addListener((obs, oldVal, newVal) -> refreshData());
         } catch (Exception e) {
             System.err.println("Error in setupUI: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -171,7 +166,7 @@ public class DashboardController implements Initializable {
             }
         } catch (Exception e) {
             System.err.println("Error in setupCharts: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -179,9 +174,7 @@ public class DashboardController implements Initializable {
         // Initialize the notification badge
         if (notificationBadge != null) {
             notificationBadge.setVisible(false);
-            hasUnreadNotifications.addListener((obs, oldVal, newVal) -> {
-                Platform.runLater(() -> notificationBadge.setVisible(newVal));
-            });
+            hasUnreadNotifications.addListener((obs, oldVal, newVal) -> Platform.runLater(() -> notificationBadge.setVisible(newVal)));
         }
         
         if (btnNotifications != null) {
@@ -190,7 +183,6 @@ public class DashboardController implements Initializable {
     }
 
     private void loadDashboardData() {
-        System.out.println("Loading dashboard data...");
         new Thread(() -> {
             try {
                 List<Supplier> suppliers = supplierService.getAll();
@@ -208,28 +200,17 @@ public class DashboardController implements Initializable {
                 List<Item> items = new ArrayList<>();
 
                 try {
-                    System.out.println("Loading transactions...");
                     transactions = loadTransactions();
                 } catch (Exception e) {
                     System.err.println("Error loading transactions: " + e.getMessage());
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
 
                 try {
-                    System.out.println("Loading items...");
                     items = loadItems();
-                    System.out.println("Loaded " + items.size() + " items");
-                    // Debug print items with low stock
-                    items.stream()
-                        .filter(item -> {
-                            int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-                            return item.getQuantity() < alertThreshold;
-                        })
-                        .forEach(item -> System.out.println("Low stock item: " + item.getItemName() +
-                            " (Qty: " + item.getQuantity() + "/" + item.getAlertSetting() + ")"));
                 } catch (Exception e) {
                     System.err.println("Error loading items: " + e.getMessage());
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
 
                 // Store final references for lambda
@@ -240,20 +221,18 @@ public class DashboardController implements Initializable {
 
                 Platform.runLater(() -> {
                     try {
-                        System.out.println("Updating UI components...");
                         updateKPIs(finalTransactions, itemMap);
                         updateCharts(finalTransactions, itemMap);
                         updateLowStockChart(finalItems);
-                        System.out.println("UI update complete");
                     } catch (Exception e) {
                         System.err.println("Error updating UI: " + e.getMessage());
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                     }
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     System.err.println("Critical error loading dashboard data: " + e.getMessage());
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     showNotification("Error loading data", NotificationController.popUpType.error);
                 });
             }
@@ -325,7 +304,7 @@ public class DashboardController implements Initializable {
             });
         } catch (Exception e) {
             System.err.println("Error updating KPIs: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -453,14 +432,12 @@ public class DashboardController implements Initializable {
                     return item.getQuantity() < alertThreshold;
                 })
                 .sorted(Comparator.comparingInt(Item::getQuantity))
-                .collect(Collectors.toList());
-                
-            System.out.println("Found " + stockAlerts.size() + " items with low stock");
+                .toList();
                 
             // Show only top 5 items in chart
             List<Item> topAlerts = stockAlerts.stream()
                 .limit(5)
-                .collect(Collectors.toList());
+                .toList();
 
             for (Item item : topAlerts) {
                 int quantity = item.getQuantity();
@@ -473,10 +450,8 @@ public class DashboardController implements Initializable {
                 
                 if (quantity <= alertThreshold * 0.5) {
                     criticalSeries.getData().add(data);
-                    System.out.println("Critical: " + item.getItemName() + " (" + quantity + "/" + alertThreshold + ")");
                 } else {
                     lowSeries.getData().add(data);
-                    System.out.println("Low: " + item.getItemName() + " (" + quantity + "/" + alertThreshold + ")");
                 }
             }
 
@@ -525,7 +500,7 @@ public class DashboardController implements Initializable {
             
         } catch (Exception e) {
             System.err.println("Error updating low stock chart: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -585,13 +560,6 @@ public class DashboardController implements Initializable {
         revenueAnalysisChart.getData().addAll(totalRevenue, avgOrderValue, profitMargin);
     }
 
-    private double calculateDemand(String itemId, List<Transaction> transactions) {
-        return transactions.stream()
-            .filter(t -> t.getItemID().equals(itemId))
-            .mapToInt(Transaction::getSoldQuantity)
-            .sum();
-    }
-
     private static class RevenueMetrics {
         private double totalRevenue = 0;
         private int transactionCount = 0;
@@ -607,46 +575,6 @@ public class DashboardController implements Initializable {
         double getProfitMargin() { return totalRevenue * TARGET_MARGIN; }
     }
 
-    private void checkForNotifications(List<Transaction> transactions, List<Item> items) {
-        notifications.clear();
-
-        // Check for low stock items
-        items.stream()
-            .filter(i -> i.getQuantity() < 10)
-            .forEach(i -> {
-                String alertLevel = i.getQuantity() <= 5 ? "CRITICAL" : "LOW";
-                notifications.add(String.format(
-                    "[%s] Low stock alert: %s (Qty: %d)",
-                    alertLevel,
-                    i.getItemName(),
-                    i.getQuantity()
-                ));
-            });
-
-        // Check for items that need reordering based on sales velocity
-        Map<String, Integer> salesVelocity = new HashMap<>();
-        transactions.forEach(tx -> 
-            salesVelocity.merge(tx.getItemID(), tx.getSoldQuantity(), Integer::sum)
-        );
-
-        items.forEach(item -> {
-            int avgDailySales = salesVelocity.getOrDefault(item.getItemID(), 0) / 30; // Average over 30 days
-            if (avgDailySales > 0) {
-                int daysOfStock = item.getQuantity() / avgDailySales;
-                if (daysOfStock < 7) { // Less than a week of stock
-                    notifications.add(String.format(
-                        "[REORDER] %s - Only %d days of stock remaining",
-                        item.getItemName(),
-                        daysOfStock
-                    ));
-                }
-            }
-        });
-
-        hasUnreadNotifications.set(!notifications.isEmpty());
-        notificationBadge.setVisible(hasUnreadNotifications.get());
-    }
-
     private List<Transaction> loadTransactions() throws Exception {
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
@@ -656,13 +584,6 @@ public class DashboardController implements Initializable {
                 .from("db/Transaction.txt")
                 .where("transactionDate", ">=", start.toString())
                 .and("transactionDate", "<=", end.plusDays(1).toString())
-                .getAsObjects();
-    }
-
-    private List<PurchaseOrder> loadPurchaseOrders() throws Exception {
-        return new QueryBuilder<>(PurchaseOrder.class)
-                .select()
-                .from("db/PurchaseOrder.txt")
                 .getAsObjects();
     }
 
@@ -695,13 +616,6 @@ public class DashboardController implements Initializable {
             System.err.println("Error loading items: " + e.getMessage());
             return new ArrayList<>();
         }
-    }
-
-    private List<Supplier> loadSuppliers() throws Exception {
-        return new QueryBuilder<>(Supplier.class)
-                .select()
-                .from("db/Supplier.txt")
-                .getAsObjects();
     }
 
     private Item getItem(String itemId) {
@@ -766,22 +680,13 @@ public class DashboardController implements Initializable {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             showNotification("Error exporting data", NotificationController.popUpType.error);
         }
     }
 
     private void refreshData() {
         loadDashboardData();
-    }
-
-    private String getStatusStyle(String status) {
-        return switch (status.toLowerCase()) {
-            case "completed" -> "status-completed";
-            case "pending" -> "status-pending";
-            case "cancelled" -> "status-cancelled";
-            default -> "status-default";
-        };
     }
 
     @FXML
@@ -905,7 +810,7 @@ public class DashboardController implements Initializable {
             
         } catch (Exception e) {
             System.err.println("Error showing notifications dialog: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             showNotification("Error showing notifications", NotificationController.popUpType.error);
         }
     }
@@ -997,7 +902,7 @@ public class DashboardController implements Initializable {
         try {
             new NotificationView(message, type, NotificationController.popUpPos.BOTTOM_RIGHT).show();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

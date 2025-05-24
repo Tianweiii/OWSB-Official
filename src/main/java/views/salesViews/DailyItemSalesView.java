@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class DailyItemSalesView implements View {
-	private BorderPane dailyItemSalesPane;
+	private final BorderPane dailyItemSalesPane;
 
 	public DailyItemSalesView() throws IOException {
 		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/DailyItemSales.fxml"));

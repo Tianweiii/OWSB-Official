@@ -17,7 +17,7 @@ public class SupplierService extends Service<Supplier> {
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
             return qb.select().from(DB_PATH).getAsObjects();
         } catch (Exception e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -30,7 +30,7 @@ public class SupplierService extends Service<Supplier> {
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
             return qb.target(DB_PATH).values(new String[]{name, company, phone, address}).create();
         } catch (Exception e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -44,7 +44,7 @@ public class SupplierService extends Service<Supplier> {
             return qb.update(id, new String[]{name, company, phone, address}
             );
         } catch (Exception e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
             return false;
         }
     }

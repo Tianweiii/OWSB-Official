@@ -2,7 +2,6 @@ package controllers.salesController;
 
 import controllers.SidebarController;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -13,12 +12,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import models.Datas.Supplier;
 import models.Datas.Transaction;
 import org.start.owsb.Layout;
 import service.DailySalesService;
@@ -35,7 +32,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 public class DailyItemSalesController implements Initializable {
 
@@ -54,13 +50,10 @@ public class DailyItemSalesController implements Initializable {
 	private static LocalDate selectedDate;
 	private Pagination pagination;
 	private final DailySalesService service = new DailySalesService();
-	private final Preferences prefs = Preferences.userNodeForPackage(DailyItemSalesController.class);
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	private Pane overlayBackground;
 	private Pane deleteDialogPane;
 	private Pane completeSalesReportPane;
-	private ObservableList<Supplier> masterList;
 
 	@Override
 	public void initialize(URL loc, ResourceBundle res) {
@@ -257,7 +250,6 @@ public class DailyItemSalesController implements Initializable {
 					setText(null);
 					setGraphic(null);
 				} else {
-					Transaction transaction = getTableView().getItems().get(getIndex());
 					LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
 					String historyStatus = service.getSalesHistoryStatus(date);
 					
@@ -298,7 +290,7 @@ public class DailyItemSalesController implements Initializable {
 			missingCtrl.setOnCreateCallback(this::reload);
 			missingCtrl.getCreateButton().setOnAction(e -> missingCtrl.onCreateNewSalesEntryButtonClick());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to load empty view", NotificationController.popUpType.error);
 		}
 	}
@@ -311,7 +303,7 @@ public class DailyItemSalesController implements Initializable {
 			view.getAddNewDailyItemSalesController().initMode(mode, transactionToEdit, selectedDate);
 			view.show();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to open entry form", NotificationController.popUpType.error);
 		}
 	}
@@ -371,12 +363,6 @@ public class DailyItemSalesController implements Initializable {
 		}
 	}
 
-	private void updateSupplierCount(int count) {
-		if (totalDailyItemSalesLabel != null) {
-			Platform.runLater(() -> totalDailyItemSalesLabel.setText(String.format("Total Daily Item Sales: %d", count)));
-		}
-	}
-
 	/**
 	 * Shows the Complete Sales Report dialog to confirm report generation
 	 */
@@ -420,12 +406,10 @@ public class DailyItemSalesController implements Initializable {
 				reload();
 			});
 			
-			controller.setOnCancel(() -> {
-				hideCompleteSalesReportDialog();
-			});
+			controller.setOnCancel(this::hideCompleteSalesReportDialog);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to show complete sales report dialog", NotificationController.popUpType.error);
 		}
 	}
@@ -488,7 +472,7 @@ public class DailyItemSalesController implements Initializable {
 			playFadeInAnimation(deleteDialogPane);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			notifyUser("Failed to show delete dialog", NotificationController.popUpType.error);
 		}
 	}
@@ -507,14 +491,6 @@ public class DailyItemSalesController implements Initializable {
 		fadeIn.setFromValue(0.0);
 		fadeIn.setToValue(1.0);
 		fadeIn.play();
-	}
-
-	private void playFadeOutAnimation(Node node, Runnable onFinish) {
-		FadeTransition fadeOut = new FadeTransition(Duration.millis(200), node);
-		fadeOut.setFromValue(1.0);
-		fadeOut.setToValue(0.0);
-		fadeOut.setOnFinished(e -> onFinish.run());
-		fadeOut.play();
 	}
 
 	private void notifyUser(String message, NotificationController.popUpType type) {
