@@ -56,14 +56,15 @@ public class UserRegistrationController implements Initializable {
 
 			for (String item: dataToAdd) {
 				if (item == null || item.isEmpty()) {
-					//TODO show error popup or error message
-					throw new Exception("Data cannot be null");
+					NotificationView notificationView = new NotificationView("Field(s) cannot be null", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+					notificationView.show();
+					return;
 				}
 			}
 
 			if (dataToAdd.length != attrs.length) {
-				//TODO show error popup or error message
-				throw new Exception("Data length does not match attribute length");
+				NotificationView notificationView = new NotificationView("Field(s) are not filled in", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+				notificationView.show();
 			}else {
 				boolean res = qb.target("db/User.txt").values(dataToAdd).create();
 				if (res) {

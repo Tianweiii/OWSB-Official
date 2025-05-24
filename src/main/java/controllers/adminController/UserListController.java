@@ -33,7 +33,7 @@ public class UserListController implements Initializable {
 	@FXML private TableView<HashMap<String, String>> tableView;
 
 	@FXML
-	public void onAddUserButtonClicked() throws IOException {
+	public void onAddUserButtonClicked() {
 		Navigator navigator = Navigator.getInstance();
 		navigator.navigate(navigator.getRouters("admin").getRoute("register"));
 	}
