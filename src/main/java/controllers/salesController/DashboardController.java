@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -13,8 +12,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -22,7 +19,6 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import models.Datas.*;
 import models.Utils.QueryBuilder;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import service.DailySalesService;
 import service.ItemService;
@@ -83,36 +79,7 @@ public class DashboardController implements Initializable {
     // Chart Components
     @FXML private StackedAreaChart<String, Number> trendChart;
     @FXML private PieChart ordersChart;
-    @FXML private ScatterChart<String, Number> salesVelocityChart;
-    @FXML private StackedBarChart<String, Number> categoryPerformanceChart;
     @FXML private LineChart<String, Number> revenueAnalysisChart;
-    @FXML private BubbleChart<Number, Number> inventoryHealthMap;
-
-    // Table Components
-    @FXML private TableView<SalesRecord> salesTable;
-    @FXML private TableColumn<SalesRecord, String> colDate;
-    @FXML private TableColumn<SalesRecord, String> colOrderId;
-    @FXML private TableColumn<SalesRecord, String> colProduct;
-    @FXML private TableColumn<SalesRecord, String> colCategory;
-    @FXML private TableColumn<SalesRecord, Integer> colQuantity;
-    @FXML private TableColumn<SalesRecord, Double> colAmount;
-    @FXML private TableColumn<SalesRecord, String> colStatus;
-    @FXML private TableColumn<SalesRecord, Void> colActions;
-    @FXML private Label totalRecordsLabel;
-    @FXML private Pagination tablePagination;
-    @FXML private Label stockTurnoverLabel;
-    @FXML private Label avgInventoryLabel;
-    @FXML private Label stockoutRiskLabel;
-
-    // Forecast Components
-    @FXML private StackPane forecastOverlay;
-    @FXML private VBox forecastPane;
-    @FXML private ComboBox<String> forecastPeriod;
-    @FXML private ComboBox<String> forecastMethod;
-    @FXML private LineChart<String, Number> forecastChart;
-    @FXML private Label predictedRevenueLabel;
-    @FXML private Label growthRateLabel;
-    @FXML private Label confidenceLabel;
 
     // Services
     private final DailySalesService salesService;
@@ -120,7 +87,6 @@ public class DashboardController implements Initializable {
     private final ItemService itemService;
 
     // Data Management
-    private FilteredList<SalesRecord> filteredSales;
     private final IntegerProperty totalRecords = new SimpleIntegerProperty(0);
     private final IntegerProperty currentPage = new SimpleIntegerProperty(0);
     private final IntegerProperty itemsPerPage = new SimpleIntegerProperty(ITEMS_PER_PAGE);
@@ -289,10 +255,23 @@ public class DashboardController implements Initializable {
         System.out.println("Loading dashboard data...");
         new Thread(() -> {
             try {
+                // Load suppliers
+                List<Supplier> suppliers = supplierService.getAll();
+
+                // Update supplier count on UI thread
+                Platform.runLater(() -> {
+                    if (lblSupplierCount != null) {
+                        lblSupplierCount.setText(String.valueOf(suppliers.size()));
+                    }
+                    if (supplierProgress != null) {
+                        supplierProgress.setProgress(Math.min(suppliers.size() / 100.0, 1.0));
+                    }
+                });
+
                 // Initialize empty lists to prevent null pointer exceptions
                 List<Transaction> transactions = new ArrayList<>();
                 List<Item> items = new ArrayList<>();
-                
+
                 try {
                     System.out.println("Loading transactions...");
                     transactions = loadTransactions();
@@ -300,7 +279,7 @@ public class DashboardController implements Initializable {
                     System.err.println("Error loading transactions: " + e.getMessage());
                     e.printStackTrace();
                 }
-                
+
                 try {
                     System.out.println("Loading items...");
                     items = loadItems();
@@ -311,7 +290,7 @@ public class DashboardController implements Initializable {
                             int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
                             return item.getQuantity() < alertThreshold;
                         })
-                        .forEach(item -> System.out.println("Low stock item: " + item.getItemName() + 
+                        .forEach(item -> System.out.println("Low stock item: " + item.getItemName() +
                             " (Qty: " + item.getQuantity() + "/" + item.getAlertSetting() + ")"));
                 } catch (Exception e) {
                     System.err.println("Error loading items: " + e.getMessage());
@@ -363,15 +342,15 @@ public class DashboardController implements Initializable {
             int totalOrders = transactions.size();
 
             for (Transaction tx : transactions) {
-                // Revenue is calculated from the marked-up price in daily sales
-                double revenue = tx.getSoldQuantity() * tx.getUnitPrice(); // This is the marked-up price
+                // Revenue from marked-up price in Transaction
+                double revenue = tx.getSoldQuantity() * tx.getMarkedUpPrice();
                 totalRevenue += revenue;
-                
-                // Profit is calculated as (marked-up price - original item price)
+
+                // Cost from original price in Item
                 Item item = itemMap.get(tx.getItemID());
                 if (item != null) {
-                    double originalCost = item.getUnitPrice() * tx.getSoldQuantity(); // Original cost from item table
-                    double profit = revenue - originalCost; // Actual profit
+                    double originalCost = item.getUnitPrice() * tx.getSoldQuantity();
+                    double profit = revenue - originalCost;
                     totalProfit += profit;
                 }
             }
@@ -682,80 +661,6 @@ public class DashboardController implements Initializable {
         revenueAnalysisChart.getData().addAll(totalRevenue, avgOrderValue, profitMargin);
     }
 
-    private void updateInventoryHealth(List<Transaction> transactions) {
-        inventoryHealthMap.getData().clear();
-
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Inventory Health");
-
-        // Calculate metrics for each item
-        for (Item item : loadItems()) {
-            double stockLevel = item.getQuantity();
-            double demand = calculateDemand(item.getItemID(), transactions);
-            double turnover = calculateStockTurnover(item, transactions);
-            
-            // Create bubble - X: Stock Level, Y: Demand, Size: Turnover
-            series.getData().add(new XYChart.Data<>(stockLevel, demand, turnover));
-        }
-
-        inventoryHealthMap.getData().add(series);
-        
-        // Update summary labels
-        updateInventoryMetricLabels();
-    }
-
-    private void updateInventoryMetricLabels() {
-        try {
-            List<Item> items = loadItems();
-            
-            // Calculate overall metrics
-            double avgTurnover = items.stream()
-                .mapToDouble(item -> {
-                    try {
-                        return calculateStockTurnover(item, loadTransactionsForCharting());
-                    } catch (Exception e) {
-                        System.err.println("Error calculating turnover for item " + item.getItemID() + ": " + e.getMessage());
-                        return 0.0;
-                    }
-                })
-                .average()
-                .orElse(0.0);
-                
-            double avgDays = items.stream()
-                .mapToDouble(item -> {
-                    try {
-                        return calculateInventoryDays(item, loadTransactionsForCharting());
-        } catch (Exception e) {
-                        System.err.println("Error calculating inventory days for item " + item.getItemID() + ": " + e.getMessage());
-                        return 0.0;
-                    }
-                })
-                .average()
-                .orElse(0.0);
-                
-            double avgRisk = items.stream()
-                .mapToDouble(item -> {
-                    try {
-                        return calculateStockoutRisk(item, loadTransactionsForCharting());
-                    } catch (Exception e) {
-                        System.err.println("Error calculating stockout risk for item " + item.getItemID() + ": " + e.getMessage());
-                        return 0.0;
-                    }
-                })
-                .average()
-                .orElse(0.0);
-            
-            stockTurnoverLabel.setText(String.format("%.1f", avgTurnover));
-            avgInventoryLabel.setText(String.format("%.0f", avgDays));
-            stockoutRiskLabel.setText(String.format("%.1f%%", avgRisk));
-        } catch (Exception e) {
-            System.err.println("Error updating inventory metrics: " + e.getMessage());
-            stockTurnoverLabel.setText("N/A");
-            avgInventoryLabel.setText("N/A");
-            stockoutRiskLabel.setText("N/A");
-        }
-    }
-
     private double calculateDemand(String itemId, List<Transaction> transactions) {
         return transactions.stream()
             .filter(t -> t.getItemID().equals(itemId))
@@ -854,7 +759,7 @@ public class DashboardController implements Initializable {
                         item.setItemName(data.getOrDefault("itemName", "Unknown Item"));
                         item.setQuantity(Integer.parseInt(data.getOrDefault("quantity", "0")));
                         item.setAlertSetting(Integer.parseInt(data.getOrDefault("alertSetting", "10")));
-                        item.setUnitPrice(Double.parseDouble(data.getOrDefault("price", "0")));
+                        item.setUnitPrice(Double.parseDouble(data.getOrDefault("unitPrice", "0")));
                     items.add(item);
                     }
                 } catch (Exception e) {
@@ -940,17 +845,6 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
             showNotification("Error exporting data", NotificationController.popUpType.error);
         }
-    }
-
-    private void filterSalesTable() {
-        System.out.println("filter sales table");
-        String statusText = statusFilter.getValue();
-
-        filteredSales.setPredicate(record ->
-            (statusText == null || statusText.equals("All") ||
-                record.getStatus().equalsIgnoreCase(statusText))
-        );
-
     }
 
     private void refreshData() {
@@ -1200,38 +1094,6 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public static class SalesRecord {
-        private final LocalDateTime date;
-        private final String orderId;
-        private final String productName;
-        private final String category;
-        private final int quantity;
-        private final double amount;
-        private final String status;
-
-        public SalesRecord(LocalDateTime date, String orderId,
-                          String productName, String category,
-                          int quantity, double amount, String status) {
-            this.date = date;
-            this.orderId = "TX-" + orderId;
-            this.productName = productName;
-            this.category = category;
-            this.quantity = quantity;
-            this.amount = amount;
-            this.status = status;
-        }
-
-        public String getFormattedDate() {
-            return date.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm"));
-        }
-        public String getOrderId() { return orderId; }
-        public String getProductName() { return productName; }
-        public String getCategory() { return category; }
-        public int getQuantity() { return quantity; }
-        public double getAmount() { return amount; }
-        public String getStatus() { return status; }
-    }
-
     private void updateWelcomeMessage() {
         try {
             // Get username from SessionManager if available
@@ -1244,380 +1106,12 @@ public class DashboardController implements Initializable {
             } catch (Exception e) {
                 // Fall back to "User" if cannot get the username
             }
-            
+
             welcomeText.setText("Welcome back, " + username);
         } catch (Exception e) {
             System.out.println("Error setting welcome message: " + e.getMessage());
         }
-    }
-
-    @FXML
-    private void handleForecast() {
-        try {
-            // Create custom notification-style overlay
-            StackPane overlay = new StackPane();
-            overlay.setId("forecastOverlay");
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
-            overlay.prefWidthProperty().bind(salesManagerDashboardPane.widthProperty());
-            overlay.prefHeightProperty().bind(salesManagerDashboardPane.heightProperty());
-
-            // Create forecast box
-            VBox forecastBox = new VBox(15);
-            forecastBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12px; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4);");
-            forecastBox.setMaxWidth(800);
-            forecastBox.setMaxHeight(600);
-
-            // Header with icon and title
-            HBox header = new HBox(10);
-            header.setAlignment(Pos.CENTER_LEFT);
-
-            ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/images/chart.png")));
-            icon.setFitHeight(32);
-            icon.setFitWidth(32);
-
-            Label title = new Label("Sales Forecast");
-            title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2196F3;");
-
-            Button closeButton = new Button();
-            closeButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/close.png"))));
-            closeButton.setStyle("-fx-background-color: transparent;");
-            
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
-            
-            header.getChildren().addAll(icon, title, spacer, closeButton);
-
-            // Controls
-            HBox controls = new HBox(10);
-            controls.setAlignment(Pos.CENTER_LEFT);
-            
-            ComboBox<String> periodCombo = new ComboBox<>(FXCollections.observableArrayList(
-                "Next 7 Days", "Next 30 Days", "Next 90 Days", "Next Year"
-            ));
-            periodCombo.setValue("Next 30 Days");
-            
-            ComboBox<String> methodCombo = new ComboBox<>(FXCollections.observableArrayList(
-                "Linear Regression", "Moving Average", "Exponential Smoothing"
-            ));
-            methodCombo.setValue("Linear Regression");
-            
-            Button generateBtn = new Button("Generate Forecast");
-            generateBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-            
-            controls.getChildren().addAll(periodCombo, methodCombo, generateBtn);
-
-            // Chart
-            LineChart<String, Number> chart = new LineChart<>(new CategoryAxis(), new NumberAxis());
-            chart.setTitle("Sales Forecast");
-            chart.setAnimated(false);
-            
-            // Add components to forecast box
-            forecastBox.getChildren().addAll(header, controls, chart);
-
-            // Add to overlay
-            overlay.getChildren().add(forecastBox);
-            StackPane.setAlignment(forecastBox, Pos.CENTER);
-
-            // Event handlers
-            closeButton.setOnAction(e -> salesManagerDashboardPane.getChildren().remove(overlay));
-            generateBtn.setOnAction(e -> generateForecast(chart, periodCombo.getValue(), methodCombo.getValue()));
-
-            // Show overlay
-            if (!salesManagerDashboardPane.getChildren().contains(overlay)) {
-                salesManagerDashboardPane.getChildren().add(overlay);
-            }
-        } catch (Exception e) {
-            System.err.println("Error showing forecast: " + e.getMessage());
-            e.printStackTrace();
-            showNotification("Error", NotificationController.popUpType.error);
         }
-    }
-
-
-    private void generateForecast(LineChart<String, Number> chart, String period, String method) {
-        try {
-            // Clear previous data
-            chart.getData().clear();
-
-            // Load historical data
-            List<Transaction> transactions = loadTransactionsForCharting();
-            Map<LocalDate, Double> historicalData = new TreeMap<>();
-            
-            // Process historical data
-            for (Transaction t : transactions) {
-                LocalDate date = LocalDate.parse(t.getDailySalesHistoryID());
-                double amount = t.getSoldQuantity() * t.getUnitPrice();
-                historicalData.merge(date, amount, Double::sum);
-            }
-
-            // Generate forecast data
-            XYChart.Series<String, Number> historicalSeries = new XYChart.Series<>();
-            historicalSeries.setName("Historical");
-            
-            XYChart.Series<String, Number> forecastSeries = new XYChart.Series<>();
-            forecastSeries.setName("Forecast");
-
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd");
-            
-            // Add historical data
-            historicalData.forEach((date, value) -> 
-                historicalSeries.getData().add(new XYChart.Data<>(date.format(fmt), value))
-            );
-
-            // Calculate forecast period
-            int days = switch (period) {
-                case "Next 7 Days" -> 7;
-                case "Next 30 Days" -> 30;
-                case "Next 90 Days" -> 90;
-                default -> 365;
-            };
-
-            // Generate forecast data
-            LocalDate lastDate = historicalData.keySet().stream()
-                .max(LocalDate::compareTo)
-                .orElse(LocalDate.now());
-
-            Map<LocalDate, Double> forecastData = new TreeMap<>();
-            
-            for (int i = 1; i <= days; i++) {
-                LocalDate forecastDate = lastDate.plusDays(i);
-                double forecastValue = calculateForecastValue(historicalData, forecastDate, method);
-                forecastData.put(forecastDate, forecastValue);
-                forecastSeries.getData().add(new XYChart.Data<>(forecastDate.format(fmt), forecastValue));
-            }
-
-            chart.getData().addAll(historicalSeries, forecastSeries);
-
-            // Update forecast metrics
-            updateForecastMetrics(historicalData, forecastData);
-            
-            // Enable export functionality
-            Button exportBtn = new Button("Export Forecast");
-            exportBtn.setOnAction(e -> exportForecast(historicalData, forecastData));
-            
-            // Add export button to chart
-            VBox chartControls = (VBox) chart.getParent();
-            if (!chartControls.getChildren().contains(exportBtn)) {
-                chartControls.getChildren().add(exportBtn);
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error generating forecast: " + e.getMessage());
-            e.printStackTrace();
-            showNotification("Error", NotificationController.popUpType.error);
-        }
-    }
-
-    private void updateForecastMetrics(Map<LocalDate, Double> historicalData, Map<LocalDate, Double> forecastData) {
-        try {
-            // Calculate predicted revenue (sum of forecast values)
-            double predictedRevenue = forecastData.values().stream().mapToDouble(Double::doubleValue).sum();
-            
-            // Calculate growth rate
-            double historicalAvg = historicalData.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double forecastAvg = forecastData.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double growthRate = ((forecastAvg - historicalAvg) / historicalAvg) * 100;
-            
-            // Calculate confidence score (simplified)
-            double confidence = calculateConfidenceScore(historicalData, forecastData);
-            
-            // Update labels
-            if (predictedRevenueLabel != null) {
-                predictedRevenueLabel.setText(String.format("$%,.2f", predictedRevenue));
-            }
-            if (growthRateLabel != null) {
-                growthRateLabel.setText(String.format("%.1f%%", growthRate));
-            }
-            if (confidenceLabel != null) {
-                confidenceLabel.setText(String.format("%.0f%%", confidence * 100));
-            }
-        } catch (Exception e) {
-            System.err.println("Error updating forecast metrics: " + e.getMessage());
-        }
-    }
-
-    private double calculateConfidenceScore(Map<LocalDate, Double> historicalData, Map<LocalDate, Double> forecastData) {
-        try {
-            // Calculate mean absolute percentage error (MAPE)
-            double totalError = 0.0;
-            int count = 0;
-            
-            // Use last 7 days of historical data to compare with first 7 days of forecast
-            List<Double> historicalValues = new ArrayList<>(historicalData.values());
-            List<Double> forecastValues = new ArrayList<>(forecastData.values());
-            
-            int compareSize = Math.min(7, Math.min(historicalValues.size(), forecastValues.size()));
-            
-            for (int i = 0; i < compareSize; i++) {
-                double actual = historicalValues.get(historicalValues.size() - compareSize + i);
-                double forecast = forecastValues.get(i);
-                
-                if (actual != 0) {
-                    totalError += Math.abs((actual - forecast) / actual);
-                    count++;
-                }
-            }
-            
-            double mape = count > 0 ? totalError / count : 1.0;
-            return Math.max(0.0, Math.min(1.0, 1.0 - mape));
-            
-        } catch (Exception e) {
-            System.err.println("Error calculating confidence score: " + e.getMessage());
-            return 0.5; // Return medium confidence in case of error
-        }
-    }
-
-    private void exportForecast(Map<LocalDate, Double> historicalData, Map<LocalDate, Double> forecastData) {
-        try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Export Forecast Data");
-            fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("CSV Files", "*.csv")
-            );
-            
-            File file = fileChooser.showSaveDialog(salesManagerDashboardPane.getScene().getWindow());
-            if (file != null) {
-                try (PrintWriter writer = new PrintWriter(file)) {
-                    // Write header
-                    writer.println("Date,Type,Amount");
-                    
-                    // Write historical data
-                    historicalData.forEach((date, amount) -> 
-                        writer.printf("%s,Historical,%.2f%n", date, amount)
-                    );
-                    
-                    // Write forecast data
-                    forecastData.forEach((date, amount) -> 
-                        writer.printf("%s,Forecast,%.2f%n", date, amount)
-                    );
-                    
-                    showNotification("Forecast data exported successfully", NotificationController.popUpType.success);
-                }
-            }
-        } catch (Exception e) {
-            showNotification("Error exporting forecast data", NotificationController.popUpType.error);
-        }
-    }
-
-    private double calculateForecastValue(Map<LocalDate, Double> historicalData, LocalDate forecastDate, String method) {
-        // Implement different forecasting methods
-        switch (method) {
-            case "Linear Regression":
-                return calculateLinearRegression(historicalData, forecastDate);
-            case "Moving Average":
-                return calculateMovingAverage(historicalData);
-            case "Exponential Smoothing":
-                return calculateExponentialSmoothing(historicalData);
-            default:
-                return 0.0;
-        }
-    }
-
-    private double calculateLinearRegression(Map<LocalDate, Double> historicalData, LocalDate forecastDate) {
-        // Simple linear regression implementation
-        List<Double> values = new ArrayList<>(historicalData.values());
-        double avg = values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        return avg * (1 + 0.1); // Simple 10% growth projection
-    }
-
-    private double calculateMovingAverage(Map<LocalDate, Double> historicalData) {
-        return historicalData.values().stream()
-            .mapToDouble(Double::doubleValue)
-            .average()
-            .orElse(0.0);
-    }
-
-    private double calculateExponentialSmoothing(Map<LocalDate, Double> historicalData) {
-        double alpha = 0.3; // Smoothing factor
-        double lastValue = historicalData.values().stream()
-            .mapToDouble(Double::doubleValue)
-            .average()
-            .orElse(0.0);
-        return lastValue * (1 + alpha);
-    }
-
-    private static class SalesVelocityMetric {
-        private int count = 0;
-        private double totalAmount = 0;
-        
-        void addSale(double amount) {
-            count++;
-            totalAmount += amount;
-        }
-        
-        int getCount() { return count; }
-        double getAverageAmount() { return count > 0 ? totalAmount / count : 0; }
-    }
-
-    private static class CategoryPerformanceMetric {
-        private double revenue = 0;
-        private int unitsSold = 0;
-        private static final double MARGIN_RATE = 0.3;
-        
-        void addSale(double amount, int quantity) {
-            revenue += amount;
-            unitsSold += quantity;
-        }
-        
-        double getRevenue() { return revenue; }
-        int getUnitsSold() { return unitsSold; }
-        double getMargin() { return revenue * MARGIN_RATE; }
-    }
-
-    private double calculateStockTurnover(Item item, List<Transaction> transactions) {
-        // Calculate stock turnover rate (COGS / Average Inventory)
-        double soldQuantity = transactions.stream()
-            .filter(t -> t.getItemID().equals(item.getItemID()))
-            .mapToInt(Transaction::getSoldQuantity)
-            .sum();
-            
-        double averageInventory = item.getQuantity() / 2.0; // Simplified calculation
-        return averageInventory > 0 ? soldQuantity / averageInventory : 0;
-    }
-
-    private double calculateInventoryDays(Item item, List<Transaction> transactions) {
-        // Calculate days of inventory on hand
-        double dailySales = transactions.stream()
-            .filter(t -> t.getItemID().equals(item.getItemID()))
-            .mapToInt(Transaction::getSoldQuantity)
-            .average()
-            .orElse(0.0);
-            
-        return dailySales > 0 ? item.getQuantity() / dailySales : 0;
-    }
-
-    private double calculateStockoutRisk(Item item, List<Transaction> transactions) {
-        // Calculate stockout risk based on inventory level and sales velocity
-        double avgDailySales = transactions.stream()
-            .filter(t -> t.getItemID().equals(item.getItemID()))
-            .mapToInt(Transaction::getSoldQuantity)
-            .average()
-            .orElse(0.0);
-            
-        double daysOfStock = avgDailySales > 0 ? item.getQuantity() / avgDailySales : 0;
-        double riskThreshold = 7.0; // 7 days of stock
-        
-        // Risk increases as days of stock decreases
-        return Math.max(0, Math.min(100, (1 - (daysOfStock / riskThreshold)) * 100));
-    }
-
-    private String getCategoryFromItem(Item item) {
-        try {
-            QueryBuilder<Item> qb = new QueryBuilder<>(Item.class);
-            ArrayList<HashMap<String, String>> result = qb
-                .select(new String[]{"category"})
-                .from("db/Item.txt")
-                .where("itemID", "=", item.getItemID())
-                .get();
-                
-            if (!result.isEmpty()) {
-                return result.get(0).get("category");
-            }
-        } catch (Exception e) {
-            System.err.println("Error getting category for item " + item.getItemID() + ": " + e.getMessage());
-        }
-        return "Uncategorized";
-    }
 
     private static class DailyMetrics {
         double revenue = 0;

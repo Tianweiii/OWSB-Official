@@ -123,13 +123,8 @@ public class SupplierController implements Initializable {
         this.table.refresh();
     }
 
-//    private void removeAddFormListeners() {
-//        this.addNameField.textProperty()dd();
-//    }
-//
     /** Hide the "add" panel with animation */
-    @FXML private void hideAddForm() {
-//        this.removeAddFormListeners();
+    @FXML private void hideAddForm() {  
         hidePane(addFormPane);
     }
 

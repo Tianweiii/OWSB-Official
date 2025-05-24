@@ -224,7 +224,7 @@ public class ItemListController implements Initializable {
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
-					updateItemCount(oListItems.size());
+
 				});
 				notificationView = new NotificationView("Item has been successfully changed", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
 			}else {
@@ -252,7 +252,6 @@ public class ItemListController implements Initializable {
 					controller.getItemTable().getItems().stream().filter(i ->
 							i.getItemID().equals(selectedId)).findFirst().ifPresent(controller.getItemTable().getItems()::remove);
 					controller.getItemTable().refresh();
-					updateItemCount(controller.getItemTable().getItems().size());
 				});
 			}else {
 				notificationView = new NotificationView("Item deletion failed", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -359,7 +358,6 @@ public class ItemListController implements Initializable {
 					itemTable.getItems().clear();
 					itemTable.setItems(oListItems);
 					itemTable.refresh();
-					updateItemCount(oListItems.size());
 
 				});
 				notificationView = new NotificationView("Item added successfully", NotificationController.popUpType.success, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -419,15 +417,15 @@ public class ItemListController implements Initializable {
 			setupListeners();
 			updateItemCount(oListItems.size());
 
+			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
+			List<String> columnNames = List.of(this.columns);
+
 			// Add listener for table items changes
 			itemTable.getItems().addListener((ListChangeListener<ItemListDTO>) change -> {
 				while (change.next()) {
 					updateItemCount(itemTable.getItems().size());
 				}
 			});
-
-			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
-			List<String> columnNames = List.of(this.columns);
 
 			// If quantity less than alert setting, color red
 			itemTable.setRowFactory(new Callback<>() {
@@ -449,11 +447,14 @@ public class ItemListController implements Initializable {
 
 			for (String columnName : columnNames) {
 				TableColumn<ItemListDTO, String> column = new TableColumn<>(columnName);
+
 				column.setCellValueFactory(new PropertyValueFactory<>(Helper.toAttrString(columnName)));
+
 				itemTable.getColumns().add(column);
 			}
 
 			TableColumn<ItemListDTO, String> optionsColumns = this.getOptionsColumns();
+
 			itemTable.getColumns().add(optionsColumns);
 			itemTable.setItems(oListItems);
 		} catch (Exception e) {
