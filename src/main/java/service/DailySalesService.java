@@ -313,6 +313,7 @@ public class DailySalesService {
                     .select()
                     .from(HIST_FILE)
                     .where("dailySalesHistoryID", "=", dailySalesHistoryID)
+                    .and("status", "=", "Completed")
                     .getAsObjects();
             return dailySalesHistories.isEmpty() ? null : dailySalesHistories.get(0);
         } catch (Exception e) {
