@@ -413,7 +413,6 @@ public class DailyItemSalesController implements Initializable {
 				if (reportPath != null) {
 					notifyUser("Sales report completed: " + reportPath, NotificationController.popUpType.success);
 
-					// Try to open the reports folder
 					try {
 						Desktop.getDesktop().open(new File(reportPath).getParentFile());
 					} catch (Exception ex) {
@@ -437,9 +436,7 @@ public class DailyItemSalesController implements Initializable {
 		}
 	}
 
-	/**
-	 * Hides and cleans up the complete sales report dialog
-	 */
+
 	private void hideCompleteSalesReportDialog() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
@@ -449,9 +446,6 @@ public class DailyItemSalesController implements Initializable {
 		SidebarController.getSidebar().setDisable(false);
 	}
 
-	/**
-	 * Shows a modal delete dialog popup overlay to confirm deletion of the selected transaction.
-	 */
 	private void showDeleteDialog(boolean deleteAll) {
 		Transaction sel;
 		ObservableList<Transaction> allItems = FXCollections.observableArrayList();
@@ -505,9 +499,6 @@ public class DailyItemSalesController implements Initializable {
 		}
 	}
 
-	/**
-	 * Hides and cleans up the delete dialog and overlay.
-	 */
 	private void hideDeleteDialog() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();

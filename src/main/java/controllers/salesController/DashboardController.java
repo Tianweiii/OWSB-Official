@@ -45,9 +45,6 @@ import java.util.stream.Collectors;
 public class DashboardController implements Initializable {
     // Constants
     private static final int ITEMS_PER_PAGE = 10;
-    private static final int AUTO_REFRESH_MINUTES = 5;
-    private static final String DATE_FORMAT = "MMM dd";
-    private static final double PROFIT_MARGIN = 0.15; // 15% profit margin
 
     // FXML Components
     @FXML private HBox salesManagerDashboardPane;
@@ -64,7 +61,6 @@ public class DashboardController implements Initializable {
 
     // Filter Components
     @FXML private DatePicker startDatePicker, endDatePicker;
-    @FXML private ComboBox<String> statusFilter, analyticsViewFilter;
 
     // Chart Components
     @FXML private StackedAreaChart<String, Number> trendChart;
@@ -128,21 +124,6 @@ public class DashboardController implements Initializable {
         startDatePicker.setValue(LocalDate.now().minusDays(30));
         endDatePicker.setValue(LocalDate.now());
 
-            // Initialize filters with default values
-            if (statusFilter != null) {
-        statusFilter.setItems(FXCollections.observableArrayList(
-            "All", "Completed", "Pending", "Cancelled"
-        ));
-        statusFilter.getSelectionModel().selectFirst();
-            }
-
-            if (analyticsViewFilter != null) {
-                analyticsViewFilter.setItems(FXCollections.observableArrayList(
-                    "All Records", "Today", "This Week", "This Month"
-                ));
-                analyticsViewFilter.getSelectionModel().selectFirst();
-            }
-
             currentPage.addListener((obs, oldVal, newVal) -> refreshData());
         } catch (Exception e) {
             System.err.println("Error in setupUI: " + e.getMessage());
@@ -151,31 +132,11 @@ public class DashboardController implements Initializable {
     }
 
     private void setupFilters() {
-        if (statusFilter != null) {
-            statusFilter.setItems(FXCollections.observableArrayList(
-                "All", "Completed", "Pending", "Cancelled"
-            ));
-            statusFilter.getSelectionModel().selectFirst();
-        }
-
-        if (analyticsViewFilter != null) {
-        analyticsViewFilter.setItems(FXCollections.observableArrayList(
-            "All Records", "Today", "This Week", "This Month"
-        ));
-        analyticsViewFilter.getSelectionModel().selectFirst();
-        }
-
         if (startDatePicker != null) {
         startDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
         }
         if (endDatePicker != null) {
         endDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
-        }
-        if (statusFilter != null) {
-        statusFilter.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
-        }
-        if (analyticsViewFilter != null) {
-        analyticsViewFilter.valueProperty().addListener((obs, oldVal, newVal) -> refreshData());
         }
     }
 

@@ -35,7 +35,6 @@ import java.net.URL;
 import java.util.*;
 
 public class ItemListController implements Initializable {
-	// Item List Page
 	private String[] columns;
 	private final ItemService itemListService = new ItemService();
 	private final SupplierService supplierService = new SupplierService();
@@ -49,7 +48,6 @@ public class ItemListController implements Initializable {
 	@FXML private ComboBox<String> filterComboBox;
 	@FXML private Label totalItemsLabel;
 
-	// Add Item Popup
 	@FXML
 	Pane addItemPane;
 	@FXML
@@ -61,14 +59,12 @@ public class ItemListController implements Initializable {
 	@FXML private Button saveAddItemButton;
 	@FXML private Button cancelAddItemButton;
 
-	// Delete Item Pane
 	@FXML private Pane deleteItemPane;
 	@FXML private VBox deletePane;
 	@FXML private Button deleteButton;
 	@FXML private Button cancelDeleteItemButton;
 	@FXML private Label itemToBeDeleted = new Label();
 
-	// Edit Item Pane
 	@FXML private Pane editItemPane;
 	@FXML private TextField editItemNameField = new TextField();
 	@FXML private TextField editItemDescField = new TextField();

@@ -15,7 +15,6 @@
     </stylesheets>
     <ScrollPane fitToWidth="true" styleClass="dashboard-scroll-pane" HBox.hgrow="ALWAYS">
         <VBox fx:id="mainContainer" alignment="CENTER" spacing="15.0" styleClass="main-container">
-            <!-- Header Section -->
             <HBox fx:id="headerBox" alignment="CENTER_LEFT" spacing="20" styleClass="header-box">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
@@ -48,8 +47,6 @@
             <HBox spacing="15" styleClass="filter-container">
                 <DatePicker fx:id="startDatePicker" promptText="Start Date" />
                 <DatePicker fx:id="endDatePicker" promptText="End Date" />
-                <ComboBox fx:id="statusFilter" promptText="Status" styleClass="action-button-table" />
-                <ComboBox fx:id="analyticsViewFilter" promptText="View" styleClass="action-button-table" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="btnExport" onAction="#handleExport" styleClass="action-button">
                     <graphic>
