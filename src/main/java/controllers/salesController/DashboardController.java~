@@ -450,8 +450,10 @@ public class DashboardController implements Initializable {
                 
                 if (quantity <= alertThreshold * 0.5) {
                     criticalSeries.getData().add(data);
+                    System.out.println("Critical: " + item.getItemName() + " (" + quantity + "/" + alertThreshold + ")");
                 } else {
                     lowSeries.getData().add(data);
+                    System.out.println("Low: " + item.getItemName() + " (" + quantity + "/" + alertThreshold + ")");
                 }
             }
 

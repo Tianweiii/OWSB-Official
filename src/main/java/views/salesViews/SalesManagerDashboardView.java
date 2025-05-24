@@ -2,7 +2,6 @@ package views.salesViews;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import views.View;
 

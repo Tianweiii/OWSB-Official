@@ -1,7 +1,5 @@
 package service;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import models.DTO.ItemListDTO;
 import models.Datas.Item;
 import models.Datas.Supplier;

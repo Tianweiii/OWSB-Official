@@ -119,9 +119,7 @@ public class AddNewDailyItemSalesController implements Initializable {
 			}
 		});
 
-		itemCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
-			validateForm();
-		});
+		itemCombo.valueProperty().addListener((observable, oldValue, newValue) -> validateForm());
 
 		submitBtn.setOnAction(e -> onSubmit());
 	}
@@ -227,9 +225,5 @@ public class AddNewDailyItemSalesController implements Initializable {
 
 			qtyField.setText(String.valueOf(tx.getSoldQuantity()));
 		}
-	}
-
-	public void setCurrentTx(Transaction tx) {
-		this.currentTx = tx;
 	}
 }

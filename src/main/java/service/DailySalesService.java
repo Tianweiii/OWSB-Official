@@ -174,34 +174,6 @@ public class DailySalesService {
     }
 
     /**
-     * Export a date's transactions to a CSV file.
-     * 
-     * Basic CSV export without creating inventory update requests
-     *
-     * @return The full path to the exported CSV file
-     */
-    public String exportCsv(LocalDate date) {
-        String ds = date.format(ISO);
-        List<Transaction> txs = getTransactionsFor(date);
-        String filename = "sales_" + ds + ".csv";
-        try (FileWriter w = new FileWriter(filename)) {
-            w.write("Item,Qty,Price,Subtotal\n");
-            for (var t : txs) {
-                w.write(String.format(
-                        "%s,%d,%.2f,%.2f\n",
-                        t.getItemName(),
-                        t.getSoldQuantity(),
-                        t.getUnitPrice(),
-                        t.getSubtotal()
-                ));
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to export CSV", e);
-        }
-        return filename;
-    }
-
-    /**
      * Complete sales report - enhanced version that:
      * 1. Creates a more detailed CSV
      * 2. Creates inventory update requests
@@ -425,29 +397,6 @@ public class DailySalesService {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to get sales history status for " + ds, e);
             return null;
-        }
-    }
-
-    // Delete all transactions under one daily sales history ID
-    public void deleteTransactionsByDailySalesHistoryID(String dailySalesHistoryID) {
-        try {
-            new QueryBuilder<>(Transaction.class)
-                    .target(TRANS_FILE)
-                    .where("dailySalesHistoryID", "=", dailySalesHistoryID);
-//                    .deleteAllMatching();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to delete transactions by DailySalesHistoryID " + dailySalesHistoryID, e);
-        }
-    }
-
-    // Delete the daily sales history record by ID
-    public void deleteDailySalesHistory(String dailySalesHistoryID) {
-        try {
-            new QueryBuilder<>(DailySalesHistory.class)
-                    .target(HIST_FILE)
-                    .delete(dailySalesHistoryID);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to delete daily sales history " + dailySalesHistoryID, e);
         }
     }
 }
