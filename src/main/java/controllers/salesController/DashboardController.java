@@ -525,7 +525,7 @@ public class DashboardController implements Initializable {
                         .from("db/DailySalesHistory.txt")
                         .where("dailySalesHistoryID", "=", t.getDailySalesHistoryID())
                         .getAsObjects();
-                LocalDate date = historyData.getFirst().getCreatedAt();
+                LocalDate date = historyData.get(0).getCreatedAt();
                 double amount = t.getSoldQuantity() * t.getUnitPrice();
 
                 dailyMetrics.computeIfAbsent(date, k -> new RevenueMetrics())

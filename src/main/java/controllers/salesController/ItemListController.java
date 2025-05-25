@@ -451,16 +451,16 @@ public class ItemListController implements Initializable {
 
 	private void setupListeners() {
 		if (searchButton != null) {
-			searchButton.setOnAction(_ -> searchItems());
+			searchButton.setOnAction(e -> searchItems());
 		}
 
 		if (filterComboBox != null) {
 			// Add sorting functionality
-			filterComboBox.setOnAction(_ -> applySorting());
+			filterComboBox.setOnAction(e -> applySorting());
 		}
 
 		if (clearSearchButton != null) {
-			clearSearchButton.setOnAction(_ -> onClear());
+			clearSearchButton.setOnAction(e -> onClear());
 		}
 	}
 
@@ -574,7 +574,7 @@ public class ItemListController implements Initializable {
 					deleteIcon.setFitHeight(16);
 					deleteItem.setGraphic(deleteIcon);
 
-					editItem.setOnAction(_ -> {
+					editItem.setOnAction(e -> {
 						try {
 							handleEdit(data.toMap());
 						} catch (IOException ex) {
@@ -582,7 +582,7 @@ public class ItemListController implements Initializable {
 						}
 					});
 					
-					deleteItem.setOnAction(_ -> {
+					deleteItem.setOnAction(e -> {
 						try {
 							handleDelete(data.toMap());
 						} catch (IOException ex) {
