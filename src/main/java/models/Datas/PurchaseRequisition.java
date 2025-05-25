@@ -132,7 +132,6 @@ public class PurchaseRequisition implements ModelInitializable {
 		if (dateStr == null || dateStr.isEmpty()) {
 			return null;
 		}
-		System.out.println(dateStr);
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
 		return LocalDate.parse(dateStr, formatter);
 	}

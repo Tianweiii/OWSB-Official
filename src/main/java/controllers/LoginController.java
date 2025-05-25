@@ -73,7 +73,7 @@ public class LoginController implements Initializable {
 
 				switch (data.get(0).get("roleID")) {
 					case "1":
-						layout.initSidebar("admin", new String[]{"Dashboard", "Register", "User Management","Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition", "Stock Management", "Procurement Management", "Sales Purchase Request List", "Financial Report", "Payments"});
+						layout.initSidebar("admin", new String[]{"Dashboard", "Register", "User Management","Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition", "Stock Management", "Sales Purchase Request List", "Financial Report", "Payments"});
 						// Navigate to dashboard
 						navigator.navigate(navigator.getRouters("admin").getRoute("dashboard"));
 						break;
