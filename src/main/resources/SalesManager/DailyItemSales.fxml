@@ -1,113 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<BorderPane fx:id="rootPane"
-            prefHeight="137.0"
-            prefWidth="611.0"
-            style="-fx-background-color: #EDF0F5; -fx-padding: 20;"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.salesController.DailyItemSalesController">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="rootPane" prefHeight="137.0" prefWidth="611.0" styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.DailyItemSalesController">
 
    <stylesheets>
       <URL value="@../css/sales-manager.css" />
    </stylesheets>
 
    <top>
-      <VBox spacing="15.0">
-         <HBox spacing="10" alignment="CENTER_LEFT">
+      <VBox spacing="15.0" styleClass="header-box">
+         <HBox alignment="CENTER_LEFT" spacing="10">
             <ImageView fitHeight="32" fitWidth="32" pickOnBounds="true" preserveRatio="true">
-               <Image url="@../images/daily-sales.png"/>
+               <Image url="@../images/daily-sales.png" />
             </ImageView>
+            <Label styleClass="toolbar-title" text="Daily Sales Entry" />
             <padding>
-               <Insets  left="10.0" right="10.0" top="20.0" />
+               <Insets left="10.0" right="10.0" top="20.0" />
             </padding>
-            <Label text="Daily Sales Entry"
-                   styleClass="toolbar-title"
-                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" />
          </HBox>
-         <Label fx:id="subHeadingLabel"
-                style="-fx-font-size: 14px; -fx-text-fill: #757575;" />
+         <Label fx:id="subHeadingLabel" styleClass="toolbar-subtitle" />
+
+         <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-container">
+            <Label styleClass="filter-label" text="Date:" />
+            <DatePicker fx:id="datePicker" prefWidth="140" styleClass="date-picker" />
 
 
-         <HBox alignment="CENTER_LEFT" spacing="12">
-            <Label text="Date:" style="-fx-font-weight: bold;" />
-            <DatePicker fx:id="datePicker" prefWidth="140"/>
 
-            <TextField fx:id="searchField"
-                       promptText="Search item..."
-                       prefWidth="200"
-                       styleClass="search-box"/>
-            <ToggleButton fx:id="themeToggle" text="🌙">
-               <tooltip>
-                  <Tooltip text="Toggle Dark/Light"/>
-               </tooltip>
-            </ToggleButton>
+            <HBox styleClass="search-box-container" HBox.hgrow="ALWAYS">
+               <Text styleClass="search-icon" />
+               <TextField fx:id="txtSearch" promptText="Search suppliers..." styleClass="search-box" HBox.hgrow="ALWAYS" />
+            </HBox>
 
-            <Label text="Total:" style="-fx-font-weight: bold;" />
-            <Label fx:id="totalLabel"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" />
+            <Button onAction="#onSearch" styleClass="btn-secondary">
+               <graphic>
+                  <HBox alignment="CENTER" spacing="5">
+                     <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/search.png" />
+                     </ImageView>
+                     <Label text="Search" />
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="clearSearchButton" mnemonicParsing="false" onAction="#onClear" styleClass="btn-primary" text="Clear" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label styleClass="total-label" text="Total:" />
+            <Label fx:id="totalLabel" styleClass="total-value" />
          </HBox>
 
          <HBox alignment="CENTER_RIGHT" spacing="15">
-            <Button fx:id="completeSalesReportBtn"
-                    text="📊 Complete Sales Report"
-                    styleClass="btn-primary"
-                    prefWidth="190"
-                    prefHeight="32">
+            <Button fx:id="completeSalesReportBtn" styleClass="btn-primary" text="Complete Sales Report">
+               <graphic>
+                  <ImageView fitHeight="16" fitWidth="16">
+                     <Image url="@../images/report.png" />
+                  </ImageView>
+               </graphic>
                <tooltip>
-                  <Tooltip text="Generate and finalize sales report for this date"/>
+                  <Tooltip text="Generate and finalize sales report for this date" />
                </tooltip>
             </Button>
 
-            <Button fx:id="deleteAllButton"
-                    text="Delete All"
-                    styleClass="btn-delete"
-                    prefWidth="120"
-                    prefHeight="32">
+            <Button fx:id="deleteAllButton" styleClass="btn-delete" text="Delete All">
+               <graphic>
+                  <ImageView fitHeight="16" fitWidth="16">
+                     <Image url="@../images/delete.png" />
+                  </ImageView>
+               </graphic>
                <tooltip>
-                  <Tooltip text="Delete all sales records for selected date"/>
+                  <Tooltip text="Delete all sales records for selected date" />
                </tooltip>
             </Button>
          </HBox>
-
       </VBox>
    </top>
 
    <center>
-      <StackPane fx:id="contentStack" BorderPane.alignment="CENTER">
+      <StackPane fx:id="contentStack" styleClass="content-area">
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
-         <ProgressIndicator fx:id="loadingIndicator" visible="false"/>
+         <ProgressIndicator fx:id="loadingIndicator" visible="false" />
       </StackPane>
    </center>
 
    <bottom>
-      <HBox spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
-         <Button fx:id="addBtn" styleClass="btn-primary" text="+ Add">
+      <HBox spacing="10.0" styleClass="action-buttons-container">
+         <Button fx:id="addBtn" styleClass="btn-primary">
+            <graphic>
+               <ImageView fitHeight="16" fitWidth="16">
+                  <Image url="@../images/add.png" />
+               </ImageView>
+            </graphic>
             <tooltip>
-               <Tooltip text="Add new sales entry"/>
+               <Tooltip text="Add new sales entry" />
             </tooltip>
          </Button>
-         <Button fx:id="editBtn" disable="true" styleClass="btn-secondary" text="✎ Edit">
+         <Button fx:id="editBtn" styleClass="btn-secondary">
+            <graphic>
+               <ImageView fitHeight="16" fitWidth="16">
+                  <Image url="@../images/edit.png" />
+               </ImageView>
+            </graphic>
             <tooltip>
-               <Tooltip text="Edit selected entry"/>
+               <Tooltip text="Edit selected entry" />
             </tooltip>
          </Button>
-         <Button fx:id="delBtn" disable="true" styleClass="btn-delete" text="🗑 Delete">
+         <Button fx:id="delBtn" styleClass="btn-delete">
+            <graphic>
+               <ImageView fitHeight="16" fitWidth="16">
+                  <Image url="@../images/delete.png" />
+               </ImageView>
+            </graphic>
             <tooltip>
-               <Tooltip text="Delete selected entry"/>
+               <Tooltip text="Delete selected entry" />
             </tooltip>
          </Button>
+         <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="table-footer" />
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
+
    </bottom>
 </BorderPane>

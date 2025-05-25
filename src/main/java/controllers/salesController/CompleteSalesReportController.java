@@ -15,21 +15,18 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 public class CompleteSalesReportController implements Initializable {
 
     @FXML private Pane rootPane;
     @FXML private VBox confirmPane;
-    @FXML private Label confirmLabel;
-    @FXML private Label noteLabel;
+    @FXML private Label confirmLabel, noteLabel;
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
 
     private Runnable onConfirmCallback;
     private Runnable onCancelCallback;
-    private LocalDate selectedDate;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,8 +65,7 @@ public class CompleteSalesReportController implements Initializable {
     }
 
     public void setSelectedDate(LocalDate date) {
-        this.selectedDate = date;
-        if (date != null) {
+	    if (date != null) {
             String formattedDate = date.format(formatter);
             confirmLabel.setText("This will generate a sales report for " + formattedDate + 
                 " and notify inventory management. Are you sure you want to proceed?");
@@ -90,12 +86,4 @@ public class CompleteSalesReportController implements Initializable {
         fadeIn.setToValue(1.0);
         fadeIn.play();
     }
-
-    public void playFadeOutAnimation(Runnable onFinish) {
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), rootPane);
-        fadeOut.setFromValue(1.0);
-        fadeOut.setToValue(0.0);
-        fadeOut.setOnFinished(e -> onFinish.run());
-        fadeOut.play();
-    }
-} 
+}

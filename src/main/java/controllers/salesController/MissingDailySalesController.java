@@ -16,6 +16,7 @@ import views.NotificationView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class MissingDailySalesController implements Initializable {
@@ -23,6 +24,7 @@ public class MissingDailySalesController implements Initializable {
 	public VBox container;
 	@FXML private AnchorPane missingDailySalesPane;
 	@FXML private Button createNewSalesEntryButton;
+	private LocalDate salesDate;
 
 	private Runnable onCreateCallback;
 
@@ -46,32 +48,24 @@ public class MissingDailySalesController implements Initializable {
 
 	@FXML
 	public void onCreateNewSalesEntryButtonClick() {
-		System.out.println("Add button clicked!");
 		try {
 			AddNewDailyItemSalesView view = new AddNewDailyItemSalesView(this, AddNewDailyItemSalesView.Mode.FIRST);
+			view.getAddNewDailyItemSalesController().initMode(AddNewDailyItemSalesView.Mode.FIRST, null, this.salesDate);
 			view.show();
 			missingDailySalesPane.setDisable(true);
 			SidebarController.getSidebar().setDisable(true);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			try {
 				new NotificationView(
 						"Unable to open entry form",
 						NotificationController.popUpType.error,
 						NotificationController.popUpPos.BOTTOM_RIGHT
 				).show();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
 			}
-		}
-	}
-
-
-	public void notifyEntryCreated() {
-		missingDailySalesPane.setDisable(false);
-		if (onCreateCallback != null) {
-			onCreateCallback.run();
 		}
 	}
 
@@ -87,7 +81,7 @@ public class MissingDailySalesController implements Initializable {
 		return createNewSalesEntryButton;
 	}
 
-	public void reload() {
-		// Optionally implement if needed
+	public void setSalesDate(LocalDate salesDate) {
+		this.salesDate = salesDate;
 	}
 }

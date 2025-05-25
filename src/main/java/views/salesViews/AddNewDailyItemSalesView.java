@@ -19,8 +19,8 @@ public class AddNewDailyItemSalesView implements View {
 	private final Pane addNewDailyItemSalesPane;
 	private static MissingDailySalesController missingController;
 	private static DailyItemSalesController rootController;
-	private AddNewDailyItemSalesController addNewDailyItemSalesController;
-	private Mode mode;
+	private final AddNewDailyItemSalesController addNewDailyItemSalesController;
+	private final Mode mode;
 
     public AddNewDailyItemSalesController getAddNewDailyItemSalesController() {
         return addNewDailyItemSalesController;

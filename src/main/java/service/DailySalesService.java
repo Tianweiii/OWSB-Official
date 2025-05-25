@@ -1,9 +1,11 @@
 package service;
 
+import models.Datas.InventoryUpdateRequest;
 import models.Datas.Transaction;
 import models.Datas.Item;
 import models.Datas.DailySalesHistory;
 import models.Utils.QueryBuilder;
+import models.Utils.SessionManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,9 +23,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Service layer for Daily Item Sales, purely file‐based.
- */
 public class DailySalesService {
     private static final Logger LOG = Logger.getLogger(DailySalesService.class.getName());
     private static final String TRANS_FILE = "db/Transaction.txt";
@@ -59,14 +58,13 @@ public class DailySalesService {
                     .getAsObjects();
 
             String histId = dailySalesHistories.isEmpty() ?
-                    "" :
+                    "none" :
                     dailySalesHistories.get(0).getDailySalesHistoryID();
 
             QueryBuilder<Transaction> qb = new QueryBuilder<>(Transaction.class);
             return qb
                     .select()
                     .from(TRANS_FILE)
-//                    .joins(DailySalesHistory.class, "dailySalesHistoryID")
                     .where("dailySalesHistoryID", "=", histId)
                     .getAsObjects();
         } catch (Exception e) {
@@ -77,12 +75,27 @@ public class DailySalesService {
 
     /** Record a new sale locally. */
     public void recordSale(Item item, int quantity, LocalDate date) {
-        System.out.println(date);
+        if (date == null) {
+            LOG.log(Level.SEVERE, "Date cannot be null");
+            return;
+        }
+        
         String histId = getOrCreateHistory(date);
+        if (histId.isEmpty()) {
+            LOG.log(Level.SEVERE, "Failed to get/create history for date: " + date);
+            return;
+        }
+        
         try {
+            // Apply 15% markup to the unit price for profit
+            double originalPrice = item.getUnitPrice();
+            double markedUpPrice = originalPrice * 1.15;
+            
+            // Store the marked up price in the item for this transaction
+            item.setUnitPrice(markedUpPrice);
+            
             QueryBuilder<Transaction> qb = new QueryBuilder<>(Transaction.class);
-            qb
-                .target(TRANS_FILE)
+            qb.target(TRANS_FILE)
                 .values(new String[]{
                         histId,
                         String.valueOf(quantity),
@@ -90,14 +103,24 @@ public class DailySalesService {
                         "S1"  // salesID (unused)
                 })
                 .create();
+              
+            // Reset to original price after transaction is created
+            item.setUnitPrice(originalPrice);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to record sale", e);
+            LOG.log(Level.SEVERE, "Failed to record sale for date: " + date, e);
         }
     }
 
     /** Update an existing transaction's quantity. */
     public void updateTransaction(Transaction transaction, Item item, int newQty) {
         try {
+            // Apply 15% markup to the unit price for profit
+            double originalPrice = item.getUnitPrice();
+            double markedUpPrice = originalPrice * 1.15;
+            
+            // Store the marked up price in the item for this transaction
+            item.setUnitPrice(markedUpPrice);
+            
             QueryBuilder<Transaction> qb = new QueryBuilder<>(Transaction.class);
             qb
                 .target(TRANS_FILE)
@@ -107,6 +130,10 @@ public class DailySalesService {
                         item.getItemID(),
                         transaction.getSalesID()
                     });
+                    
+            // Reset to original price after transaction is updated
+            item.setUnitPrice(originalPrice);
+            
             QueryBuilder<DailySalesHistory> dshQB = new QueryBuilder<>(DailySalesHistory.class);
             HashMap<String, String> map = new HashMap<>();
             map.put("updatedAt", LocalDate.now().format(ISO));
@@ -144,39 +171,6 @@ public class DailySalesService {
     }
 
     /**
-     * Export a date's transactions to a CSV file.
-     * 
-     * Basic CSV export without creating inventory update requests
-     *
-     * @return The full path to the exported CSV file
-     */
-    public String exportCsv(LocalDate date) {
-        String ds = date.format(ISO);
-        List<Transaction> txs = getTransactionsFor(date);
-        String filename = "sales_" + ds + ".csv";
-        try (FileWriter w = new FileWriter(filename)) {
-            w.write("Item,Qty,Price,Subtotal\n");
-            for (var t : txs) {
-                w.write(String.format(
-                        "%s,%d,%.2f,%.2f\n",
-                        t.getItemName(),
-                        t.getSoldQuantity(),
-                        t.getUnitPrice(),
-                        t.getSubtotal()
-                ));
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to export CSV", e);
-        }
-        return filename;
-    }
-
-    /**
-     * Complete sales report - enhanced version that:
-     * 1. Creates a more detailed CSV
-     * 2. Creates inventory update requests
-     * 3. Updates sales history status to "Completed"
-     * 
      * @param date The date for which to complete the sales report
      * @return The full path to the exported report file
      */
@@ -193,7 +187,7 @@ public class DailySalesService {
 
         String ds = date.format(ISO);
         List<Transaction> txs = getTransactionsFor(date);
-        
+
         if (txs.isEmpty()) {
             LOG.warning("No transactions found for date: " + ds);
             return null;
@@ -207,29 +201,49 @@ public class DailySalesService {
         String filename = REPORTS_DIR + File.separator + "sales_report_" + ds + "_" + timestamp + ".csv";
         
         try (FileWriter writer = new FileWriter(filename)) {
-            // Write CSV header
-            writer.write("Report Date: " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) + "\n");
-            writer.write("Generated: " + LocalDateTime.now().format(DATETIME_FORMAT) + "\n\n");
-            writer.write("Item ID,Item Name,Quantity,Unit Price,Subtotal\n");
+            // Write CSV header with professional formatting
+            writer.write("\"OWSB - SALES REPORT\"\n");
+            writer.write("\n");
+            writer.write("\"Report Date:\",\"" + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) + "\"\n");
+            writer.write("\"Generated On:\",\"" + LocalDateTime.now().format(DATETIME_FORMAT) + "\"\n");
+            writer.write("\"Generated By:\",\"Sales Manager\"\n");
+            writer.write("\"Report ID:\",\"SR-" + timestamp + "\"\n");
+            writer.write("\n");
+            
+            // Column headers with proper formatting
+            writer.write("\"Item ID\",\"Item Name\",\"Quantity\",\"Unit Price ($)\",\"Subtotal ($)\"\n");
             
             // Write transaction data
             double totalAmount = 0;
+            int totalQuantity = 0;
+            int uniqueItemCount = (int) txs.stream().map(Transaction::getItemID).distinct().count();
+            
             for (Transaction tx : txs) {
-                writer.write(String.format("%s,%s,%d,%.2f,%.2f\n",
+                writer.write(String.format("\"%s\",\"%s\",%d,\"%.2f\",\"%.2f\"\n",
                         tx.getItemID(),
                         tx.getItemName(),
                         tx.getSoldQuantity(),
-                        tx.getUnitPrice(),
-                        tx.getSubtotal()));
-                totalAmount += tx.getSubtotal();
+                        tx.getMarkedUpPrice(),
+                        tx.getMarkedUpSubtotal()));
+                totalAmount += tx.getMarkedUpSubtotal();
+                totalQuantity += tx.getSoldQuantity();
                 
                 // Create inventory update request for each transaction
                 createInventoryUpdateRequest(tx);
             }
             
-            // Write summary
-            writer.write("\nTotal Items: " + txs.size() + "\n");
-            writer.write("Total Amount: $" + String.format("%.2f", totalAmount) + "\n");
+            // Write summary section
+            writer.write("\n");
+            writer.write("\"SUMMARY\"\n");
+            writer.write("\"Total Unique Items:\",\"" + uniqueItemCount + "\"\n");
+            writer.write("\"Total Items Sold:\",\"" + totalQuantity + "\"\n");
+            writer.write("\"Total Transactions:\",\"" + txs.size() + "\"\n");
+            writer.write("\"Total Revenue ($):\",\"" + String.format("%.2f", totalAmount) + "\"\n");
+            writer.write("\n");
+            writer.write("\"REPORT NOTES\"\n");
+            writer.write("\"This report was automatically generated by the OWSB Sales Management System.\"\n");
+            writer.write("\"All sales transactions for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) + " have been recorded and finalized.\"\n");
+            writer.write("\"Inventory update requests have been created for these transactions.\"\n");
             
             // Update sales history status to "Completed"
             updateSalesHistoryStatus(historyId, "Completed");
@@ -244,46 +258,24 @@ public class DailySalesService {
     /**
      * Create inventory update request for a transaction
      */
-    private void createInventoryUpdateRequest(Transaction transaction) {
+    private void createInventoryUpdateRequest(Transaction tx) {
+        String userID = SessionManager.getInstance().getUserData().get("userID");
         try {
-            // Create timestamp for the request
-            String timestamp = LocalDateTime.now().format(DATETIME_FORMAT);
-            
-            // Query to create inventory update request
-            // Assuming the structure of InventoryUpdateRequest has:
-            // - requestID (auto-generated)
-            // - itemID
-            // - quantity
-            // - requestType (e.g., "SALES_DEDUCTION")
-            // - status (e.g., "PENDING")
-            // - createdAt
-            // - transactionID (reference back to the sales transaction)
-            
-            // Check if the InventoryUpdateRequest.txt file exists, create if not
-            Path invReqPath = Paths.get(INV_UPDATE_REQUEST_FILE);
-            if (!Files.exists(invReqPath.getParent())) {
-                Files.createDirectories(invReqPath.getParent());
+            QueryBuilder<InventoryUpdateRequest> qb = new QueryBuilder<>(InventoryUpdateRequest.class);
+            boolean res = qb
+                    .target(INV_UPDATE_REQUEST_FILE)
+                    .values(new String[]{
+                            tx.getItemID(),
+                            userID,
+                            String.valueOf(tx.getSoldQuantity()),
+                            "Pending",
+                    })
+                    .create("REQ");
+            if (!res) {
+                LOG.log(Level.SEVERE, "Failed to create inventory update request for transaction " + tx.getTransactionID());
             }
-            if (!Files.exists(invReqPath)) {
-                Files.createFile(invReqPath);
-            }
-            
-            // Using a simplified approach here since we don't have the actual InventoryUpdateRequest model
-            // In a real implementation, you'd use the appropriate QueryBuilder for this model
-            try (FileWriter writer = new FileWriter(INV_UPDATE_REQUEST_FILE, true)) {
-                String requestLine = String.format("%s,%s,%d,%s,%s,%s\n",
-                        transaction.getItemID(),
-                        transaction.getSoldQuantity(),
-                        "SALES_DEDUCTION",
-                        "PENDING",
-                        timestamp,
-                        transaction.getTransactionID());
-                writer.write(requestLine);
-            }
-            
-            LOG.info("Created inventory update request for transaction: " + transaction.getTransactionID());
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to create inventory update request", e);
+            LOG.log(Level.SEVERE, "Failed to create inventory update requests", e);
         }
     }
 
@@ -306,39 +298,62 @@ public class DailySalesService {
         }
     }
 
+    public DailySalesHistory getDailySalesHistory(String dailySalesHistoryID) {
+        try {
+            QueryBuilder<DailySalesHistory> qb = new QueryBuilder<>(DailySalesHistory.class);
+            ArrayList<DailySalesHistory> dailySalesHistories = qb
+                    .select()
+                    .from(HIST_FILE)
+                    .where("dailySalesHistoryID", "=", dailySalesHistoryID)
+                    .and("status", "=", "Completed")
+                    .getAsObjects();
+            return dailySalesHistories.isEmpty() ? null : dailySalesHistories.get(0);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to get daily sales history", e);
+            return null;
+        }
+    }
+
     /**
-     * Find or create a DailySalesHistory for the given date.
+     * Get or create a DailySalesHistory for the given date.
      * We first query by createdAt; if none, we insert one and then re-query.
      */
     private String getOrCreateHistory(LocalDate date) {
+        if (date == null) return "";
+        
         String ds = date.format(ISO);
         try {
             QueryBuilder<DailySalesHistory> qb = new QueryBuilder<>(DailySalesHistory.class);
-            List<DailySalesHistory> list = qb
+            
+            // First try to find existing history
+            List<DailySalesHistory> existing = qb
                     .select()
                     .from(HIST_FILE)
                     .where("createdAt", "=", ds)
                     .getAsObjects();
 
-            if (!list.isEmpty()) {
-                return list.get(0).getDailySalesHistoryID();
+            if (!existing.isEmpty()) {
+                return existing.get(0).getDailySalesHistoryID();
             }
 
-            // Insert new history record with default status "Pending"
-            qb.target(HIST_FILE)
+            // Create new history if none exists
+            boolean created = qb.target(HIST_FILE)
                     .values(new String[]{ ds, ds, "Pending" })
                     .create();
 
-            // Re-query to fetch its ID
-            List<DailySalesHistory> created = qb
+            if (!created) {
+                LOG.log(Level.SEVERE, "Failed to create history record for " + ds);
+                return "";
+            }
+
+            // Fetch the newly created history
+            List<DailySalesHistory> newHistory = qb
                     .select()
                     .from(HIST_FILE)
                     .where("createdAt", "=", ds)
                     .getAsObjects();
 
-            return created.isEmpty()
-                    ? "" // fallback
-                    : created.get(0).getDailySalesHistoryID();
+            return newHistory.isEmpty() ? "" : newHistory.get(0).getDailySalesHistoryID();
 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to get/create history for " + ds, e);
@@ -349,7 +364,7 @@ public class DailySalesService {
     /** Sum all subtotals for a given date. */
     public double calculateTotalFor(LocalDate date) {
         return getTransactionsFor(date).stream()
-                .mapToDouble(Transaction::getSubtotal)
+                .mapToDouble(Transaction::getMarkedUpSubtotal)
                 .sum();
     }
 
@@ -377,37 +392,4 @@ public class DailySalesService {
             return null;
         }
     }
-
-    // Delete all transactions under one daily sales history ID
-    public void deleteTransactionsByDailySalesHistoryID(String dailySalesHistoryID) {
-        try {
-            new QueryBuilder<>(Transaction.class)
-                    .target(TRANS_FILE)
-                    .where("dailySalesHistoryID", "=", dailySalesHistoryID);
-//                    .deleteAllMatching();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to delete transactions by DailySalesHistoryID " + dailySalesHistoryID, e);
-        }
-    }
-
-    // Delete the daily sales history record by ID
-    public void deleteDailySalesHistory(String dailySalesHistoryID) {
-        try {
-            new QueryBuilder<>(DailySalesHistory.class)
-                    .target(HIST_FILE)
-                    .delete(dailySalesHistoryID);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to delete daily sales history " + dailySalesHistoryID, e);
-        }
-    }
-
-//    public boolean createInventoryUpdateRequest(Transaction transaction) {
-//        try {
-//
-//        } catch (Exception e) {
-//            LOG.log(Level.SEVERE, "Failed to create inventory update request", e);
-//            return false;
-//        }
-//        return true;
-//    }
 }

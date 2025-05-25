@@ -16,10 +16,12 @@ import java.net.URL;
 public class AddItemView implements View {
 	private final Pane addItemPane;
 	private static ItemListController rootController;
+	private final ItemListController itemListController;
 
 	public AddItemView() throws IOException {
 		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/SalesManager/Components/AddItem.fxml"));
 		this.addItemPane = loader.load();
+		this.itemListController = loader.getController();
 	}
 
 	public void showAddItemView(ItemListController rootController){
@@ -28,6 +30,7 @@ public class AddItemView implements View {
 		root.getChildren().add(addItemPane);
 		Helper.adjustPanePosition(NotificationController.popUpPos.CENTER, root, addItemPane);
 
+		this.itemListController.setupFormValidation("add");
 		AddItemView.rootController = rootController;
 
 	}

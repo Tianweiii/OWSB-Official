@@ -2,7 +2,6 @@ package controllers.salesController;
 
 import controllers.SidebarController;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -13,7 +12,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
@@ -34,71 +32,46 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 public class DailyItemSalesController implements Initializable {
 
 	private static final int ROWS_PER_PAGE = 50;
-
+	public DailyItemSalesController controller = this;
 	@FXML private DatePicker datePicker;
-	@FXML private TextField searchField;
-	@FXML private ProgressIndicator loadingIndicator;
-	@FXML private ToggleButton themeToggle;
-	@FXML private Button completeSalesReportBtn;
-	@FXML private Button addBtn;
-	@FXML private Button editBtn;
-	@FXML private Button delBtn;
-	@FXML private Button deleteAllButton;
-	@FXML private Label totalLabel;
+	@FXML private TextField txtSearch;
+	@FXML private Button clearSearchButton, completeSalesReportBtn, addBtn,editBtn,delBtn,deleteAllButton;
+	@FXML private Label totalLabel,subHeadingLabel;
 	@FXML private StackPane contentStack;
 	@FXML private BorderPane rootPane;
 	@FXML private TableView<Transaction> table;
-	@FXML private Label subHeadingLabel;
+	@FXML private Label totalDailyItemSalesLabel;
+	@FXML private ProgressIndicator loadingIndicator;
 
+	private static LocalDate selectedDate;
 	private Pagination pagination;
 	private final DailySalesService service = new DailySalesService();
-	private final Preferences prefs = Preferences.userNodeForPackage(DailyItemSalesController.class);
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	private Pane overlayBackground;
 	private Pane deleteDialogPane;
 	private Pane completeSalesReportPane;
 
 	@Override
 	public void initialize(URL loc, ResourceBundle res) {
 		contentStack.sceneProperty().addListener((o, old, newScene) -> {
-			if (newScene != null) restoreTheme();
+			if (newScene != null) setupControls();
 		});
 
 		setupControls();
+		setupSearchControls();
 		pagination = new Pagination(1, 0);
 		pagination.setPageFactory(this::createPage);
 		refreshData();
 	}
 
-	private void restoreTheme() {
-		boolean dark = prefs.getBoolean("darkMode", false);
-		Platform.runLater(() -> {
-			var styles = contentStack.getScene().getRoot().getStyleClass();
-			styles.remove("dark-mode");
-			if (dark) {
-				styles.add("dark-mode");
-				themeToggle.setText("☀️");
-			} else {
-				themeToggle.setText("🌙");
-			}
-		});
-	}
-
 	private void setupControls() {
-		datePicker.setValue(LocalDate.now());
+		datePicker.setValue(selectedDate != null ? selectedDate : LocalDate.now());
 		datePicker.setOnAction(e -> refreshData());
 
-		searchField.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER) debounceSearch();
-		});
-
-		themeToggle.setOnAction(e -> toggleTheme());
 		completeSalesReportBtn.setOnAction(e -> showCompleteSalesReportDialog());
 		addBtn.setOnAction(e -> openDialog(null));
 		editBtn.setOnAction(e -> openDialog(table.getSelectionModel().getSelectedItem()));
@@ -107,6 +80,10 @@ public class DailyItemSalesController implements Initializable {
 
 		editBtn.setDisable(true);
 		delBtn.setDisable(true);
+	}
+
+	public static void setSelectedDate(LocalDate date) {
+		DailyItemSalesController.selectedDate = date;
 	}
 
 	private void refreshData() {
@@ -145,7 +122,7 @@ public class DailyItemSalesController implements Initializable {
 		} else if (status != null && status.equals("Pending")) {
 			completeSalesReportBtn.setVisible(true);
 			completeSalesReportBtn.setDisable(false);
-			completeSalesReportBtn.setText("📊 Complete Sales Report");
+			completeSalesReportBtn.setText("Complete Sales Report");
 			completeSalesReportBtn.setTooltip(new Tooltip("Generate and finalize sales report for this date"));
 		} else{
 			completeSalesReportBtn.setVisible(false);
@@ -210,11 +187,12 @@ public class DailyItemSalesController implements Initializable {
 	private void buildTable() {
 		table = new TableView<>();
 		table.setMaxWidth(Double.MAX_VALUE);
+		table.getStyleClass().add("sales-table");
 
 		TableColumn<Transaction, String> itemCol = createCenteredColumn("Item", "itemName");
 		TableColumn<Transaction, Integer> qtyCol = createCenteredColumn("Quantity", "soldQuantity");
-		TableColumn<Transaction, Double> priceCol = createCenteredColumn("Unit Price", "unitPrice");
-		TableColumn<Transaction, Double> subtotalCol = createCenteredColumn("Subtotal", "subtotal");
+		TableColumn<Transaction, Double> priceCol = createCenteredColumn("Unit Price", "markedUpPrice");
+		TableColumn<Transaction, Double> subtotalCol = createCenteredColumn("Subtotal", "markedUpSubtotal");
 		TableColumn<Transaction, String> statusCol = createStatusColumn();
 
 		table.getColumns().addAll(itemCol, qtyCol, priceCol, subtotalCol, statusCol);
@@ -242,7 +220,14 @@ public class DailyItemSalesController implements Initializable {
 						if (empty || item == null) {
 							setText(null);
 						} else {
-							setText(item.toString());
+							// Special handling for unit price - show original and markup
+							if (propertyName.equals("markedUpPrice") && item instanceof Double price) {
+                                setText(String.format("$%.2f\n(+15%%)", price));
+								setTooltip(new Tooltip(String.format("Original: $%.2f, Markup: 15%%", price/1.15)));
+
+							} else {
+								setText(item.toString());
+							}
 							setAlignment(Pos.CENTER);
 							setWrapText(true);
 							setTextAlignment(TextAlignment.CENTER);
@@ -265,7 +250,6 @@ public class DailyItemSalesController implements Initializable {
 					setText(null);
 					setGraphic(null);
 				} else {
-					Transaction transaction = getTableView().getItems().get(getIndex());
 					LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
 					String historyStatus = service.getSalesHistoryStatus(date);
 					
@@ -302,32 +286,80 @@ public class DailyItemSalesController implements Initializable {
 			contentStack.getChildren().setAll(emptyNode);
 
 			MissingDailySalesController missingCtrl = loader.getController();
+			missingCtrl.setSalesDate(datePicker.getValue());
 			missingCtrl.setOnCreateCallback(this::reload);
 			missingCtrl.getCreateButton().setOnAction(e -> missingCtrl.onCreateNewSalesEntryButtonClick());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to load empty view", NotificationController.popUpType.error);
 		}
-	}
-
-	private void debounceSearch() {
-		if (table == null) return;
-
-		String searchTerm = searchField.getText().trim().toLowerCase();
-		table.getItems().removeIf(tx -> !tx.getItemName().toLowerCase().contains(searchTerm));
 	}
 
 	private void openDialog(Transaction transactionToEdit) {
 		try {
 			AddNewDailyItemSalesView.Mode mode = transactionToEdit == null ? AddNewDailyItemSalesView.Mode.NEW : AddNewDailyItemSalesView.Mode.UPDATE;
+			LocalDate selectedDate = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
 			AddNewDailyItemSalesView view = new AddNewDailyItemSalesView(this, mode);
-			view.getAddNewDailyItemSalesController().initMode(mode, transactionToEdit, datePicker.getValue());
-
+			view.getAddNewDailyItemSalesController().initMode(mode, transactionToEdit, selectedDate);
 			view.show();
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to open entry form", NotificationController.popUpType.error);
+		}
+	}
+
+	@FXML private void onSearch() {
+		if (table == null || txtSearch == null) return;
+		
+		String searchText = txtSearch.getText().toLowerCase().trim();
+		ObservableList<Transaction> allItems = table.getItems();
+		
+		if (searchText.isEmpty()) {
+			refreshData();
+			return;
+		}
+		
+		ObservableList<Transaction> filteredItems = allItems.filtered(transaction -> {
+			if (searchText.matches("\\d+")) {
+				// Search by quantity
+				return transaction.getSoldQuantity() == Integer.parseInt(searchText);
+			}
+			
+			// Search by item name or other text fields
+			return transaction.getItemName().toLowerCase().contains(searchText) ||
+				   transaction.getItemID().toLowerCase().contains(searchText);
+		});
+		
+		table.setItems(filteredItems);
+		updateTotalLabel(filteredItems);
+	}
+	
+	private void updateTotalLabel(ObservableList<Transaction> items) {
+		double total = items.stream()
+			.mapToDouble(tx -> tx.getSoldQuantity() * tx.getUnitPrice())
+			.sum();
+		totalLabel.setText(String.format("$%.2f", total));
+	}
+
+	@FXML private void onClear() {
+		if (txtSearch != null) {
+			txtSearch.clear();
+			refreshData();
+		}
+	}
+
+	private void setupSearchControls() {
+		if (txtSearch != null) {
+			txtSearch.setPromptText("Search by item name or quantity...");
+			txtSearch.textProperty().addListener((obs, old, newVal) -> {
+				if (newVal.isEmpty()) {
+					refreshData();
+				}
+			});
+		}
+		
+		if (clearSearchButton != null) {
+			clearSearchButton.setOnAction(e -> onClear());
 		}
 	}
 
@@ -360,17 +392,13 @@ public class DailyItemSalesController implements Initializable {
 				String reportPath = service.completeSalesReport(selectedDate);
 				if (reportPath != null) {
 					notifyUser("Sales report completed: " + reportPath, NotificationController.popUpType.success);
-					
-					// Try to open the reports folder
+
 					try {
 						Desktop.getDesktop().open(new File(reportPath).getParentFile());
 					} catch (Exception ex) {
 						// Silently ignore if can't open
 					}
-					
-					// Update UI to reflect completed status
 					updateSalesStatus();
-//					createInventoryUpdateRequest();
 				} else {
 					notifyUser("Failed to generate sales report", NotificationController.popUpType.error);
 				}
@@ -378,19 +406,15 @@ public class DailyItemSalesController implements Initializable {
 				reload();
 			});
 			
-			controller.setOnCancel(() -> {
-				hideCompleteSalesReportDialog();
-			});
+			controller.setOnCancel(this::hideCompleteSalesReportDialog);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			notifyUser("Failed to show complete sales report dialog", NotificationController.popUpType.error);
 		}
 	}
 
-	/**
-	 * Hides and cleans up the complete sales report dialog
-	 */
+
 	private void hideCompleteSalesReportDialog() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
@@ -400,9 +424,6 @@ public class DailyItemSalesController implements Initializable {
 		SidebarController.getSidebar().setDisable(false);
 	}
 
-	/**
-	 * Shows a modal delete dialog popup overlay to confirm deletion of the selected transaction.
-	 */
 	private void showDeleteDialog(boolean deleteAll) {
 		Transaction sel;
 		ObservableList<Transaction> allItems = FXCollections.observableArrayList();
@@ -451,23 +472,11 @@ public class DailyItemSalesController implements Initializable {
 			playFadeInAnimation(deleteDialogPane);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			notifyUser("Failed to show delete dialog", NotificationController.popUpType.error);
 		}
 	}
 
-//	private void createInventoryUpdateRequest() {
-//		try {
-//			service.createInventoryUpdateRequest();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			notifyUser("Failed to create inventory update request", NotificationController.popUpType.error);
-//		}
-//	}
-
-	/**
-	 * Hides and cleans up the delete dialog and overlay.
-	 */
 	private void hideDeleteDialog() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
@@ -482,30 +491,6 @@ public class DailyItemSalesController implements Initializable {
 		fadeIn.setFromValue(0.0);
 		fadeIn.setToValue(1.0);
 		fadeIn.play();
-	}
-
-	private void playFadeOutAnimation(Node node, Runnable onFinish) {
-		FadeTransition fadeOut = new FadeTransition(Duration.millis(200), node);
-		fadeOut.setFromValue(1.0);
-		fadeOut.setToValue(0.0);
-		fadeOut.setOnFinished(e -> onFinish.run());
-		fadeOut.play();
-	}
-
-	private void toggleTheme() {
-		var root = contentStack.getScene().getRoot();
-		List<String> styles = root.getStyleClass();
-
-		boolean switchingToDark = !styles.contains("dark-mode");
-		if (switchingToDark) {
-			styles.add("dark-mode");
-			themeToggle.setText("☀️");
-		} else {
-			styles.remove("dark-mode");
-			themeToggle.setText("🌙");
-		}
-
-		prefs.putBoolean("darkMode", switchingToDark);
 	}
 
 	private void notifyUser(String message, NotificationController.popUpType type) {

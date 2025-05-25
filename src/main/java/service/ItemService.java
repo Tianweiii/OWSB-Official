@@ -1,7 +1,5 @@
 package service;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import models.DTO.ItemListDTO;
 import models.Datas.Item;
 import models.Datas.Supplier;
@@ -56,10 +54,10 @@ public class ItemService extends Service<ItemListDTO> {
 							varargs[1],
 							LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
 							LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-							"0",
-							"100",
-							"0",
+							"10",
 							varargs[2],
+							varargs[3],
+							varargs[4],
 					})
 					.create();
 		} catch (Exception e) {

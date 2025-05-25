@@ -240,7 +240,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 				for (Class<? extends ModelInitializable> join: this.joins) {
 					String joinName = Helper.toAttrString(join.getSimpleName());
 					String joinTextFileName = joinName + ".txt";
-
 					if (allData.get(0).get(joinName+"_id") == null && allData.get(0).get(joinName+"ID") == null) {
 						throw new RuntimeException("No " + joinName + " ID found");
 					}
@@ -565,7 +564,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 			// Get latest ID
 			List<String> allLines = Files.readAllLines(filePath);
 			int latestId;
-			String latestIdString = allLines.isEmpty() ? "" : allLines.get(allLines.size()-1).split(",")[0];
+			String latestIdString = allLines.isEmpty() ? "1" : allLines.get(allLines.size()-1).split(",")[0];
 			if (latestIdString.matches("[0-9]+")) {
 				latestId = allLines.isEmpty() ? 1 : Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
 			} else {

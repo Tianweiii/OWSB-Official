@@ -61,11 +61,11 @@ public class ItemListDTO {
 	}
 
 	public String getSupplierID() {
-		return supplierID;
+		return supplierID != null ? supplierID : "NA";
 	}
 
 	public String getSupplierName() {
-		return supplierName;
+		return supplierName != null ? supplierName : "NA";
 	}
 
 	public void setSupplierName(String supplierName) {
