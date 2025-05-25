@@ -80,6 +80,7 @@ public class Navigator {
 
 		// Finance manager
 		financeRouter.addRoute("financeHome", FinanceHomeView.class);
+		financeRouter.addRoute("PRPO", PRPOView.class);
 		financeRouter.addRoute("financeReport", FinanceReportView.class);
 		financeRouter.addRoute("financePayments", FinancePaymentsView.class);
 		financeRouter.addRoute("makePayments", MakePaymentsView.class);
