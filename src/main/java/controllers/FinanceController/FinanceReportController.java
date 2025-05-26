@@ -71,12 +71,10 @@ public class FinanceReportController implements Initializable {
     }
 
     public void viewAllPayments() {
-//        mainController.viewAllPayments();
         navigator.navigate(navigator.getRouters("finance").getRoute("viewAllPayments"));
     }
 
     public void viewAllSales() {
-//        mainController.viewAllSales();
         navigator.navigate(navigator.getRouters("finance").getRoute("viewAllSales"));
     }
 
@@ -259,6 +257,8 @@ public class FinanceReportController implements Initializable {
     }
 
     // 2 tables, 1 for sales, 1 for payments, summary of the datas,
+    // precious 5 of each
+    // summary at the bottom
     public void generateFinanceReport() throws JRException {
 
 
