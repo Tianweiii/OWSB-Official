@@ -164,6 +164,7 @@ public class InventoryUpdateRequestController implements Initializable {
 
                     String[] updateValues = new String[]{
                             item.getItemName(),
+                            item.getDescription(),
                             item.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                             String.valueOf(item.getAlertSetting()),

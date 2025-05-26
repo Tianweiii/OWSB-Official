@@ -945,6 +945,7 @@ public class EditPRPOController implements Initializable {
 
             for(ItemRow itemRow : tableData){
                 Item targetItem = itemMap.get(itemRow.getItemID());
+                System.out.println("targetItem:" + targetItem.getDescription());
                 int prevQuantity = targetItem.getQuantity();
                 int newQuantity = prevQuantity + itemRow.getQuantity();
                 String note = "Verifying Purchase Order - "+poData.getPoID();
@@ -955,6 +956,7 @@ public class EditPRPOController implements Initializable {
 
                 newDataList.add(new String[]{
                         targetItem.getItemName(),
+                        targetItem.getDescription(),
                         stringifyDateTime(targetItem.getCreatedAt()),
                         stringifyDateTime(LocalDateTime.now()),
                         String.valueOf(targetItem.getAlertSetting()),
