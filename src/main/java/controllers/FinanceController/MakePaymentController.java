@@ -232,7 +232,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
 
     public void onPressPay() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
-        mainController.renderLoader();
+//        mainController.renderLoader();
+//        navigator.renderLoader();
 
         if (validateCardFields()) {
             new Thread(() -> {
@@ -287,16 +288,19 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                     PauseTransition pause = new PauseTransition(Duration.millis(remainingTime));
                     pause.setOnFinished(ev -> {
                         if (finalRes) {
-                            mainController.goToPaymentSuccess();
+                            navigator.navigate(navigator.getRouters("finance").getRoute("paymentSuccess"));
+//                            mainController.goToPaymentSuccess();
                         }
-                        mainController.removeLoader();
+//                        mainController.removeLoader();
+//                        navigator.removeLoader();
                     });
                     pause.play();
                 });
 
             }).start();
         } else {
-            mainController.removeLoader();
+//            mainController.removeLoader();
+//            navigator.removeLoader();
         }
     }
 

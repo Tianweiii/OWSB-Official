@@ -15,6 +15,9 @@ import models.Datas.Transaction;
 import models.Utils.FileIO;
 import models.Utils.Helper;
 import models.Utils.Navigator;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -68,12 +71,10 @@ public class FinanceReportController implements Initializable {
     }
 
     public void viewAllPayments() {
-//        mainController.viewAllPayments();
         navigator.navigate(navigator.getRouters("finance").getRoute("viewAllPayments"));
     }
 
     public void viewAllSales() {
-//        mainController.viewAllSales();
         navigator.navigate(navigator.getRouters("finance").getRoute("viewAllSales"));
     }
 
@@ -120,10 +121,6 @@ public class FinanceReportController implements Initializable {
         }
     }
 
-    public void generateFinanceReport() {
-        // TODO: generate and open jasperreport pdf
-    }
-
     public double getTotalSales() throws IOException {
         Map<String, Double> priceMap = new HashMap<>();
 
@@ -166,6 +163,7 @@ public class FinanceReportController implements Initializable {
     }
 
     public void initLineChart() {
+        double priceMultiplier = 1.15;
         try {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_DATE;
             DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy MMM");
@@ -182,7 +180,7 @@ public class FinanceReportController implements Initializable {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(",");
-                    priceMap.put(parts[0].trim(), Double.parseDouble(parts[6].trim()));
+                    priceMap.put(parts[0].trim(), Double.parseDouble(parts[6].trim()) * priceMultiplier);
                 }
             }
 
@@ -257,5 +255,17 @@ public class FinanceReportController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    // 2 tables, 1 for sales, 1 for payments, summary of the datas,
+    // precious 5 of each
+    // summary at the bottom
+    public void generateFinanceReport() throws JRException {
+
+
+        JasperReport report = (JasperReport) JRLoader.loadObjectFromFile("src/main/resource/Jasper/FinanceReport.jasper");
+
+
+    }
+
 
 }

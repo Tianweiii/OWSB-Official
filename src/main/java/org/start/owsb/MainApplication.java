@@ -1,6 +1,7 @@
 package org.start.owsb;
 
 import controllers.FinanceController.FinanceMainController;
+import controllers.FinanceController.PaymentSuccessController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,6 +28,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         Layout layout = Layout.getInstance();
         Navigator navigator = Navigator.getInstance();
+
         SessionManager session = SessionManager.getInstance();
         navigator.setLayout(layout);
 
@@ -58,5 +60,8 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch();
+//        SessionManager ins = SessionManager.getInstance();
+//        SessionManager.setCurrentPaymentPO(new PurchaseOrder("PO12", "PR12", "US12", "Office Equipments", 1231.25, "Verified"));
+//        PaymentSuccessController.pressPrintReceipt();
     }
 }

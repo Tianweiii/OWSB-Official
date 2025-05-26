@@ -107,4 +107,16 @@ public class User implements ModelInitializable {
 
 	}
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"userID='" + userID + '\'' +
+				", username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", position='" + position + '\'' +
+				", age=" + age +
+				", roleID='" + roleID + '\'' +
+				'}';
+	}
 }

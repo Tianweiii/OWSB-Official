@@ -13,7 +13,7 @@ public class SessionManager {
 	// create session instance on login, all values binded to that instance
 	// clear instance on logout
 	// all temp static, for static, will change to non after binding
-	private static FinanceManager financeManagerData;
+	private  FinanceManager financeManagerData;
 	private static PurchaseOrder paymentPurchaseOrder;
 	private static PurchaseRequisition purchaseRequisition;
 
@@ -32,14 +32,15 @@ public class SessionManager {
 		this.userData = userData;
 	}
 
-	public static void setFinanceManagerData(FinanceManager fm) {
+	public void setFinanceManagerData(FinanceManager fm) {
 		financeManagerData = fm;
 	}
 
-	public static FinanceManager getFinanceManagerData() { return financeManagerData; }
+	public FinanceManager getFinanceManagerData() { return financeManagerData; }
 
 	public static void setCurrentPaymentPO(PurchaseOrder PO) {
 		paymentPurchaseOrder = PO;
+		System.out.println(PO.toString());
 	}
 
 	public static PurchaseOrder getCurrentPaymentPO() { return paymentPurchaseOrder; }

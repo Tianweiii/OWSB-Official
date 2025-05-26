@@ -151,10 +151,11 @@ public class PurchaseOrder implements ModelInitializable {
 			String supplierID = i.getSupplierID();
 			String itemName = FileIO.getXFromID("Item", 0, 1, i.getItemID());
 			String itemID = i.getItemID();
+			double unitPrice = i.getUnitPrice();
 			int quantity = Integer.parseInt(itemAndQuantity.get(itemID));
-			double amount = quantity * i.getUnitPrice();
+			double amount = quantity * unitPrice;
 
-			PaymentDTO payment = new PaymentDTO(poID, itemName, amount, itemID, quantity);
+			PaymentDTO payment = new PaymentDTO(PO_ID, itemName, amount, itemID, quantity, unitPrice);
 
 			// Group by supplier ID
 			payments.computeIfAbsent(supplierID, k -> new ArrayList<>()).add(payment);
@@ -163,5 +164,14 @@ public class PurchaseOrder implements ModelInitializable {
 		return payments;
 	}
 
-//	public HashMap<String, String> get
+	public PurchaseOrder(String PO_ID, String PR_ID, String userID, String title, double payableAmount, String status) {
+		this.PO_ID = PO_ID;
+		this.PR_ID = PR_ID;
+		this.userID = userID;
+		this.title = title;
+		this.payableAmount = payableAmount;
+		this.status = status;
+	}
+
+	//	public HashMap<String, String> get
 }

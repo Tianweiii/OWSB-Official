@@ -12,7 +12,7 @@
             <Font name="Baloo Da 2 Medium" size="20.0" />
          </font>
       </Text>
-      <VBox fx:id="itemContainer" prefWidth="100.0">
+      <VBox fx:id="itemContainer" prefWidth="100.0" spacing="20.0">
 <!--         <children>-->
 <!--            <HBox alignment="CENTER" fillHeight="false" prefWidth="370.0" spacing="20.0" VBox.vgrow="NEVER">-->
 <!--               <children>-->

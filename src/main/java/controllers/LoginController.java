@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import models.Datas.Role;
+import models.Users.FinanceManager;
 import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.Navigator;
@@ -93,10 +94,11 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
 						break;
 					case "5":
+						HashMap<String, String> FUD = data.get(0);
+						session.setFinanceManagerData(new FinanceManager(FUD.get("userID"), FUD.get("username"), FUD.get("email"), FUD.get("password"), FUD.get("position"), Integer.parseInt(FUD.get("age")), FUD.get("roleID")));
 						layout.initSidebar("finance", new String[]{"Home", "Procurement Management", "Financial Report", "Payments"});
 						//Navigate to dashboard
 						navigator.navigate(navigator.getRouters("finance").getRoute("financeHome"));
-//						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
 						break;
 				}
 

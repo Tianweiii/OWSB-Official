@@ -43,13 +43,6 @@ public class Payment implements ModelInitializable {
 		this.amount = amount;
 		this.PO_ID = PO_ID;
 		this.userID = userID;
-
-//		// TODO: get latest row count
-//		int count = 30;
-//
-//		this.paymentID = MessageFormat.format("PY{0}", count); // TODO: change to fetch row count
-//		this.createdAt = LocalDateTime.now().toString();
-//		this.paymentReference = generatePaymentReference(count);
 	}
 
 	public Payment() {}

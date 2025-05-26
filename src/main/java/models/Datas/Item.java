@@ -38,6 +38,16 @@ public class Item implements ModelInitializable, EditPRPOController.ItemRow {
 		this.unitPrice = Double.parseDouble(data.get("unitPrice"));
 		this.supplierID = data.get("supplierID");
 
+	public Item(String[] data) {
+		itemID = data[0];
+		itemName = data[1];
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		createdAt = LocalDateTime.parse(data[2], formatter);
+		updatedAt = LocalDateTime.parse(data[3], formatter);
+		alertSetting = data[4];
+		quantity = Integer.parseInt(data[5]);
+		unitPrice = Double.parseDouble(data[6]);
+		supplierID = data[7];
 	}
 
 	public Item(String itemID, String itemName,String description, LocalDateTime createdAt, LocalDateTime updatedAt, int alertSetting, int quantity) {

@@ -28,7 +28,7 @@
                      <children>
                         <VBox prefHeight="44.0" prefWidth="304.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Text fill="#727272" strokeType="OUTSIDE" strokeWidth="0.0" text="Year finance review">
+                              <Text fill="#727272" strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly finance review">
                                  <font>
                                     <Font name="Baloo 2 Medium" size="18.0" />
                                  </font>

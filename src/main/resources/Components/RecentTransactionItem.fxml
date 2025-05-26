@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.RecentTransactionItemController">
+   <children>
+      <VBox fx:id="leftContainer" minHeight="50.0" minWidth="50.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 20; -fx-border-radius: 20;" />
+      <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="369.0">
+         <children>
+            <Text fx:id="nameField" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Name" wrappingWidth="63.920997619628906">
+               <font>
+                  <Font name="Baloo 2 ExtraBold" size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="idField" fill="#aeaeae" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Name">
+               <font>
+                  <Font name="Baloo 2 Medium" size="12.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <Region prefHeight="50.0" prefWidth="88.0" HBox.hgrow="ALWAYS" />
+      <VBox alignment="CENTER" prefHeight="50.0">
+         <children>
+            <Text fx:id="amountField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM 999.99">
+               <font>
+                  <Font name="Baloo Bhai 2 SemiBold" size="13.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" top="20.0" />
+   </padding>
+</HBox>
