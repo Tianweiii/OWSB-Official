@@ -6,7 +6,6 @@ module org.start.owsb {
 	requires java.desktop;
     requires java.sql;
     requires java.management;
-    requires jdk.unsupported.desktop;
     requires com.fasterxml.jackson.annotation;
     requires java.prefs;
 
