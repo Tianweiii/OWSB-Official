@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="editUserPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminController.EditUserController">
+   <children>
+      <HBox alignment="CENTER" layoutX="69.0" prefHeight="400.0" prefWidth="462.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+         <children>
+            <VBox alignment="CENTER" prefHeight="393.0" prefWidth="278.0">
+               <children>
+                  <Region prefHeight="25.0" prefWidth="278.0" />
+                  <HBox prefHeight="35.0" prefWidth="278.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="92.0" prefWidth="278.0" text="Edit User" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="278.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="280.0" text="Username" />
+                              <TextField fx:id="editUsernameField" />
+                              <Label layoutX="10.0" layoutY="97.0" prefHeight="18.0" prefWidth="280.0" text="Password" />
+                              <TextField fx:id="editEmailField1" layoutX="10.0" layoutY="126.0" />
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="18.0" prefWidth="280.0" text="Email" />
+                              <TextField fx:id="editEmailField" layoutX="10.0" layoutY="28.0" />
+                              <Label layoutX="10.0" layoutY="54.0" prefHeight="18.0" prefWidth="280.0" text="Position" />
+                              <HBox prefHeight="23.0" prefWidth="278.0">
+                                 <children>
+                                    <ChoiceBox fx:id="editPositionChoiceBox" prefHeight="26.0" prefWidth="344.0" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <Label layoutX="10.0" layoutY="98.0" prefHeight="18.0" prefWidth="280.0" text="Age" />
+                              <TextField fx:id="editAgeField" layoutX="10.0" layoutY="116.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="278.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="confirmEditButton" mnemonicParsing="false" onAction="#onConfirmEditButtonClick" prefHeight="26.0" prefWidth="100.0" text="Edit" />
+                        <Button fx:id="cancelEditButton" mnemonicParsing="false" onAction="#onCancelEditButtonClick" prefWidth="100.0" text="Cancel" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</Pane>

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025 Too Tze Jiat
+ * All Rights Reserved.
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited.
+ */
+
 package models.Utils;
 
 import models.ModelInitializable;
@@ -28,7 +35,8 @@ import java.util.stream.Collectors;
  * </code>
  * </pre>
  *
- * @param <T> The type of the class to be used.
+ * @param <T> The type of the class to be used. T must implement the ModelInitializable interface.
+ * @see ModelInitializable
  * */
 public class QueryBuilder<T extends ModelInitializable>{
 	private final String FILE_ROOT = "src/main/java/";
@@ -230,9 +238,8 @@ public class QueryBuilder<T extends ModelInitializable>{
 			//Joins
 			if (!this.joins.isEmpty() && !allData.isEmpty()) {
 				for (Class<? extends ModelInitializable> join: this.joins) {
-					String joinName = join.getSimpleName().toLowerCase();
+					String joinName = Helper.toAttrString(join.getSimpleName());
 					String joinTextFileName = joinName + ".txt";
-
 					if (allData.get(0).get(joinName+"_id") == null && allData.get(0).get(joinName+"ID") == null) {
 						throw new RuntimeException("No " + joinName + " ID found");
 					}
@@ -380,7 +387,13 @@ public class QueryBuilder<T extends ModelInitializable>{
 	 * @param orStack The stack of the OR statements
 	 * @return The data holder stack
 	 */
-	private ArrayDeque<ArrayList<HashMap<String, String>>> recursiveLogicalOperatorCheck(ArrayDeque<Integer> queue, ArrayList<HashMap<String, String>> dataHolder, ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack, ArrayList<HashMap<String, String>> dataCopy, ArrayDeque<String[]> andStack, ArrayDeque<String[]> orStack) {
+	private ArrayDeque<ArrayList<HashMap<String, String>>> recursiveLogicalOperatorCheck(
+			ArrayDeque<Integer> queue,
+			ArrayList<HashMap<String, String>> dataHolder,
+			ArrayDeque<ArrayList<HashMap<String, String>>> dataHolderStack,
+			ArrayList<HashMap<String, String>> dataCopy,
+			ArrayDeque<String[]> andStack,
+			ArrayDeque<String[]> orStack) {
 		Iterator<Integer> iterator = queue.iterator();
 		ArrayDeque<String[]> andStackClone = andStack.clone();
 		if (queue.isEmpty()) {
@@ -551,7 +564,7 @@ public class QueryBuilder<T extends ModelInitializable>{
 			// Get latest ID
 			List<String> allLines = Files.readAllLines(filePath);
 			int latestId;
-			String latestIdString = allLines.isEmpty() ? "" : allLines.get(allLines.size()-1).split(",")[0];
+			String latestIdString = allLines.isEmpty() ? "1" : allLines.get(allLines.size()-1).split(",")[0];
 			if (latestIdString.matches("[0-9]+")) {
 				latestId = allLines.isEmpty() ? 1 : Integer.parseInt(allLines.get(allLines.size()-1).split(",")[0]) + 1;
 			} else {
@@ -593,7 +606,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 				} else {
 					latestId = Integer.parseInt(Helper.extractNumber(latestIdString)) + 1;
 				}
-				System.out.println(latestId);
 				idToUse = customId + latestId;
 			} else {
 				idToUse = customId;
@@ -849,6 +861,15 @@ public class QueryBuilder<T extends ModelInitializable>{
 		}
 	}
 
+	/**
+	 * Deletes any items that match the equation given.
+	 *
+	 * @param fieldOne <b>String</b> <br> The left side of the comparison.
+	 * @param operator <b>String</b> <br> The comparison operator. Currently supported operators are:
+	 *                 "=", "!=", "like"
+	 * @param fieldTwo <b>String</b> <br> The right side of the comparison.
+	 * @return <b>boolean</b>
+	 * */
 	public boolean deleteAnyMatching(String fieldOne, String operator, String fieldTwo) {
 		String targetFile = (this.targetFile != null ? this.targetFile : this.getClassName().toLowerCase()) + ".txt";
 

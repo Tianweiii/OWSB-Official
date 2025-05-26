@@ -75,11 +75,11 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
     }
 
     private void initTable() {
-        PO_IDField.setCellValueFactory(new PropertyValueFactory<>("PO_ID"));
+        PO_IDField.setCellValueFactory(new PropertyValueFactory<>("poID"));
         titleField.setCellValueFactory(new PropertyValueFactory<>("title"));
         amountField.setCellValueFactory(new PropertyValueFactory<>("payableAmount"));
         openedByField.setCellValueFactory(new PropertyValueFactory<>("userID"));
-        statusField.setCellValueFactory(new PropertyValueFactory<>("status"));
+        statusField.setCellValueFactory(new PropertyValueFactory<>("POStatus"));
 
         actionField.setCellFactory(column -> {
             return new TableCell<PurchaseOrder, Void>() {

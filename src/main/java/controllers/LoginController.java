@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import models.Datas.Role;
 import models.Users.User;
 import models.Utils.Helper;
@@ -13,13 +15,16 @@ import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
 import views.NotificationView;
+import views.adminViews.AdminDashboardView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
+	@FXML private AnchorPane rootPane;
 	@FXML private Button loginButton;
 	@FXML private TextField usernameField = new TextField();
 	@FXML private TextField passwordField = new TextField();
@@ -68,13 +73,12 @@ public class LoginController implements Initializable {
 
 				switch (data.get(0).get("roleID")) {
 					case "1":
-						layout.initSidebar("admin", new String[]{"Register"});
+						layout.initSidebar("admin", new String[]{"Dashboard", "Register", "User Management","Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition", "Stock Management", "Sales Purchase Request List", "Financial Report", "Payments"});
 						// Navigate to dashboard
-						FXMLLoader test = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
-						navigator.navigate(test.load());
+						navigator.navigate(navigator.getRouters("admin").getRoute("dashboard"));
 						break;
 					case "2":
-						layout.initSidebar("sales", new String[]{"Home", "Manage Item List"});
+						layout.initSidebar("sales", new String[]{"Home", "Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition"});
 						//Navigate to dashboard
 						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
 						break;
@@ -84,9 +88,9 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("purchase").getRoute("PRPO"));
 						break;
 					case "4":
-						layout.initSidebar("inventory", new String[]{"Register"});
+						layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Procurement Management", "Sales Purchase Request List"});
 						//Navigate to dashboard
-//						navigator.navigate(navigator.getRouters("sales").getRoute("somewhere"));
+						navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));
 						break;
 					case "5":
 						layout.initSidebar("finance", new String[]{"Home", "Procurement Management", "Financial Report", "Payments"});
@@ -103,12 +107,22 @@ public class LoginController implements Initializable {
 				notificationView.show();
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			NotificationView notificationView = null;
+			try {
+				notificationView = new NotificationView(e.getMessage(), NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+			}
+			notificationView.show();
 		}
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-
+		this.rootPane.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				this.loginButton.fire();
+			}
+		});
 	}
 }

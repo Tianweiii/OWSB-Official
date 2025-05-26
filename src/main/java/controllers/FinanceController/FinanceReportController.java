@@ -167,8 +167,8 @@ public class FinanceReportController implements Initializable {
 
     public void initLineChart() {
         try {
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM yyyy");
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_DATE;
+            DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy MMM");
 
             // Revenue: Month -> Total Sales
             Map<String, Double> revenueMap = new HashMap<>();
@@ -226,7 +226,7 @@ public class FinanceReportController implements Initializable {
             }
 
             // Collect all months from both maps
-            TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse("01-" + m, DateTimeFormatter.ofPattern("dd-MMM yyyy"))));
+            TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse(m + "-01", DateTimeFormatter.ofPattern("yyyy MMM-dd"))));
             allMonths.addAll(revenueMap.keySet());
             allMonths.addAll(costMap.keySet());
 
