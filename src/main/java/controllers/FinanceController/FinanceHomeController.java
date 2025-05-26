@@ -426,7 +426,7 @@ public class FinanceHomeController implements Initializable {
     }
 
     public void getMonthlyGPM() throws IOException {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM yyyy");
         double priceMultiplier = 1.15;
         // Gross profit margin = (Revenue - Cost of Goods Sold) / Revenue × 100

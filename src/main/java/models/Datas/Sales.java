@@ -59,8 +59,8 @@ public class Sales implements ModelInitializable {
 
 	public Sales(String salesID, String createdAt, String updatedAt, String userID) {
 		this.salesID = salesID;
-		this.createdAt = LocalDate.parse(createdAt, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		this.updatedAt = LocalDate.parse(updatedAt, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		this.createdAt = LocalDate.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		this.updatedAt = LocalDate.parse(updatedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		this.userID = userID;
 	}
 

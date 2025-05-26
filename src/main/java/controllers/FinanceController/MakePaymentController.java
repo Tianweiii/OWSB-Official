@@ -213,7 +213,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
             return false;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             LocalDate date = LocalDate.parse(expirationDate, formatter);
             if (date.isBefore(LocalDate.now())) {

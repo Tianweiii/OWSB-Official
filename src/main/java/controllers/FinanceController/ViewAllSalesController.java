@@ -126,6 +126,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
                 System.out.println("parts:" + Arrays.toString(parts));
                 salesMap.put(parts[0], new Sales(parts[0], parts[1], parts[2], parts[3]));
             }
+            System.out.println("asodinmawd" + salesMap);
         }
 
         // getting prices
@@ -134,10 +135,11 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String itemId = parts[0].trim();
-                Item item = new Item(itemId, parts[1].trim(), Double.parseDouble(parts[6].trim()));
+                Item item = new Item(itemId, parts[1].trim(), Double.parseDouble(parts[7].trim()));
                 priceMap.put(itemId, item);
             }
         }
+        System.out.println("there");
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Transaction.txt"))) {
             String line;
@@ -150,6 +152,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
                 list.add(new SalesTransactionDTO(parts[0], priceMap.get(itemId).getItemName(), amount, salesMap.get(parts[4]).getCreatedAt().toString(), salesMap.get(parts[4]).getUserID()));
             }
         }
+        System.out.println("idk");
 
         return FXCollections.observableArrayList(list);
     }
@@ -172,10 +175,10 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
     private void initBarChart(ObservableList<SalesTransactionDTO> allSales) {
         Map<String, Double> monthlySales = new HashMap<>();
         for (SalesTransactionDTO sale : allSales) {
-            String dateStr = sale.getCreatedDate(); // format 25-04-2025
-            System.out.println("12312312" + dateStr);
+            String dateStr = sale.getCreatedDate(); // format 2025-04-25
+            System.out.println(dateStr);
             String[] parts = dateStr.split("-");
-            String monthYear = parts[1] + "-" + parts[2];
+            String monthYear = parts[1] + "-" + parts[0];
             monthlySales.put(monthYear, monthlySales.getOrDefault(monthYear, 0.0) + sale.getSalesAmount());
         }
 

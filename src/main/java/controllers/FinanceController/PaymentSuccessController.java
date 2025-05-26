@@ -76,7 +76,7 @@ public class PaymentSuccessController implements Initializable {
         JasperExportManager.exportReportToPdfFile(print, pdfPath);
 
         // tootzejiat@gmail.com
-        fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPO_ID()), "receipt.pdf");
+        fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "receipt.pdf");
 //        File pdfFile = new File(pdfPath);
 //        if (pdfFile.exists()) {
 //            if (Desktop.isDesktopSupported()) {
