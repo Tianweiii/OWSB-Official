@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="addNewDailyItemSalesPane" prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.AddNewDailyItemSalesController">
+   <children>
+      <VBox alignment="CENTER" layoutX="94.0" prefHeight="400.0" prefWidth="562.0">
+         <children>
+            <HBox prefHeight="8.0" prefWidth="562.0">
+               <children>
+                  <Label fx:id="salesEntryLabel" alignment="CENTER" prefHeight="30.0" prefWidth="711.0" text="Label" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="65.0" prefWidth="562.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Select An Item" />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ChoiceBox fx:id="itemChoiceBox" maxWidth="1.7976931348623157E308" prefHeight="37.0" prefWidth="562.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <Region prefHeight="16.0" prefWidth="562.0" />
+            <HBox prefHeight="56.0" prefWidth="562.0">
+               <children>
+                  <VBox prefHeight="61.0" prefWidth="562.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Quantity" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <Button onAction="#onDecrementButtonClick" fx:id="decrementButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+                              <TextField fx:id="quantityField" prefHeight="26.0" prefWidth="29.0" />
+                              <Button onAction="#onIncrementButtonClick" fx:id="incrementButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Region layoutX="10.0" layoutY="204.0" prefHeight="16.0" prefWidth="562.0" />
+            <HBox prefHeight="37.0" prefWidth="562.0" spacing="15.0">
+               <children>
+                  <Button onAction="#onSubmitButtonClick" fx:id="submitButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" />
+                  <Button onAction="#onCancelButtonClick" fx:id="cancelButton" mnemonicParsing="false" prefWidth="88.0" text="Cancel" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>

@@ -14,16 +14,14 @@ import models.Users.FinanceManager;
 import models.Users.User;
 import models.Utils.FileIO;
 import models.Utils.Navigator;
-import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
-import net.sf.jasperreports.engine.JRException;
-import views.UserRegistrationView;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
+import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
@@ -37,20 +35,30 @@ public class MainApplication extends Application {
         navigator.setPrevFile(navigator.getRouters("all").getRoute("login"));
         ArrayList<Parent> stackList = navigator.getStackList();
         stackList.add(navigator.getRouters("all").getRoute("login"));
+
+
         navigator.navigate(navigator.getRouters("all").getRoute("login"));
 
         Scene scene = new Scene(layout.getRoot());
+        stage.setTitle("OWSB Purchase Order Management System");
         scene.getStylesheets().getClass().getResource("/css/general.css");
+        stage.setTitle("OWSB Purchase Order Management System");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
+
+        //Responsiveness: toggle the "narrow" class on your root-pane when scene width < 600
+        scene.widthProperty().addListener((obs, oldW, newW) -> {
+            if (newW.doubleValue() < 600) {
+                layout.getRoot().getStyleClass().add("narrow");
+            } else {
+                layout.getRoot().getStyleClass().remove("narrow");
+            }
+        });
+
     }
 
-    public static void main(String[] args) throws IOException, ReflectiveOperationException, JRException {
-//        QueryBuilder<PurchaseRequisition> qb = new QueryBuilder<>(PurchaseRequisition.class);
-//        ArrayList<PurchaseRequisition> PRs = qb.select().from("db/PurchaseRequisition").getAsObjects();
-//        System.out.println(PRs.get(0).getUserID());
-
+    public static void main(String[] args) {
         launch();
 //        SessionManager ins = SessionManager.getInstance();
 //        SessionManager.setCurrentPaymentPO(new PurchaseOrder("PO12", "PR12", "US12", "Office Equipments", 1231.25, "Verified"));

@@ -1,6 +1,6 @@
 package views;
 
-import controllers.UserRegistrationController;
+import controllers.adminController.UserRegistrationController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="updateItemPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InventoryController.UpdateInventoryController">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="500.0" style="-fx-background-color: white;">
+         <center>
+            <HBox alignment="CENTER" prefHeight="172.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="201.0" prefWidth="379.0">
+                     <children>
+                        <Label prefHeight="24.0" prefWidth="65.0" text="Alert Level" textFill="#707070">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txtAlertLevel" prefHeight="40.0" prefWidth="330.0" promptText="Alert Level">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="120.0" text="Stock Count" textFill="#707070">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="btnDecrease" accessibleRole="DECREMENT_BUTTON" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: white; -fx-border-color: #BBBBBB; -fx-border-radius: 10;" text="-">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                              </Button>
+                              <TextField fx:id="txtNum" alignment="CENTER" prefHeight="47.0" prefWidth="97.0" promptText="Num" style="-fx-background-color: white;">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </TextField>
+                              <Button fx:id="btnIncrease" accessibleRole="INCREMENT_BUTTON" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: white; -fx-border-color: #BBBBBB; -fx-border-radius: 10;" text="+">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </center>
+         <bottom>
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+              <buttons>
+                <Button fx:id="btnUpdateInventory" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" style="-fx-background-color: #E9E9E9; -fx-border-radius: 10;" text="Apply" textAlignment="CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+              </buttons>
+               <padding>
+                  <Insets bottom="20.0" right="20.0" />
+               </padding>
+            </ButtonBar>
+         </bottom>
+         <top>
+            <VBox prefHeight="76.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="TOP_RIGHT" prefHeight="15.0" prefWidth="500.0">
+                     <children>
+                        <Button fx:id="btnClose" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="58.0" style="-fx-background-color: white;" text="X">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="500.0">
+                     <children>
+                        <Label fx:id="txtItemName" alignment="CENTER" prefHeight="30.0" prefWidth="462.0" text="Item Name" textAlignment="CENTER" textFill="#505050">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </top>
+      </BorderPane>
+   </children>
+</StackPane>

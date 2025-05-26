@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="725.0" prefWidth="1168.0" style="-fx-background-color: #F4F4F4;" stylesheets="@../css/Inventory.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EditPRPOController">
+   <children>
+      <AnchorPane layoutY="6.0" prefHeight="190.0" prefWidth="200.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox layoutX="266.0" layoutY="45.0" spacing="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <Text fx:id="title_text" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Request Item List">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Text>
+                  <AnchorPane fx:id="statusbox_container" />
+               </children>
+            </HBox>
+            <HBox fx:id="label_text_container" layoutX="91.0" layoutY="70.0" spacing="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="90.0">
+               <children>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ImageView fx:id="label_1_image" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                        <Text fx:id="label_1_text" fill="#374151" strokeType="OUTSIDE" strokeWidth="0.0" text="PR ID: PO5A1R034">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ImageView fx:id="label_2_image" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                        <Text fx:id="label_2_text" fill="#374151" strokeType="OUTSIDE" strokeWidth="0.0" text="Linked PR:  PR2478A45">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox fx:id="save_change_button_container" layoutX="593.0" layoutY="30.0" spacing="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <Button fx:id="discard_button" minHeight="40.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: #E9E9E9;" styleClass="saveChangeButton" text="Discard" textFill="#707070">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="save_change_button" minHeight="40.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: #E9E9E9;" styleClass="saveChangeButton" text="Save Changes" textFill="#707070">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox fx:id="po_title_container" alignment="CENTER" spacing="10.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0">
+               <children>
+                  <Text fx:id="po_title_text" fill="#505050" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Order Title: ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="po_title_text_field" editable="false" prefHeight="30.0" prefWidth="500.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="184.0" layoutY="232.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="190.0">
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <VBox prefHeight="298.0" prefWidth="686.0" spacing="20.0">
+                     <children>
+                        <AnchorPane>
+                           <children>
+                              <Button fx:id="edit_button" mnemonicParsing="false" onMouseClicked="#openPopupModal" style="-fx-background-color: transparent;" styleClass="editButton" text="Add Item +" textFill="#707070" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                        <TableView fx:id="item_list_table">
+                          <columns>
+                            <TableColumn fx:id="itemIDCol" prefWidth="148.80000150203705" text="Item ID" />
+                            <TableColumn fx:id="itemNameCol" maxWidth="661.6000213623047" minWidth="661.6000213623047" prefWidth="661.6000213623047" text="Item Name" />
+                              <TableColumn fx:id="quantityCol" prefWidth="132.800048828125" text="Quantity" />
+                              <TableColumn maxWidth="60.0" minWidth="60.0" prefWidth="60.0" fx:id="xButtonCol" />
+                          </columns>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets bottom="90.0" left="90.0" right="90.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <HBox spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="40.0">
+               <children>
+                  <Button fx:id="action_button_1" minHeight="48.0" minWidth="180.0" mnemonicParsing="false" style="-fx-background-color: #1E3A8A;" styleClass="actionButton" text="Mark as Return" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="action_button_2" minHeight="48.0" minWidth="180.0" mnemonicParsing="false" style="-fx-background-color: #1E3A8A;" styleClass="actionButton" text="Approve PO" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox fx:id="datepicker_container" spacing="20.0" visible="false" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="25.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PR Required Date: ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <DatePicker fx:id="datepicker" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="dimmedBg" onMouseClicked="#closeAllPopup" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #00000066;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane id="popup_modal" fx:id="popup_modal" layoutX="184.0" layoutY="213.0" prefHeight="300.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10;" visible="false">
+               <children>
+                  <Button layoutX="744.0" mnemonicParsing="false" onMouseClicked="#closePopupModal" style="-fx-background-color: transparent;" styleClass="xButton" text="✕" textFill="#bfbfbf" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Text fill="#092165" layoutX="324.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Item">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <VBox layoutX="40.0" layoutY="50.0" prefHeight="200.0" prefWidth="234.0" spacing="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
+                     <children>
+                        <VBox spacing="10.0">
+                           <children>
+                              <Text fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an item">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Text>
+                              <ComboBox fx:id="item_dropdown" minHeight="40.0" prefHeight="40.0" prefWidth="768.0" promptText="Select an item" style="-fx-background-color: #ffffff; -fx-border-color: #BBBBBB; -fx-border-radius: 5;">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ComboBox>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="61.0" prefWidth="406.0" spacing="10.0">
+                           <children>
+                              <Text fill="#707070" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Text>
+                              <HBox>
+                                 <children>
+                                    <Button minHeight="43.0" mnemonicParsing="false" onMouseClicked="#decreaseQuantity" prefHeight="0.0" prefWidth="60.0" style="-fx-background-color: #ffffff; -fx-border-color: #BBBBBB; -fx-border-radius: 10;" styleClass="quantityButton" text="-" textFill="#505050">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <TextField fx:id="qty_text_field" prefHeight="43.0" prefWidth="80.0" style="-fx-background-color: transparent;" />
+                                    <Button minHeight="43.0" mnemonicParsing="false" onMouseClicked="#increaseQuantity" prefHeight="0.0" prefWidth="60.0" style="-fx-background-color: #ffffff; -fx-border-color: #BBBBBB; -fx-border-radius: 10;" styleClass="quantityButton" text="+" textFill="#505050">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <HBox spacing="20.0">
+                           <children>
+                              <Button mnemonicParsing="false" onMouseClicked="#addItem" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5;" styleClass="actionButton" text="Add Item">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                              <Button mnemonicParsing="false" onMouseClicked="#closePopupModal" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5;" styleClass="actionButton" text="Cancel">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="popup_notif" layoutX="384.0" layoutY="263.0" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10;" visible="false">
+               <children>
+                  <Button layoutX="344.0" mnemonicParsing="false" onMouseClicked="#closePopupNotif" style="-fx-background-color: transparent;" styleClass="xButton" text="✕" textFill="#bfbfbf" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Text fx:id="delete_confirmation_message" fill="#707070" layoutX="9.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to delete this PR/PO?" textAlignment="CENTER" wrappingWidth="381.59999999999985">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="prpo_id_text_field" fill="#707070" layoutX="47.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PR1902431" textAlignment="CENTER" wrappingWidth="312.328125">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <HBox layoutX="43.0" layoutY="126.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0">
+                     <children>
+                        <Button fx:id="popupNotifActionButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #F87474; -fx-background-radius: 5;" styleClass="actionButton" text="Delete" textFill="#663030">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button mnemonicParsing="false" onMouseClicked="#closePopupNotif" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5;" styleClass="actionButton" text="Cancel">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

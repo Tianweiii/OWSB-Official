@@ -130,3 +130,8 @@ boolean res = qb.target("db/fileName").deleteMany(new String[]{"id1", "id2", "id
 
 boolean res = qb.target("db/fileName").deleteAnyMatching("name", "=", "John");
 ```
+
+## License
+© 2025 Too Tze Jiat. All rights reserved.
+
+This repository contains proprietary code. No license is granted to use, copy, modify, or distribute this software without explicit written permission.

@@ -29,8 +29,8 @@ public class PRItemController implements Initializable {
     }
 
     public void setData(PRItemDTO item) {
-        titleField.setText(item.getItemTitle());
-        supplierField.setText(item.getSupplierID());
+        titleField.setText(item.getItemName());
+        supplierField.setText("S2");
         quantityField.setText(String.valueOf(item.getQuantity()));
         unitPriceField.setText(String.valueOf(item.getUnitPrice()));
         amountField.setText(String.valueOf(item.getTotal()));

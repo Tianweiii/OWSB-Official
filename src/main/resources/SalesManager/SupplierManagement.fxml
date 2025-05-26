@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="rootPane" styleClass="root-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.salesController.SupplierController">
+    <stylesheets>
+        <URL value="@../css/sales-manager.css" />
+    </stylesheets>
+    <BorderPane>
+        <top>
+            <VBox spacing="15" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="header-box">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../images/supplier.png" />
+                    </ImageView>
+                    <VBox spacing="4">
+                        <Label styleClass="welcome-text" text="Supplier Management">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label styleClass="subtitle-text" text="Manage your product suppliers" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#showAddForm" styleClass="action-button">
+                        <graphic>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Text styleClass="button-icon" text="➕" />
+                                <Label text="Add Supplier" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <HBox spacing="20.0" styleClass="filter-container">
+                    <HBox styleClass="search-box-container" HBox.hgrow="ALWAYS">
+                        <Text styleClass="search-icon" />
+                        <TextField fx:id="txtSearch" promptText="Search suppliers..." styleClass="search-box" HBox.hgrow="ALWAYS" />
+                    </HBox>
+
+                    <Button onAction="#onSearch" styleClass="btn-secondary">
+                        <graphic>
+                            <HBox alignment="CENTER" spacing="5">
+                                <ImageView fitHeight="16" fitWidth="16">
+                                    <Image url="@../images/search.png" />
+                                </ImageView>
+                                <Label text="Search" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#onClear" fx:id="clearSearchButton" mnemonicParsing="false" styleClass="btn-primary" text="Clear" />
+                    <ComboBox fx:id="cmbSort" prefWidth="200" promptText="Sort by..." styleClass="filter-combo">
+                  <padding>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </padding></ComboBox>
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+                </HBox>
+            </VBox>
+        </top>
+
+        <center>
+            <VBox spacing="10">
+                <TableView fx:id="table" prefWidth="684.0" styleClass="sales-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                        <TableColumn fx:id="colName" prefWidth="180" text="Name" />
+                        <TableColumn fx:id="colPhone" prefWidth="140" text="Phone" />
+                        <TableColumn fx:id="colCompany" prefWidth="180" text="Company" />
+                        <TableColumn fx:id="colActions" prefWidth="80" text="Actions" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <placeholder>
+                        <Label styleClass="table-placeholder" text="No suppliers found" />
+                    </placeholder>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="table-footer">
+                    <Label fx:id="totalSupplierLabel" styleClass="total-records" text="Total Suppliers: 0" HBox.hgrow="ALWAYS" />
+                </HBox>
+            </VBox>
+        </center>
+
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+    </BorderPane>
+
+    <!-- Add Supplier Form -->
+    <AnchorPane fx:id="addFormPane" prefHeight="400" prefWidth="360" styleClass="white-form" visible="false" StackPane.alignment="CENTER">
+        <VBox spacing="15" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+            <HBox alignment="CENTER" spacing="10">
+                <Label styleClass="toolbar-title" text="Add New Supplier">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Label>
+            </HBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Supplier Name" />
+                <TextField fx:id="addNameField" promptText="Enter supplier name" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Phone Number" />
+                <TextField fx:id="addPhoneField" promptText="Enter phone number" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Company" />
+                <TextField fx:id="addCompanyField" promptText="Enter company name" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Address" />
+                <TextField fx:id="addAddressField" promptText="Enter company address" styleClass="dialog-input" />
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <HBox alignment="CENTER" spacing="15">
+                <Button fx:id="addSubmitBtn" onAction="#onSaveAddSupplierButtonClick" prefWidth="120" styleClass="btn-primary" text="Save" />
+                <Button fx:id="addCancelBtn" onAction="#hideAddForm" prefWidth="120" styleClass="btn-secondary" text="Cancel" />
+            </HBox>
+        </VBox>
+    </AnchorPane>
+
+    <!-- Edit Supplier Form -->
+    <AnchorPane fx:id="editFormPane" prefHeight="400" prefWidth="360" styleClass="white-form" visible="false" StackPane.alignment="CENTER">
+        <VBox spacing="15" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+            <HBox alignment="CENTER" spacing="10">
+                <Label styleClass="toolbar-title" text="Edit Supplier">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Label>
+            </HBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Supplier Name" />
+                <TextField fx:id="editNameField" promptText="Enter supplier name" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Phone Number" />
+                <TextField fx:id="editPhoneField" promptText="Enter phone number" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Company" />
+                <TextField fx:id="editCompanyField" promptText="Enter company name" styleClass="dialog-input" />
+            </VBox>
+
+            <VBox spacing="5">
+                <Label styleClass="toolbar-label" text="Address" />
+                <TextField fx:id="editAddressField" promptText="Enter company address" styleClass="dialog-input" />
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <HBox alignment="CENTER" spacing="15">
+                <Button onAction="#onSaveEditButtonClick" fx:id="editSaveBtn" prefWidth="140" styleClass="btn-primary" text="Save Changes" />
+                <Button fx:id="editCancelBtn" onAction="#hideEditForm" prefWidth="120" styleClass="btn-secondary" text="Cancel" />
+            </HBox>
+        </VBox>
+    </AnchorPane>
+</StackPane>

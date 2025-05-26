@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import java.net.URL?>
+<AnchorPane fx:id="missingDailySalesPane"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.salesController.MissingDailySalesController"
+            styleClass="white-form"
+            prefWidth="600" prefHeight="240">
+   <stylesheets>
+      <URL value="@../css/sales-manager.css" />
+   </stylesheets>
+   <VBox fx:id="container"
+         alignment="CENTER"
+         spacing="16"
+         AnchorPane.topAnchor="0"
+         AnchorPane.bottomAnchor="0"
+         AnchorPane.leftAnchor="0"
+         AnchorPane.rightAnchor="0">
+      <ImageView fitWidth="64" fitHeight="64">
+         <Image url="@../icons/empty-state.png"/>
+      </ImageView>
+      <Label text="You haven’t recorded any sales today yet."
+             styleClass="toolbar-title"/>
+      <Button fx:id="createNewSalesEntryButton"
+              onAction="#onCreateNewSalesEntryButtonClick"
+              text="+ Add Sales Entry"
+              styleClass="btn-primary"/>
+   </VBox>
+</AnchorPane>

@@ -24,7 +24,7 @@ public class FinanceManager extends User {
 //    private int FinanceId;
 
     final String paymentPath = "db/Payment.txt";
-    final String[] paymentColumns = new String[]{"paymentID", "PO_ID", "userID", "paymentMethod", "amount", "createdAt", "paymentReference"};
+    final String[] paymentColumns = new String[]{"paymentID", "poID", "userID", "paymentMethod", "amount", "createdAt", "paymentReference"};
 
     public FinanceManager(String user_id, String username, String email, String password, String position, int age, String role_id) {
         super(user_id, username, email, password, position, age, role_id);
@@ -73,7 +73,7 @@ public class FinanceManager extends User {
     public boolean approvePO(String PO_ID, String status) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
         String path = "db/PurchaseOrder";
         HashMap<String, String> target = new HashMap<>();
-        target.put("pr_order_status_id", status);
+        target.put("POStatus", status);
         QueryBuilder<PurchaseOrder> qb = new QueryBuilder<>(PurchaseOrder.class);
         return qb.target(path).update(PO_ID, target);
     }

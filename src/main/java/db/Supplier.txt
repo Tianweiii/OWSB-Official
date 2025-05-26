@@ -1,20 +1,21 @@
-SP1,Ahmad Supplies,Bumi Trading Sdn Bhd,0123456789,45 Jalan Tun Razak, Kuala Lumpur
-SP2,Lee Hardware,Lee Enterprise Sdn Bhd,0138765432,12 Jalan Ampang, Kuala Lumpur
-SP3,Ravi Distributors,Ravi & Sons Sdn Bhd,0172233445,89 Jalan Tebrau, Johor Bahru
-SP4,Lim Industrial,Lim Engineering Sdn Bhd,0199988776,23 Jalan Dato Onn, Ipoh
-SP5,Muhammad Supplies,Southeast Ventures,0123456789,45 Jalan Ampang Kuala Lumpur 50450
-SP6,Elite Mart Supplies,Elite Distribution,0198765432,12 Jalan Tun Razak Kuala Lumpur 50400
-SP7,Supplier Hub,Borneo Traders,0134455667,88 Jalan Bukit Bintang Kuala Lumpur 55100
-SP8,Asia Pacific Goods,Dynamic Resources,0143344556,27 Lorong Merdeka Shah Alam 40000
-SP9,Kota Supply Co,Eastside Logistics,0167788990,90 Jalan Gasing Petaling Jaya 46000
-SP10,GlobalMart Sdn Bhd,Global Commerce,0112233445,11 Jalan Raja Chulan Kuala Lumpur 50200
-SP11,Tropics Distributors,Tropics Ventures,0121122334,76 Jalan Klang Lama Kuala Lumpur 58000
-SP12,Sabah Supply House,Kinabalu Industries,0189988776,33 Jalan Pantai Kota Kinabalu 88000
-SP13,Penang Traders,Bayan Logistics,0176655443,100 Jalan Burma George Town 10050
-SP14,Central Suppliers,MidCity Group,0139988776,21 Jalan Kuching Kuala Lumpur 51200
-SP15,Southlink Supply,Southern Connect,0148877665,62 Jalan Skudai Johor Bahru 80200
-SP16,BizLink Supplies,Techno Holdings,0127766554,40 Jalan Sultan Ismail Kuala Lumpur 50250
-SP17,Trusted Source,Trust Capital,0163344556,29 Jalan Ipoh Kuala Lumpur 51200
-SP18,Pacific Distributors,Pacific Group,0194433221,58 Jalan Tun Perak Kuala Lumpur 50050
-SP19,Selatan Trading,Selatan Enterprise,0178899001,15 Jalan Tebrau Johor Bahru 80300
-SP20,North Supply Co,Utara Business Hub,0183344557,70 Jalan Alor Setar Alor Setar 05100
+S2,Lee Hardwares,Lee Enterprise Sdn Bhd,0138765432,12 Jalan Ampang
+S3,Ravi Distributors,Ravi & Sons Sdn Bhd,0172233445,89 Jalan Tebrau, Johor Bahru
+S4,Lim Industrial,Lim Engineering Sdn Bhd,0199988776,23 Jalan Dato Onn, Ipoh
+S5,Muhammad Supplies,Southeast Ventures,0123456789,45 Jalan Ampang Kuala Lumpur 50450
+S6,Elite Mart Supplies,Elite Distribution,0198765432,12 Jalan Tun Razak Kuala Lumpur 50400
+S7,Supplier Hub,Borneo Traders,0134455667,88 Jalan Bukit Bintang Kuala Lumpur 55100
+S8,Asia Pacific Goods,Dynamic Resources,0143344556,27 Lorong Merdeka Shah Alam 40000
+S9,Kota Supply Co,Eastside Logistics,0167788990,90 Jalan Gasing Petaling Jaya 46000
+S10,GlobalMart Sdn Bhd,Global Commerce,0112233445,11 Jalan Raja Chulan Kuala Lumpur 50200
+S11,Tropics Distributors,Tropics Ventures,0121122334,76 Jalan Klang Lama Kuala Lumpur 58000
+S12,Sabah Supply House,Kinabalu Industries,0189988776,33 Jalan Pantai Kota Kinabalu 88000
+S13,Penang Traders,Bayan Logistics,0176655443,100 Jalan Burma George Town 10050
+S14,Central Suppliers,MidCity Group,0139988776,21 Jalan Kuching Kuala Lumpur 51200
+S15,Southlink Supply,Southern Connect,0148877665,62 Jalan Skudai Johor Bahru 80200
+S16,BizLink Supplies,Techno Holdings,0127766554,40 Jalan Sultan Ismail Kuala Lumpur 50250
+S17,Trusted Source,Trust Capital,0163344556,29 Jalan Ipoh Kuala Lumpur 51200
+S18,Pacific Distributors,Pacific Group,0194433221,58 Jalan Tun Perak Kuala Lumpur 50050
+S19,Selatan Trading,Selatan Enterprise,0178899001,15 Jalan Tebrau Johor Bahru 80300
+S20,North Supply Co,Utara Business Hub,0183344557,70 Jalan Alor Setar Alor Setar 05100
+S21,names,namesss,1234567890,adddd
+S22,bababba,ssasda,5656556565,asdadasd
