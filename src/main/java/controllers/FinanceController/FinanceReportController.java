@@ -9,24 +9,32 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import models.DTO.SalesItemDTO;
+import models.Datas.FinanceReportHeaderData;
 import models.Datas.Item;
 import models.Datas.Payment;
 import models.Datas.Transaction;
 import models.Utils.FileIO;
 import models.Utils.Helper;
 import models.Utils.Navigator;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperReport;
+import models.Utils.SessionManager;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
+import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 public class FinanceReportController implements Initializable {
 
@@ -48,6 +56,11 @@ public class FinanceReportController implements Initializable {
 
     Navigator navigator = Navigator.getInstance();
     private FinanceMainController mainController;
+
+    private TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse(m + "-01", DateTimeFormatter.ofPattern("yyyy MMM-dd"))));
+    private Map<String, Double> revenueMap = new HashMap<>();
+    private Map<String, Double> costMap = new HashMap<>();
+    private Map<String, Double> priceMap = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -168,19 +181,21 @@ public class FinanceReportController implements Initializable {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_DATE;
             DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy MMM");
 
-            // Revenue: Month -> Total Sales
-            Map<String, Double> revenueMap = new HashMap<>();
-
-            // Cost: Month -> Total Payments
-            Map<String, Double> costMap = new HashMap<>();
+//            // Revenue: Month -> Total Sales
+//            revenueMap = new HashMap<>();
+//
+//            // Cost: Month -> Total Payments
+//            costMap = new HashMap<>();
 
             // Parse item prices
-            Map<String, Double> priceMap = new HashMap<>();
+//            Map<String, Double> priceMap = new HashMap<>();
             try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Item.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(",");
-                    priceMap.put(parts[0].trim(), Double.parseDouble(parts[6].trim()) * priceMultiplier);
+                    double rawPrice = Double.parseDouble(parts[6].trim()) * priceMultiplier;
+                    double roundedPrice = Math.round(rawPrice * 100.0) / 100.0;
+                    priceMap.put(parts[0].trim(), roundedPrice);
                 }
             }
 
@@ -207,7 +222,11 @@ public class FinanceReportController implements Initializable {
                     String month = date.format(monthFormatter);
 
                     double amount = priceMap.get(itemId) * quantity;
-                    revenueMap.put(month, revenueMap.getOrDefault(month, 0.0) + amount);
+                    BigDecimal newRevenue = BigDecimal.valueOf(revenueMap.getOrDefault(month, 0.0))
+                            .add(BigDecimal.valueOf(amount))
+                            .setScale(2, RoundingMode.HALF_UP);
+                    revenueMap.put(month, newRevenue.doubleValue());
+
                 }
             }
 
@@ -219,12 +238,16 @@ public class FinanceReportController implements Initializable {
                     LocalDate date = LocalDate.parse(parts[5].trim(), inputFormatter);
                     String month = date.format(monthFormatter);
                     double amount = Double.parseDouble(parts[3].trim());
-                    costMap.put(month, costMap.getOrDefault(month, 0.0) + amount);
+                    BigDecimal newCost = BigDecimal.valueOf(costMap.getOrDefault(month, 0.0))
+                            .add(BigDecimal.valueOf(amount))
+                            .setScale(2, RoundingMode.HALF_UP);
+                    costMap.put(month, newCost.doubleValue());
+
                 }
             }
 
             // Collect all months from both maps
-            TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse(m + "-01", DateTimeFormatter.ofPattern("yyyy MMM-dd"))));
+//            TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse(m + "-01", DateTimeFormatter.ofPattern("yyyy MMM-dd"))));
             allMonths.addAll(revenueMap.keySet());
             allMonths.addAll(costMap.keySet());
 
@@ -241,14 +264,13 @@ public class FinanceReportController implements Initializable {
             for (String month : allMonths) {
                 double revenue = revenueMap.getOrDefault(month, 0.0);
                 double cost = costMap.getOrDefault(month, 0.0);
-                double profit = revenue - cost;
+                double profit = BigDecimal.valueOf(revenue - cost).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
                 revenueSeries.getData().add(new XYChart.Data<>(month, revenue));
                 costSeries.getData().add(new XYChart.Data<>(month, cost));
                 profitSeries.getData().add(new XYChart.Data<>(month, profit));
             }
 
-            lineChart.getData().clear();
             lineChart.getData().addAll(revenueSeries, costSeries, profitSeries);
 
         } catch (IOException e) {
@@ -256,15 +278,55 @@ public class FinanceReportController implements Initializable {
         }
     }
 
-    // 2 tables, 1 for sales, 1 for payments, summary of the datas,
-    // precious 5 of each
-    // summary at the bottom
     public void generateFinanceReport() throws JRException {
+        LocalDateTime now = LocalDateTime.now();  // Get current date and time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedNow = now.format(formatter);
 
+        List<Map<String, ?>> rows = new ArrayList<>();
 
-        JasperReport report = (JasperReport) JRLoader.loadObjectFromFile("src/main/resource/Jasper/FinanceReport.jasper");
+        for (String month : allMonths) {
+            Map<String, Object> row = new HashMap<>();
+            double revenue = revenueMap.getOrDefault(month, 0.0);
+            double cost = costMap.getOrDefault(month, 0.0);
+            double profit = revenue - cost;
+            row.put("monthField", month);
+            row.put("revenueField", revenue);
+            row.put("costField", cost);
+            row.put("profitField", profit);
 
+            rows.add(row);
+        }
 
+        JasperReport report = (JasperReport) JRLoader.loadObjectFromFile("src/main/resources/Jasper/FinanceReport.jasper");
+
+        List<FinanceReportHeaderData> headerDataList = new ArrayList<>();
+        headerDataList.add(new FinanceReportHeaderData(formattedNow, SessionManager.getInstance().getFinanceManagerData().getName()));
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(headerDataList);
+
+        JRBeanCollectionDataSource financeReportDataSource = new JRBeanCollectionDataSource(rows);
+        Map<String, Object> params = new HashMap<>();
+        params.put("TABLE_DATA_SOURCE", financeReportDataSource);
+
+        JasperPrint print = JasperFillManager.fillReport(report, params, dataSource);
+
+        String pdfPath = "financeReport" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".pdf";
+        JasperExportManager.exportReportToPdfFile(print, pdfPath);
+
+        File pdfFile = new File(pdfPath);
+        if (pdfFile.exists()) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(pdfFile);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("AWT Desktop is not supported on this platform.");
+            }
+        } else {
+            System.out.println("PDF file was not generated.");
+        }
     }
 
 
