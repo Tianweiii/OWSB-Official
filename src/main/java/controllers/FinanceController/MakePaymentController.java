@@ -250,7 +250,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                                     "Credit Card",
                                     Helper.getTodayDate(),
                                     Payment.generatePaymentReference(Payment.getPaymentLatestRowCount())
-                            }).create();
+                            }).create("PY");
 
                     // update PO status to paid
                     QueryBuilder<PurchaseOrder> qb3 = new QueryBuilder<>(PurchaseOrder.class);
@@ -281,7 +281,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
                 long elapsed = System.currentTimeMillis() - startTime;
                 // load for at least 2 seconds to mimic real ting lol
-                long remainingTime = Math.max(0, 2000 - elapsed);
+                long remainingTime = Math.max(0, 1000 - elapsed);
 
                 boolean finalRes = res;
                 Platform.runLater(() -> {
