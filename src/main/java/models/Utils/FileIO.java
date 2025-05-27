@@ -144,6 +144,20 @@ public class FileIO {
         return list;
     }
 
+    public static <T> T getObjectFromID(Class<T> classname, String filenameWithoutTXT, int indexToCheck, String targetID) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            for (String line; (line = br.readLine()) != null;) {
+                String[] parts = line.split(",");
+                if (parts[indexToCheck].trim().equals(targetID)) {
+                    Constructor<T> constructor = classname.getConstructor(String[].class);
+                    return constructor.newInstance((Object) parts);
+                }
+            }
+        }
+        System.out.println("No data found.");
+        return null;
+    }
+
     public static <T> ArrayList<T> getAllLines(Class<T> classname, String filenameWithoutTXT) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         ArrayList<T> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {

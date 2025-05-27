@@ -37,9 +37,9 @@
                <children>
                   <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #fcba03; -fx-background-radius: 100;">
                      <children>
-                        <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../assets/images/report.png" />
+                              <Image url="@../assets/images/transaction-white.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -64,9 +64,9 @@
                <children>
                   <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #a346eb; -fx-background-radius: 100;">
                      <children>
-                        <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../assets/images/report.png" />
+                              <Image url="@../assets/images/sales-white.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -87,7 +87,7 @@
                   <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
                </padding>
             </VBox>
-            <VBox prefHeight="200.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <VBox prefHeight="200.0" style="-fx-background-color: white; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                <children>
                   <BarChart fx:id="barChart">
                     <xAxis>

@@ -35,9 +35,9 @@
                <children>
                   <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #9452e3; -fx-background-radius: 100;">
                      <children>
-                        <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="38.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../assets/images/report.png" />
+                              <Image url="@../assets/images/money.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -62,9 +62,9 @@
                <children>
                   <VBox alignment="CENTER" minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #6d9bf7; -fx-background-radius: 100;">
                      <children>
-                        <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../assets/images/report.png" />
+                              <Image url="@../assets/images/paper-money.png" />
                            </image>
                         </ImageView>
                      </children>
