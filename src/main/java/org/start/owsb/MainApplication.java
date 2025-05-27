@@ -1,27 +1,15 @@
 package org.start.owsb;
 
-import controllers.FinanceController.FinanceMainController;
-import controllers.FinanceController.PaymentSuccessController;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.DTO.TransactionDTO;
-import models.Datas.*;
 
-import models.Users.FinanceManager;
-import models.Users.User;
-import models.Utils.FileIO;
 import models.Utils.Navigator;
 import models.Utils.SessionManager;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.*;
-import java.util.HashMap;
 
 public class MainApplication extends Application {
     @Override
