@@ -35,7 +35,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="46.0" prefWidth="117.0" style="-fx-background-color: #8b2bff; -fx-background-radius: 8;">
+                        <VBox alignment="CENTER" onMouseClicked="#generateFinanceReport" prefHeight="46.0" prefWidth="117.0" style="-fx-background-color: #8b2bff; -fx-background-radius: 8;">
                            <children>
                               <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Export">
                                  <font>

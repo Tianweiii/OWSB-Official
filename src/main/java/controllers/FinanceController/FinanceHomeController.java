@@ -260,8 +260,8 @@ public class FinanceHomeController implements Initializable {
         });
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.setTranslateZ(-300);
-        camera.setTranslateY(-75);
+        camera.setTranslateZ(-450);
+        camera.setTranslateY(-100);
         camera.setFieldOfView(45);
         camera.setNearClip(0.1);
         camera.setFarClip(2000.0);

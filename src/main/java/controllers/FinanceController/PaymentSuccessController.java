@@ -77,15 +77,5 @@ public class PaymentSuccessController implements Initializable {
 
         // tootzejiat@gmail.com
         fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "receipt.pdf");
-//        File pdfFile = new File(pdfPath);
-//        if (pdfFile.exists()) {
-//            if (Desktop.isDesktopSupported()) {
-//                Desktop.getDesktop().open(pdfFile);
-//            } else {
-//                System.out.println("AWT Desktop is not supported on this platform.");
-//            }
-//        } else {
-//            System.out.println("PDF file was not generated.");
-//        }
     }
 }
