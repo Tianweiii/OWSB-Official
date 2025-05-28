@@ -123,10 +123,8 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                System.out.println("parts:" + Arrays.toString(parts));
                 salesMap.put(parts[0], new Sales(parts[0], parts[1], parts[2], parts[3]));
             }
-            System.out.println("asodinmawd" + salesMap);
         }
 
         // getting prices
@@ -152,7 +150,6 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
                 list.add(new SalesTransactionDTO(parts[0], priceMap.get(itemId).getItemName(), amount, salesMap.get(parts[4]).getCreatedAt().toString(), salesMap.get(parts[4]).getUserID()));
             }
         }
-        System.out.println("idk");
 
         return FXCollections.observableArrayList(list);
     }

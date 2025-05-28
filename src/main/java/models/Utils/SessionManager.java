@@ -40,7 +40,6 @@ public class SessionManager {
 
 	public static void setCurrentPaymentPO(PurchaseOrder PO) {
 		paymentPurchaseOrder = PO;
-		System.out.println(PO.toString());
 	}
 
 	public static PurchaseOrder getCurrentPaymentPO() { return paymentPurchaseOrder; }

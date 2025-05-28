@@ -89,7 +89,6 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
             cardDatas = qb.select().from("db/PaymentCard").getAsObjects();
 
             paymentItems = currentPO.getPurchaseItemList();
-            System.out.println(paymentItems);
 
         } catch (ReflectiveOperationException | IOException e) {
             throw new RuntimeException(e);
@@ -116,11 +115,9 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
         // rendering payment items
         for (var entry : paymentItems.entrySet()) {
-            System.out.println(paymentItems);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PaymentItem.fxml"));
                 Parent card = loader.load();
-                System.out.println(loader);
 
                 PaymentItemController controller = loader.getController();
                 controller.setData(entry.getKey(), entry.getValue());
