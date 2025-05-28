@@ -1,14 +1,19 @@
 package controllers.FinanceController;
 
 import controllers.NotificationController;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -30,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import models.DTO.PaymentDTO;
@@ -60,6 +66,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     private TextField cvvField;
     @FXML
     private CheckBox saveCardField;
+    @FXML
+    private VBox loaderPane;
 
     @FXML
     private Text subtotalField;
@@ -228,9 +236,8 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     }
 
 
-    public void onPressPay() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
-//        mainController.renderLoader();
-//        navigator.renderLoader();
+    public void onPressPay() throws IOException {
+        renderLoader();
 
         if (validateCardFields()) {
             new Thread(() -> {
@@ -278,7 +285,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
 
                 long elapsed = System.currentTimeMillis() - startTime;
                 // load for at least 2 seconds to mimic real ting lol
-                long remainingTime = Math.max(0, 1000 - elapsed);
+                long remainingTime = Math.max(0, 2000 - elapsed);
 
                 boolean finalRes = res;
                 Platform.runLater(() -> {
@@ -288,17 +295,48 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                             navigator.navigate(navigator.getRouters("finance").getRoute("paymentSuccess"));
 //                            mainController.goToPaymentSuccess();
                         }
-//                        mainController.removeLoader();
-//                        navigator.removeLoader();
+                        removeLoader();
                     });
                     pause.play();
                 });
 
             }).start();
         } else {
-//            mainController.removeLoader();
-//            navigator.removeLoader();
+            removeLoader();
         }
     }
 
+    public void renderLoader() {
+        Group spinnerGroup = new Group();
+
+        Circle outerRing = new Circle(25, Color.TRANSPARENT);
+        outerRing.setStroke(Color.DODGERBLUE);
+        outerRing.setStrokeWidth(3);
+        // Create a gap in the circle
+        outerRing.getStrokeDashArray().addAll(90.0, 10.0);
+
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.rgb(70, 150, 255, 0.7));
+        glow.setRadius(10);
+        outerRing.setEffect(glow);
+
+        spinnerGroup.getChildren().add(outerRing);
+
+        RotateTransition rotate = new RotateTransition(Duration.seconds(1.2), outerRing);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setInterpolator(Interpolator.EASE_BOTH);
+        rotate.play();
+
+        loaderPane.getChildren().add(spinnerGroup);
+
+        loaderPane.setOpacity(1);
+        loaderPane.setMouseTransparent(false);
+    }
+
+    public void removeLoader() {
+        loaderPane.setOpacity(0);
+        loaderPane.setMouseTransparent(true);
+        loaderPane.getChildren().clear();
+    }
 }
