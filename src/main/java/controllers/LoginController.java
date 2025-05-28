@@ -14,6 +14,7 @@ import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
+import service.PurchaseRequisitionCreationRequestService;
 import views.NotificationView;
 
 import java.io.IOException;
@@ -70,6 +71,7 @@ public class LoginController implements Initializable {
 			if (!data.isEmpty()) {
 				session.setUserData(data.get(0));
 
+				PurchaseRequisitionCreationRequestService purchaseRequisitionCreationRequestService = new PurchaseRequisitionCreationRequestService();
 				switch (data.get(0).get("roleID")) {
 					case "1":
 						layout.initSidebar("admin", new String[]{"Dashboard", "Register", "User Management","Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Procurement Management", "Stock Management", "Sales Purchase Request List", "Financial Report", "Payments"});
@@ -77,6 +79,7 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("admin").getRoute("dashboard"));
 						break;
 					case "2":
+						purchaseRequisitionCreationRequestService.restore();
 						layout.initSidebar("sales", new String[]{"Home", "Manage Item List", "Manage Supplier List", "Submit Daily Sales Entry", "Create Purchase Requisition"});
 						//Navigate to dashboard
 						navigator.navigate(navigator.getRouters("sales").getRoute("home"));
@@ -87,6 +90,7 @@ public class LoginController implements Initializable {
 						navigator.navigate(navigator.getRouters("purchase").getRoute("viewStock"));
 						break;
 					case "4":
+						purchaseRequisitionCreationRequestService.restore();
 						layout.initSidebar("inventory", new String[]{"Home", "Stock Management", "Procurement Management", "Sales Purchase Request List"});
 						//Navigate to dashboard
 						navigator.navigate(navigator.getRouters("inventory").getRoute("inventoryHome"));

@@ -20,6 +20,7 @@ import models.Datas.*;
 import models.Utils.QueryBuilder;
 import javafx.scene.chart.NumberAxis;
 import service.DailySalesService;
+import service.PurchaseRequisitionCreationRequestService;
 import service.SupplierService;
 import controllers.NotificationController;
 import views.NotificationView;
@@ -235,13 +236,14 @@ public class DashboardController implements Initializable {
                 final List<Transaction> finalTransactions = transactions;
                 final List<Item> finalItems = items;
                 final Map<String, Item> itemMap = finalItems.stream()
-                        .collect(Collectors.toMap(Item::getItemID, item -> item));
+                    .collect(Collectors.toMap(Item::getItemID, item -> item));
+                List<PurchaseRequisitionCreationRequest> prRequests = new PurchaseRequisitionCreationRequestService().getAll();
 
                 Platform.runLater(() -> {
                     try {
                         updateKPIs(finalTransactions, itemMap);
-                        updateCharts(finalTransactions, itemMap);
-                        updateLowStockChart(finalItems);
+                        updateCharts(finalTransactions, itemMap, prRequests);
+                        updateLowStockChart(prRequests);
                     } catch (Exception e) {
                         System.err.println("Error updating UI: " + e.getMessage());
                         System.out.println(e.getMessage());
@@ -328,10 +330,10 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void updateCharts(List<Transaction> transactions, Map<String, Item> itemMap) {
+    private void updateCharts(List<Transaction> transactions, Map<String, Item> itemMap, List<PurchaseRequisitionCreationRequest> prRequests) {
         updateTrendChart(transactions, itemMap);
         updateProductMix(transactions);
-        updateLowStockChart(itemMap.values());
+        updateLowStockChart(prRequests);
         updateRevenueAnalysis(transactions);
     }
 
@@ -433,92 +435,88 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void updateLowStockChart(Collection<Item> items) {
+    private void updateLowStockChart(List<PurchaseRequisitionCreationRequest> prRequests) {
         try {
-            if (lowStockChart == null) {
-                System.err.println("Low stock chart is null");
-                return;
-            }
+//            if (lowStockChart == null) {
+//                System.err.println("Low stock chart is null");
+//                return;
+//            }
+//
+//            lowStockChart.getData().clear();
+//
+//            // Create series for different alert levels
+//            XYChart.Series<String, Number> criticalSeries = new XYChart.Series<>();
+//            criticalSeries.setName("Critical Stock");
+//
+//            XYChart.Series<String, Number> lowSeries = new XYChart.Series<>();
+//            lowSeries.setName("Low Stock");
+//
+//            List<Item> stockAlerts = items.stream()
+//                .filter(item -> {
+//                    int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
+//                    return item.getQuantity() < alertThreshold;
+//                })
+//                .sorted(Comparator.comparingInt(Item::getQuantity))
+//                .toList();
+//
+//            // Show only top 5 items in chart
+//            List<Item> topAlerts = stockAlerts.stream()
+//                .limit(5)
+//                .toList();
+//
+//            for (Item item : topAlerts) {
+//                int quantity = item.getQuantity();
+//                int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
+//
+//                XYChart.Data<String, Number> data = new XYChart.Data<>(
+//                    item.getItemName() + "\n(" + quantity + "/" + alertThreshold + ")",
+//                    quantity
+//                );
+//
+//                if (quantity <= alertThreshold * 0.5) {
+//                    criticalSeries.getData().add(data);
+//                } else {
+//                    lowSeries.getData().add(data);
+//                }
+//            }
+//
+//            if (!criticalSeries.getData().isEmpty()) lowStockChart.getData().add(criticalSeries);
+//            if (!lowSeries.getData().isEmpty()) lowStockChart.getData().add(lowSeries);
+//
+//            criticalSeries.getData().forEach(data -> {
+//                if (data.getNode() != null) {
+//                    data.getNode().setStyle("-fx-bar-fill: #ff4444;"); // Red for critical
+//                    setupTooltip(data, "Critical");
+//                }
+//            });
+//
+//            lowSeries.getData().forEach(data -> {
+//                if (data.getNode() != null) {
+//                    data.getNode().setStyle("-fx-bar-fill: #ffa726;"); // Orange for low
+//                    setupTooltip(data, "Low");
+//                }
+//            });
 
-            lowStockChart.getData().clear();
-
-            // Create series for different alert levels
-            XYChart.Series<String, Number> criticalSeries = new XYChart.Series<>();
-            criticalSeries.setName("Critical Stock");
-
-            XYChart.Series<String, Number> lowSeries = new XYChart.Series<>();
-            lowSeries.setName("Low Stock");
-
-            List<Item> stockAlerts = items.stream()
-                    .filter(item -> {
-                        int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-                        return item.getQuantity() < alertThreshold;
-                    })
-                    .sorted(Comparator.comparingInt(Item::getQuantity))
-                    .toList();
-
-            // Show only top 5 items in chart
-            List<Item> topAlerts = stockAlerts.stream()
-                    .limit(5)
-                    .toList();
-
-            for (Item item : topAlerts) {
-                int quantity = item.getQuantity();
-                int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-
-                XYChart.Data<String, Number> data = new XYChart.Data<>(
-                        item.getItemName() + "\n(" + quantity + "/" + alertThreshold + ")",
-                        quantity
-                );
-
-                if (quantity <= alertThreshold * 0.5) {
-                    criticalSeries.getData().add(data);
-                } else {
-                    lowSeries.getData().add(data);
-                }
-            }
-
-            if (!criticalSeries.getData().isEmpty()) lowStockChart.getData().add(criticalSeries);
-            if (!lowSeries.getData().isEmpty()) lowStockChart.getData().add(lowSeries);
-
-            criticalSeries.getData().forEach(data -> {
-                if (data.getNode() != null) {
-                    data.getNode().setStyle("-fx-bar-fill: #ff4444;"); // Red for critical
-                    setupTooltip(data, "Critical");
-                }
-            });
-
-            lowSeries.getData().forEach(data -> {
-                if (data.getNode() != null) {
-                    data.getNode().setStyle("-fx-bar-fill: #ffa726;"); // Orange for low
-                    setupTooltip(data, "Low");
-                }
-            });
 
             // Update alert count label and notification badge
             Platform.runLater(() -> {
                 if (lowStockCountLabel != null) {
-                    lowStockCountLabel.setText(stockAlerts.size() + " items need attention");
+                    lowStockCountLabel.setText(prRequests.size() + " purchase requests need to be made");
                     lowStockCountLabel.setStyle("-fx-text-fill: " +
-                            (!criticalSeries.getData().isEmpty() ? "#ff4444" : "#ffa726") + ";");
+                        (!prRequests.isEmpty() ? "#ff4444" : "#ffa726") + ";");
                 }
 
                 notifications.clear();
-                for (Item item : stockAlerts) {
-                    int quantity = item.getQuantity();
-                    int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-
-                    String alertLevel = quantity <= alertThreshold * 0.5 ? "CRITICAL" : "LOW";
+                for (PurchaseRequisitionCreationRequest prRequest : prRequests) {
+                    int minimumPurchaseQuantity = prRequest.getMinimumPurchaseQuantity();
 
                     notifications.add(String.format(
-                            "[%s] Low stock alert: %s (Qty: %d/%d)",
-                            alertLevel,
-                            item.getItemName(),
-                            quantity,
-                            alertThreshold
+                        "Please create a PR for: %s (Minimum Purchase Quantity: %s)",
+                        prRequest.getItemID(),
+                        minimumPurchaseQuantity
                     ));
                 }
-                hasUnreadNotifications.set(!stockAlerts.isEmpty());
+                hasUnreadNotifications.set(!prRequests.isEmpty());
             });
 
         } catch (Exception e) {

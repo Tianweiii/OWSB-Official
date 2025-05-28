@@ -13,6 +13,7 @@ import models.Datas.InventoryUpdateLog;
 import models.Datas.Item;
 import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
+import service.PurchaseRequisitionCreationRequestService;
 import views.NotificationView;
 
 import java.time.LocalDateTime;
@@ -152,6 +153,7 @@ public class UpdateInventoryController {
             };
 
             boolean updateSuccess = qb.update(String.valueOf(item.getItemID()), values);
+            new PurchaseRequisitionCreationRequestService().restore();
             closeDialog();
             if (refreshCallback != null) {
                 refreshCallback.accept(item, updateSuccess);

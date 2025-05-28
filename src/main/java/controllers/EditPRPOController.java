@@ -19,6 +19,7 @@ import models.DTO.PODataDTO;
 import models.DTO.PRDataDTO;
 import models.Datas.*;
 import models.Utils.*;
+import service.PurchaseRequisitionCreationRequestService;
 import views.NotificationView;
 
 import java.io.IOException;
@@ -909,9 +910,11 @@ public class EditPRPOController implements Initializable {
                 };
 
                 boolean res = PRIqb.target("db/PurchaseRequisitionItem.txt").values(newPRItem).create();
-                if(!res){
+                boolean deletePRReq = new PurchaseRequisitionCreationRequestService().delete(itemRow.getItemID(), itemRow.getQuantity());
+                if (!res && !deletePRReq) {
                     createItemRes = false;
                 }
+
             }
 
             if(createRes && createItemRes){
@@ -937,7 +940,8 @@ public class EditPRPOController implements Initializable {
 
             boolean deletePRRes = prQb.delete(prData.getPrID());
             boolean deletePRItemRes = priQb.deleteAnyMatching("prRequisitionID", "=", prData.getPrID());
-            if(deletePRRes && deletePRItemRes){
+            boolean deletePRReqRes = new PurchaseRequisitionCreationRequestService().add();
+            if(deletePRRes && deletePRItemRes && deletePRReqRes){
                 Navigator navigator = Navigator.getInstance();
                 FXMLLoader PRPOLoader = new FXMLLoader(getClass().getResource("/PRPO/PRPO.fxml"));
                 navigator.navigate(PRPOLoader.load());
@@ -1091,6 +1095,7 @@ public class EditPRPOController implements Initializable {
             // Deleting all the previous PR Item's
             QueryBuilder<PurchaseRequisitionItem> PRIqb = new QueryBuilder<>(PurchaseRequisitionItem.class);
             boolean deleteRes = PRIqb.target("db/PurchaseRequisitionItem.txt").deleteAnyMatching("prRequisitionID", "=", prData.getPrID());
+            new PurchaseRequisitionCreationRequestService().restore();
             QueryBuilder<PurchaseRequisition> PRqb = new QueryBuilder<>(PurchaseRequisition.class);
 
             // Rewriting all the new PR item's
@@ -1111,7 +1116,8 @@ public class EditPRPOController implements Initializable {
                     throw new Exception("Data length does not match attribute length");
                 }else {
                     boolean res = PRIqb.target("db/PurchaseRequisitionItem.txt").values(newPRItem).create();
-                    if(!res){
+                    boolean deletePRReq = new PurchaseRequisitionCreationRequestService().delete(itemRow.getItemID(), itemRow.getQuantity());
+                    if(!res && !deletePRReq){
                         rewriteRes = false;
                     }
                 }
