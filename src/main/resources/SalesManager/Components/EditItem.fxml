@@ -36,11 +36,6 @@
       </VBox>
 
       <VBox spacing="10">
-         <Label styleClass="form-label" text="Item Quantity" />
-         <TextField fx:id="editItemQuantityField" promptText="Enter quantity..." styleClass="text-search" />
-      </VBox>
-
-      <VBox spacing="10">
          <Label styleClass="form-label" text="Item Price" />
          <TextField fx:id="editItemPriceField" promptText="Enter price..." styleClass="text-search" />
       </VBox>

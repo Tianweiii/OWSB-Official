@@ -53,6 +53,8 @@ public class PRPOController implements Initializable {
     private boolean viewingPRPane;
     private final ObservableList<String> PRFilterList = FXCollections.observableArrayList("ALL", "PENDING", "LATE", "APPROVED");
     private final ObservableList<String> POFilterList = FXCollections.observableArrayList("ALL", "PENDING", "APPROVED", "VERIFIED", "PAID", "RETURNED", "DELETED");
+    private int totalPendingPRCount;
+    private int totalPendingPOCount;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -109,12 +111,18 @@ public class PRPOController implements Initializable {
     }
 
     public void loadPRData(String filter_status) throws Exception {
+        System.out.println("loading PR data");
         pr_list_container.getChildren().clear();
         List<PRDataDTO> prDTOList = PRDataDTO.getPRDataDTOs(filter_status.toLowerCase());
+        totalPendingPRCount = 0;
         for(PRDataDTO prDTO : prDTOList){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PRPOBox.fxml"));
                 Parent boxPane = loader.load();
+
+                if(prDTO.getStatus().equals("pending")){
+                    totalPendingPRCount += 1;
+                }
 
                 PRPOBoxController boxController = loader.getController();
                 boxController.setPRData(prDTO);
@@ -128,10 +136,15 @@ public class PRPOController implements Initializable {
     public void loadPOData(String filter_status) throws Exception {
         po_list_container.getChildren().clear();
         List<PODataDTO> poDTOList = PODataDTO.getPODataDTOs(filter_status.toLowerCase());
+        totalPendingPOCount = 0;
         for(PODataDTO poDTO : poDTOList){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Components/PRPOBox.fxml"));
                 Parent boxPane = loader.load();
+
+                if(poDTO.getStatus().equals("pending")){
+                    totalPendingPOCount += 1;
+                }
 
                 PRPOBoxController boxController = loader.getController();
                 boxController.setPOData(poDTO);
@@ -152,6 +165,7 @@ public class PRPOController implements Initializable {
         }
 
         if(procurement_type.toLowerCase().equals("request")){
+            pending_pr_text.setText(totalPendingPRCount + " Pending PR");
             filter_dropdown.setItems(PRFilterList);
             filter_dropdown.setValue("ALL");
 
@@ -165,6 +179,7 @@ public class PRPOController implements Initializable {
 
             viewingPRPane = true;
         } else {
+            pending_pr_text.setText(totalPendingPOCount + " Pending PO");
             filter_dropdown.setItems(POFilterList);
             filter_dropdown.setValue("ALL");
 

@@ -69,6 +69,8 @@ public class Navigator {
 		salesRouter.addRoute("edit-PRPO", EditPRPOView.class);
 
 		// Purchase manager
+		purchaseRouter.addRoute("viewStock", ItemListView.class);
+		purchaseRouter.addRoute("viewSupplier", SupplierView.class);
 		purchaseRouter.addRoute("PRPO", PRPOView.class);
 		purchaseRouter.addRoute("edit-PRPO", EditPRPOView.class);
 

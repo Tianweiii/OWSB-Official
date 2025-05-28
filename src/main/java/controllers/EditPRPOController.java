@@ -34,6 +34,7 @@ import java.util.*;
 import static models.Datas.Item.stringifyDateTime;
 
 public class EditPRPOController implements Initializable {
+
     public interface ItemRow {
         String getItemID();
         String getItemName();
@@ -53,7 +54,11 @@ public class EditPRPOController implements Initializable {
     @FXML
     public ImageView label_2_image;
     @FXML
-    public Text label_2_text; //  Eg. Created By: John Doe
+    public Text label_2_text; //  Eg. Linked PR: PR2301241 || PR Created By: John Doe
+    @FXML
+    public ImageView label_3_image;
+    @FXML
+    public Text label_3_text; // Eg. PO Created By: John Doe
     @FXML
     public HBox save_change_button_container; // The container for the 'Discard' & 'Save Changes' button
     @FXML
@@ -285,12 +290,23 @@ public class EditPRPOController implements Initializable {
                 false,  // preserveRatio
                 true    // smooth scaling
         );
+        Image userIconImage = new Image(
+                Objects.requireNonNull(getClass().getResourceAsStream("/Assets/icon/user_icon_blue.png")),
+                20, 20,
+                false,  // preserveRatio
+                true    // smooth scaling
+        );
+
         label_1_image.setImage(cargoIconImage);
         label_2_image.setImage(cargoIconImage);
+        label_3_image.setImage(userIconImage);
+        label_3_image.setVisible(true);
 
         // Setup label's text
         label_1_text.setText("PO ID: " + poData.getPoID());
         label_2_text.setText("Linked PR: " + poData.getPrID());
+        label_3_text.setText("PO Created By: " + poData.getUserName());
+        label_3_text.setVisible(true);
 
         statusBoxController.setStatus(poData.getStatus());
 
@@ -322,7 +338,7 @@ public class EditPRPOController implements Initializable {
         // Setup label's text
         if(prData != null){
             label_1_text.setText("PR ID: " + prData.getPrID());
-            label_2_text.setText("Created By: " + prData.getUserName());
+            label_2_text.setText("PR Created By: " + prData.getUserName());
 
             statusBoxController.setStatus(prData.getStatus());
 

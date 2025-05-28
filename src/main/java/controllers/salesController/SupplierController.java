@@ -18,6 +18,7 @@ import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Callback;
 import models.Datas.Supplier;
+import models.Utils.SessionManager;
 import service.SupplierService;
 import views.NotificationView;
 import views.salesViews.DeleteSupplierView;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
 
 public class SupplierController implements Initializable {
 
+    @FXML private Button addSupplierBtn;
     @FXML private StackPane rootPane;
     @FXML private TableView<Supplier> table;
     @FXML private TableColumn<Supplier, String> colId,colName,colPhone,colCompany;
@@ -53,9 +55,17 @@ public class SupplierController implements Initializable {
     private final SupplierService svc = new SupplierService();
     private ObservableList<Supplier> masterList;
     private Supplier editingSupplier;
+    private String user_role = SessionManager.getInstance().getUserData().get("roleID");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // If role = purchase manager
+        if(user_role.equals("3")){
+            addSupplierBtn.setVisible(false);
+        } else {
+            addActionsColumn();
+        }
+
         colId.setCellValueFactory(new PropertyValueFactory<>("supplierId"));
         colId.setStyle("-fx-alignment: CENTER;");
         colName.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
@@ -64,7 +74,7 @@ public class SupplierController implements Initializable {
         colPhone.setStyle("-fx-alignment: CENTER;");
         colCompany.setCellValueFactory(new PropertyValueFactory<>("companyName"));
         colCompany.setStyle("-fx-alignment: CENTER;");
-        addActionsColumn();
+
 
         masterList = FXCollections.observableArrayList(svc.getAll());
         updateSupplierCount(masterList.size());
@@ -183,7 +193,7 @@ public class SupplierController implements Initializable {
             private final Button actionButton = new Button("⋮");
             {
                 actionButton.getStyleClass().addAll("action-button-table");
-                actionButton.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #f0f0f0; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
+                actionButton.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
                 actionButton.setCursor(javafx.scene.Cursor.HAND);
 
                 actionButton.setOnAction(e -> {
@@ -216,7 +226,7 @@ public class SupplierController implements Initializable {
         ContextMenu menu = new ContextMenu();
         MenuItem edit = new MenuItem("Edit");
         MenuItem del = new MenuItem("Delete");
-        del.setStyle("-fx-text-fill:red;");
+        del.setStyle("-fx-text-fill: #ba0202;");
 
         // Add icons to menu items
         ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));

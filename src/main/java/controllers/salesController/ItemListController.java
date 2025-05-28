@@ -18,6 +18,7 @@ import javafx.util.StringConverter;
 import models.DTO.ItemListDTO;
 import models.Datas.Supplier;
 import models.Utils.Helper;
+import models.Utils.SessionManager;
 import models.Utils.Validation;
 import org.start.owsb.Layout;
 import service.ItemService;
@@ -27,6 +28,7 @@ import views.salesViews.AddItemView;
 import views.salesViews.DeleteConfirmationView;
 import views.salesViews.EditItemView;
 
+import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -35,6 +37,8 @@ public class ItemListController implements Initializable {
 	private String[] columns;
 	private final ItemService itemListService = new ItemService();
 	private final SupplierService supplierService = new SupplierService();
+	private SessionManager session = SessionManager.getInstance();
+	private String user_role = session.getUserData().get("roleID");
 	@FXML private AnchorPane rootPane;
 	@FXML private Button addItemButton,searchButton, clearSearchButton, deleteButton, cancelDeleteItemButton, saveEditItemButton, cancelEditItemButton, saveAddItemButton, cancelAddItemButton;
 	@FXML private ChoiceBox<String> filterByChoiceBox;
@@ -48,7 +52,7 @@ public class ItemListController implements Initializable {
 
 	@FXML
 	private TextField addItemNameField;
-	@FXML private TextField addItemPriceField, addItemQuantityField, itemDescField;
+	@FXML private TextField addItemPriceField, itemDescField;
 	@FXML private ComboBox<Supplier> supplierComboBox = new ComboBox<>();
 
 
@@ -58,7 +62,6 @@ public class ItemListController implements Initializable {
 	@FXML private Pane editItemPane;
 	@FXML private TextField editItemNameField = new TextField();
 	@FXML private TextField editItemDescField = new TextField();
-	@FXML private TextField editItemQuantityField = new TextField();
 	@FXML private TextField editItemPriceField = new TextField();
 	@FXML private ComboBox<Supplier> editSupplierComboBox = new ComboBox<>();
 
@@ -112,7 +115,6 @@ public class ItemListController implements Initializable {
 		NotificationView notificationView;
 		String changedItemName = this.editItemNameField.getText();
 		String changedItemDescription = this.editItemDescField.getText();
-		String changedItemQuantity = this.editItemQuantityField.getText();
 		String changedItemPrice = this.editItemPriceField.getText();
 		Supplier selectedSupplier = this.editSupplierComboBox.getValue();
 		
@@ -160,33 +162,11 @@ public class ItemListController implements Initializable {
 			return;
 		}
 		
-		// Validate quantity is a valid number
-		try {
-			int quantity = Integer.parseInt(changedItemQuantity);
-			if (quantity < 0) {
-				notificationView = new NotificationView("Quantity cannot be negative", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
-				notificationView.show();
-				return;
-			}
-		} catch (NumberFormatException e) {
-			try {
-				notificationView = new NotificationView("Quantity must be a valid number", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
-				notificationView.show();
-			} catch (IOException ex) {
-				System.out.println(ex.getMessage());
-			}
-			return;
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		
 		String itemId = EditItemView.getData().get("itemID");
 
 		HashMap<String, String> dataToUpdate = new HashMap<>();
 		dataToUpdate.put("itemName", changedItemName);
 		dataToUpdate.put("description", changedItemDescription);
-		dataToUpdate.put("quantity", changedItemQuantity);
 		dataToUpdate.put("unitPrice", changedItemPrice);
 		dataToUpdate.put("supplierID", changedSupplierID);
 		try {
@@ -267,7 +247,6 @@ public class ItemListController implements Initializable {
 		Supplier supplier = this.supplierComboBox.getValue();
 		String itemDescription = this.itemDescField.getText();
 		String itemPrice = this.addItemPriceField.getText();
-		String itemQuantity = this.addItemQuantityField.getText();
 
 		try {
 			NotificationView notificationView;
@@ -305,20 +284,6 @@ public class ItemListController implements Initializable {
 				return;
 			}
 			
-			// Validate quantity is a valid number
-			try {
-				int quantity = Integer.parseInt(itemQuantity);
-				if (quantity < 0) {
-					notificationView = new NotificationView("Quantity cannot be negative", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
-					notificationView.show();
-					return;
-				}
-			} catch (NumberFormatException e) {
-				notificationView = new NotificationView("Quantity must be a valid number", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
-				notificationView.show();
-				return;
-			}
-			
 			ItemListController controllerReference = AddItemView.getRootController();
 			ObservableList<ItemListDTO> data = getLatestData();
 
@@ -331,7 +296,7 @@ public class ItemListController implements Initializable {
 				}
 			}
 			
-			boolean res = itemListService.add(itemName, itemDescription, itemQuantity, itemPrice, supplier.getSupplierId());
+			boolean res = itemListService.add(itemName, itemDescription, "0", itemPrice, supplier.getSupplierId());
 
 			if (res) {
 				ObservableList<ItemListDTO> oListItems = getLatestData();
@@ -400,35 +365,29 @@ public class ItemListController implements Initializable {
 			setupListeners();
 			updateItemCount(oListItems.size());
 
-			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Quantity", "Created At", "Updated At"};
+			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Created At", "Updated At"};
 			List<String> columnNames = List.of(this.columns);
-
-			// If quantity less than alert setting, color red
-			itemTable.setRowFactory(new Callback<>() {
-				@Override
-				public TableRow<ItemListDTO> call(TableView<ItemListDTO> hashMapTableView) {
-					return new TableRow<>() {
-						@Override
-						protected void updateItem(ItemListDTO item, boolean empty) {
-							super.updateItem(item, empty);
-							if (item != null && item.getQuantity() < item.getAlertSetting()) {
-								setStyle("-fx-background-color: #ff0000;");
-							} else {
-								setStyle("");
-							}
-						}
-					};
-				}
-			});
 
 			for (String columnName : columnNames) {
 				TableColumn<ItemListDTO, String> column = new TableColumn<>(columnName);
 				column.setCellValueFactory(new PropertyValueFactory<>(Helper.toAttrString(columnName)));
+
+				// Set max width for specific columns
+				if (columnName.equals("Unit Price") || columnName.equals("Quantity") || columnName.equals("Item ID")) {
+					column.setMinWidth(120);
+					column.setPrefWidth(120);
+					column.setMaxWidth(120);
+				}
+
 				itemTable.getColumns().add(column);
 			}
 
-			TableColumn<ItemListDTO, String> optionsColumns = this.getOptionsColumns();
-			itemTable.getColumns().add(optionsColumns);
+			if(user_role.equals("1") || user_role.equals("2")){
+				TableColumn<ItemListDTO, String> optionsColumns = this.getOptionsColumns();
+				itemTable.getColumns().add(optionsColumns);
+			} else if (user_role.equals("3")) {
+				addItemButton.setVisible(false);
+			}
 			itemTable.setItems(oListItems);
 		} catch (Exception e) {
 			System.out.println("Search error: " + e.getMessage());
@@ -552,7 +511,7 @@ public class ItemListController implements Initializable {
 			private final Button actionButton = new Button("⋮");
 			{
 				actionButton.getStyleClass().addAll("action-button-table");
-				actionButton.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #f0f0f0; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
+				actionButton.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
 				actionButton.setCursor(javafx.scene.Cursor.HAND);
 				
 				actionButton.setOnAction(event -> {
@@ -561,7 +520,7 @@ public class ItemListController implements Initializable {
 					ContextMenu contextMenu = new ContextMenu();
 					MenuItem editItem = new MenuItem("Edit");
 					MenuItem deleteItem = new MenuItem("Delete");
-					deleteItem.setStyle("-fx-text-fill:red;");
+					deleteItem.setStyle("-fx-text-fill: #ba0202;");
 					
 					// Add icons to menu items
 					ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
@@ -609,7 +568,6 @@ public class ItemListController implements Initializable {
 	public void prefillEditFields(HashMap<String, String> data) {
 		this.editItemNameField.setText(data.get("itemName"));
 		this.editItemDescField.setText(data.get("description"));
-		this.editItemQuantityField.setText(data.get("quantity"));
 		this.editItemPriceField.setText(data.get("unitPrice"));
 
 		String supplierId = data.get("supplierID");
@@ -667,7 +625,7 @@ public class ItemListController implements Initializable {
 			});
 
 			addItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidCurrency(newValue)) {
+				if (!Validation.isValidDecimal(newValue)) {
 					addItemPriceField.setStyle("-fx-border-color: red;");
 					saveAddItemButton.setDisable(true);
 				} else {
@@ -675,17 +633,6 @@ public class ItemListController implements Initializable {
 					validateAddForm();
 				}
 			});
-
-			addItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidQuantity(newValue)) {
-					addItemQuantityField.setStyle("-fx-border-color: red;");
-					saveAddItemButton.setDisable(true);
-				} else {
-					addItemQuantityField.setStyle("");
-					validateAddForm();
-				}
-			});
-
 		} else {
 			// Edit Form Validation
 			editItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -699,21 +646,11 @@ public class ItemListController implements Initializable {
 			});
 
 			editItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidCurrency(newValue)) {
+				if (!Validation.isValidDecimal(newValue)) {
 					editItemPriceField.setStyle("-fx-border-color: red;");
 					saveEditItemButton.setDisable(true);
 				} else {
 					editItemPriceField.setStyle("");
-					validateEditForm();
-				}
-			});
-
-			editItemQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidQuantity(newValue)) {
-					editItemQuantityField.setStyle("-fx-border-color: red;");
-					saveEditItemButton.setDisable(true);
-				} else {
-					editItemQuantityField.setStyle("");
 					validateEditForm();
 				}
 			});
@@ -723,16 +660,14 @@ public class ItemListController implements Initializable {
 
 	private void validateAddForm() {
 		boolean isValid = Validation.isValidName(addItemNameField.getText()) &&
-						 Validation.isValidCurrency(addItemPriceField.getText()) &&
-						 Validation.isValidQuantity(addItemQuantityField.getText()) &&
+						 Validation.isValidDecimal(addItemPriceField.getText()) &&
 						 supplierComboBox.getValue() != null;
 		saveAddItemButton.setDisable(!isValid);
 	}
 
 	private void validateEditForm() {
 		boolean isValid = Validation.isValidName(editItemNameField.getText()) &&
-						 Validation.isValidCurrency(editItemPriceField.getText()) &&
-						 Validation.isValidQuantity(editItemQuantityField.getText()) &&
+						 Validation.isValidDecimal(editItemPriceField.getText()) &&
 						 editSupplierComboBox.getValue() != null;
 		saveEditItemButton.setDisable(!isValid);
 	}
