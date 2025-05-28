@@ -363,7 +363,7 @@ public class ItemListController implements Initializable {
 			setupListeners();
 			updateItemCount(oListItems.size());
 
-			this.columns = new String[]{"Item ID", "Item Name", "Description", "Supplier Name", "Unit Price", "Created At", "Updated At"};
+			this.columns = new String[]{"Item ID", "Item Name", "Description", "Quantity", "Supplier Name", "Unit Price", "Created At", "Updated At"};
 			List<String> columnNames = List.of(this.columns);
 
 			for (String columnName : columnNames) {

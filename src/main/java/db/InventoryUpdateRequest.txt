@@ -12,5 +12,5 @@ REQ011,I11,U11,2,Pending
 REQ012,I12,U10,5,Rejected
 REQ013,I13,U1,3,Pending
 REQ014,I14,U4,6,Rejected
-REQ015,I15,U5,4,Pending
+REQ015,I15,U5,4,Approved
 REQ016,I16,U5,4,Rejected
