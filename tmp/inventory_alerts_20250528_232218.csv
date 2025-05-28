@@ -1,0 +1,25 @@
+﻿OWSB Inventory Alerts Report
+===========================
+Generated on: 2025-05-28 23:22:18
+
+1. ALERT SUMMARY
+--------------
+Critical Alerts,1
+Low Stock Alerts,3
+Reorder Alerts,0
+Total Alerts,4
+
+2. DETAILED ALERT REPORT
+----------------------
+Priority,Alert Type,Item Name,Current Stock,Alert Threshold,Status,Action Required,Risk Level,Estimated Reorder Time,Last Updated
+1-High,CRITICAL,Namess,0,10,OUT OF STOCK,Immediate Reorder Required,High Risk,24 hours,2025-05-28 23:22:18
+3-Low,LOW,Flashlight,8,15,REORDER,Monitor Stock,Low Risk,7 days,2025-05-28 23:22:18
+3-Low,LOW,Pliers Set,51,100,REORDER,Monitor Stock,Low Risk,7 days,2025-05-28 23:22:18
+3-Low,LOW,Paint Brushes Set,61,100,REORDER,Monitor Stock,Low Risk,7 days,2025-05-28 23:22:18
+
+3. RISK ASSESSMENT
+----------------
+Risk Level,Description,Recommended Action
+High Risk,Stock levels critical or depleted,Immediate action required within 24 hours
+Medium Risk,Stock levels below optimal threshold,Action required within 3-5 days
+Low Risk,Stock levels approaching reorder point,Review within 1 week
