@@ -157,7 +157,7 @@ public class PurchaseRequisitionCreationRequestService extends Service<PurchaseR
 			QueryBuilder<PurchaseRequisitionCreationRequest> qb = new QueryBuilder<>(PurchaseRequisitionCreationRequest.class);
 
 			//Delete all PRRequests
-			qb.target(DATA_FILE).deleteAnyMatching("quantity", ">", "0");
+			qb.target(DATA_FILE).deleteAnyMatching("quantity", ">", "-1");
 
 			// Restore the Requests
 			this.add();
