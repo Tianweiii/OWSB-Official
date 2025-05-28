@@ -10,289 +10,293 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox prefHeight="1000.0" prefWidth="1185.0" spacing="30.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.MakePaymentController">
-   <children>
-      <VBox prefHeight="200.0" prefWidth="363.0" spacing="30.0" HBox.hgrow="NEVER">
-         <children>
-            <VBox fillWidth="false" prefHeight="70.0" prefWidth="683.0">
-               <children>
-                  <VBox alignment="CENTER" onMouseClicked="#onPressBack" prefHeight="47.0" prefWidth="46.0" VBox.vgrow="NEVER">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../assets/images/back.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Checkout">
-               <font>
-                  <Font name="Baloo Da 2 Medium" size="40.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="10.0" />
-               </VBox.margin>
-            </Text>
-            <HBox prefHeight="732.0" prefWidth="315.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <ScrollPane prefWidth="363.0" style="-fx-background-color: none;" stylesheets="@../css/general.css">
-                     <content>
-                        <VBox fx:id="cardItemContainer" prefWidth="345.0" spacing="15.0">
-                           <children>
-                              <HBox fx:id="newCardContainer" alignment="CENTER" onMouseClicked="#onPressNewCard" prefHeight="200.0" prefWidth="343.0" spacing="10.0" style="-fx-background-radius: 15;">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add new">
-                                       <font>
-                                          <Font name="Baloo Da 2 Medium" size="20.0" />
-                                       </font>
-                                    </Text>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../assets/images/add.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children></HBox>
-                           </children>
-                        </VBox>
-                     </content>
-                     <effect>
-                        <Blend />
-                     </effect>
-                     <styleClass>
-                        <String fx:value="scroll-pane" />
-                        <String fx:value="viewport" />
-                     </styleClass>
-                  </ScrollPane>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox prefHeight="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
-         <children>
-            <VBox prefHeight="218.0" prefWidth="282.0">
-               <children>
-                  <VBox prefHeight="71.0" prefWidth="400.0">
-                     <children>
-                        <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Shipping Details">
-                           <font>
-                              <Font name="Baloo Da 2 Medium" size="22.0" />
-                           </font>
-                        </Text>
-                        <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
-                           <VBox.margin>
-                              <Insets left="3.0" right="3.0" />
-                           </VBox.margin>
-                        </VBox>
-                     </children>
-                  </VBox>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OWSB">
-                     <font>
-                        <Font name="Baloo 2 Medium" size="16.0" />
-                     </font>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="11, Jalan IDK 99">
-                     <font>
-                        <Font name="Baloo 2 Medium" size="16.0" />
-                     </font>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bukit not tinggi">
-                     <font>
-                        <Font name="Baloo 2 Medium" size="16.0" />
-                     </font>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="12345, Kuala Lumpur">
-                     <font>
-                        <Font name="Baloo 2 Medium" size="16.0" />
-                     </font>
-                  </Text>
-               </children>
-            </VBox>
-            <VBox alignment="CENTER_LEFT" prefWidth="282.0" spacing="25.0">
-               <children>
-                  <VBox prefHeight="71.0" prefWidth="400.0">
-                     <children>
-                        <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Details">
-                           <font>
-                              <Font name="Baloo Da 2 Medium" size="22.0" />
-                           </font>
-                        </Text>
-                        <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
-                           <VBox.margin>
-                              <Insets left="3.0" right="3.0" />
-                           </VBox.margin>
-                        </VBox>
-                     </children>
-                  </VBox>
-                  <VBox prefWidth="311.0" spacing="15.0">
-                     <children>
-                        <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Number">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                        <TextField fx:id="cardNumberField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
-                     </children>
-                  </VBox>
-                  <VBox prefWidth="311.0" spacing="15.0">
-                     <children>
-                        <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                        <TextField fx:id="nameField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
-                     </children>
-                  </VBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <VBox prefWidth="311.0" spacing="15.0">
-                           <children>
-                              <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Expiration Date">
-                                 <font>
-                                    <Font name="Baloo 2 Medium" size="16.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="expirationDateField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
-                           </children>
-                        </VBox>
-                        <VBox prefWidth="311.0" spacing="15.0">
-                           <children>
-                              <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="CVV">
-                                 <font>
-                                    <Font name="Baloo 2 Medium" size="16.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="cvvField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <Region prefHeight="157.0" prefWidth="282.0" />
-                  <HBox fillHeight="false" prefHeight="39.0" prefWidth="282.0">
-                     <children>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <CheckBox fx:id="saveCardField" graphicTextGap="5.0" mnemonicParsing="false" text="Save Card">
-                                 <font>
-                                    <Font name="Baloo 2 Medium" size="14.0" />
-                                 </font>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" onMouseClicked="#onPressPay" prefHeight="35.0" prefWidth="118.0" style="-fx-background-color: black; -fx-background-radius: 5;">
-                                 <children>
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Pay">
-                                       <font>
-                                          <Font name="Baloo 2 Medium" size="16.0" />
-                                       </font>
-                                    </Text>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </HBox>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-         <padding>
-            <Insets top="165.0" />
-         </padding>
-      </VBox>
-      <VBox prefHeight="795.0" spacing="15.0">
-         <children>
-            <VBox prefHeight="44.0" prefWidth="400.0">
-               <children>
-                  <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Order Summary">
-                     <font>
-                        <Font name="Baloo Da 2 Medium" size="22.0" />
-                     </font>
-                  </Text>
-                  <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
-                     <VBox.margin>
-                        <Insets left="3.0" right="3.0" />
-                     </VBox.margin>
-                  </VBox>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </VBox>
-            <ScrollPane prefHeight="542.0" prefWidth="420.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
-               <content>
-                  <VBox fx:id="orderSummaryContainer" prefHeight="200.0" prefWidth="380.0" spacing="20.0" />
-               </content>
-               <styleClass>
-                  <String fx:value="scroll-pane" />
-                  <String fx:value="viewport" />
-               </styleClass>
-            </ScrollPane>
-            <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;" />
-            <VBox prefWidth="400.0">
-               <children>
-                  <HBox prefHeight="30.0" prefWidth="398.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Subtotal (RM)">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text fx:id="subtotalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="30.0" prefWidth="398.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Shipping">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text fx:id="shippingField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM0.00">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="30.0" prefWidth="398.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text fx:id="totalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;" />
-         </children>
-         <padding>
-            <Insets top="165.0" />
-         </padding>
-      </VBox>
-   </children>
-   <padding>
-      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-   </padding>
-</HBox>
+<StackPane prefHeight="1000.0" prefWidth="1185.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.MakePaymentController">
+   <HBox prefHeight="1000.0" prefWidth="1185.0" spacing="30.0">
+      <children>
+         <VBox prefHeight="200.0" prefWidth="363.0" spacing="30.0" HBox.hgrow="NEVER">
+            <children>
+               <VBox fillWidth="false" prefHeight="70.0" prefWidth="683.0">
+                  <children>
+                     <VBox alignment="CENTER" onMouseClicked="#onPressBack" prefHeight="47.0" prefWidth="46.0" VBox.vgrow="NEVER">
+                        <children>
+                           <ImageView fitHeight="40.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../assets/images/back.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </VBox>
+                  </children>
+               </VBox>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Checkout">
+                  <font>
+                     <Font name="Baloo Da 2 Medium" size="40.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets left="10.0" />
+                  </VBox.margin>
+               </Text>
+               <HBox prefHeight="732.0" prefWidth="315.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <ScrollPane prefWidth="363.0" style="-fx-background-color: none;" stylesheets="@../css/general.css">
+                        <content>
+                           <VBox fx:id="cardItemContainer" prefWidth="345.0" spacing="15.0">
+                              <children>
+                                 <HBox fx:id="newCardContainer" alignment="CENTER" onMouseClicked="#onPressNewCard" prefHeight="200.0" prefWidth="343.0" spacing="10.0" style="-fx-background-radius: 15;">
+                                    <children>
+                                       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add new">
+                                          <font>
+                                             <Font name="Baloo Da 2 Medium" size="20.0" />
+                                          </font>
+                                       </Text>
+                                       <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                          <image>
+                                             <Image url="@../assets/images/add.png" />
+                                          </image>
+                                       </ImageView>
+                                    </children></HBox>
+                              </children>
+                           </VBox>
+                        </content>
+                        <effect>
+                           <Blend />
+                        </effect>
+                        <styleClass>
+                           <String fx:value="scroll-pane" />
+                           <String fx:value="viewport" />
+                        </styleClass>
+                     </ScrollPane>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+         <VBox prefHeight="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
+            <children>
+               <VBox prefHeight="218.0" prefWidth="282.0">
+                  <children>
+                     <VBox prefHeight="71.0" prefWidth="400.0">
+                        <children>
+                           <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Shipping Details">
+                              <font>
+                                 <Font name="Baloo Da 2 Medium" size="22.0" />
+                              </font>
+                           </Text>
+                           <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
+                              <VBox.margin>
+                                 <Insets left="3.0" right="3.0" />
+                              </VBox.margin>
+                           </VBox>
+                        </children>
+                     </VBox>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OWSB">
+                        <font>
+                           <Font name="Baloo 2 Medium" size="16.0" />
+                        </font>
+                     </Text>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="11, Jalan IDK 99">
+                        <font>
+                           <Font name="Baloo 2 Medium" size="16.0" />
+                        </font>
+                     </Text>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bukit not tinggi">
+                        <font>
+                           <Font name="Baloo 2 Medium" size="16.0" />
+                        </font>
+                     </Text>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="12345, Kuala Lumpur">
+                        <font>
+                           <Font name="Baloo 2 Medium" size="16.0" />
+                        </font>
+                     </Text>
+                  </children>
+               </VBox>
+               <VBox alignment="CENTER_LEFT" prefWidth="282.0" spacing="25.0">
+                  <children>
+                     <VBox prefHeight="71.0" prefWidth="400.0">
+                        <children>
+                           <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Details">
+                              <font>
+                                 <Font name="Baloo Da 2 Medium" size="22.0" />
+                              </font>
+                           </Text>
+                           <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
+                              <VBox.margin>
+                                 <Insets left="3.0" right="3.0" />
+                              </VBox.margin>
+                           </VBox>
+                        </children>
+                     </VBox>
+                     <VBox prefWidth="311.0" spacing="15.0">
+                        <children>
+                           <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Number">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                           <TextField fx:id="cardNumberField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
+                        </children>
+                     </VBox>
+                     <VBox prefWidth="311.0" spacing="15.0">
+                        <children>
+                           <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                           <TextField fx:id="nameField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
+                        </children>
+                     </VBox>
+                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                        <children>
+                           <VBox prefWidth="311.0" spacing="15.0">
+                              <children>
+                                 <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="Expiration Date">
+                                    <font>
+                                       <Font name="Baloo 2 Medium" size="16.0" />
+                                    </font>
+                                 </Text>
+                                 <TextField fx:id="expirationDateField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
+                              </children>
+                           </VBox>
+                           <VBox prefWidth="311.0" spacing="15.0">
+                              <children>
+                                 <Text fill="#9a9a9a" strokeType="OUTSIDE" strokeWidth="0.0" text="CVV">
+                                    <font>
+                                       <Font name="Baloo 2 Medium" size="16.0" />
+                                    </font>
+                                 </Text>
+                                 <TextField fx:id="cvvField" styleClass="underline-textfield" stylesheets="@../css/textField.css" />
+                              </children>
+                           </VBox>
+                        </children>
+                     </HBox>
+                     <Region prefHeight="157.0" prefWidth="282.0" />
+                     <HBox fillHeight="false" prefHeight="39.0" prefWidth="282.0">
+                        <children>
+                           <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <CheckBox fx:id="saveCardField" graphicTextGap="5.0" mnemonicParsing="false" text="Save Card">
+                                    <font>
+                                       <Font name="Baloo 2 Medium" size="14.0" />
+                                    </font>
+                                 </CheckBox>
+                              </children>
+                           </HBox>
+                           <HBox alignment="BOTTOM_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                              <children>
+                                 <HBox alignment="CENTER" onMouseClicked="#onPressPay" prefHeight="35.0" prefWidth="118.0" style="-fx-background-color: black; -fx-background-radius: 5;">
+                                    <children>
+                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Pay">
+                                          <font>
+                                             <Font name="Baloo 2 Medium" size="16.0" />
+                                          </font>
+                                       </Text>
+                                    </children>
+                                 </HBox>
+                              </children>
+                           </HBox>
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+            </children>
+            <padding>
+               <Insets top="165.0" />
+            </padding>
+         </VBox>
+         <VBox prefHeight="795.0" spacing="15.0">
+            <children>
+               <VBox prefHeight="44.0" prefWidth="400.0">
+                  <children>
+                     <Text fill="#949494" strokeType="OUTSIDE" strokeWidth="0.0" text="Order Summary">
+                        <font>
+                           <Font name="Baloo Da 2 Medium" size="22.0" />
+                        </font>
+                     </Text>
+                     <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;">
+                        <VBox.margin>
+                           <Insets left="3.0" right="3.0" />
+                        </VBox.margin>
+                     </VBox>
+                  </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+               </VBox>
+               <ScrollPane prefHeight="542.0" prefWidth="420.0" stylesheets="@../css/general.css" VBox.vgrow="ALWAYS">
+                  <content>
+                     <VBox fx:id="orderSummaryContainer" prefHeight="200.0" prefWidth="380.0" spacing="20.0" />
+                  </content>
+                  <styleClass>
+                     <String fx:value="scroll-pane" />
+                     <String fx:value="viewport" />
+                  </styleClass>
+               </ScrollPane>
+               <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;" />
+               <VBox prefWidth="400.0">
+                  <children>
+                     <HBox prefHeight="30.0" prefWidth="398.0">
+                        <children>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Subtotal (RM)">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                           <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                           <Text fx:id="subtotalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="30.0" prefWidth="398.0">
+                        <children>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Shipping">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                           <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                           <Text fx:id="shippingField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM0.00">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="30.0" prefWidth="398.0">
+                        <children>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                           <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                           <Text fx:id="totalField" strokeType="OUTSIDE" strokeWidth="0.0" text="RM999.00">
+                              <font>
+                                 <Font name="Baloo 2 Medium" size="16.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+               <VBox prefHeight="1.0" prefWidth="100.0" style="-fx-background-color: #949494;" />
+            </children>
+            <padding>
+               <Insets top="165.0" />
+            </padding>
+         </VBox>
+      </children>
+      <padding>
+         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+      </padding>
+   </HBox>
+   <VBox fx:id="loaderPane" alignment="CENTER" mouseTransparent="true" prefHeight="1000.0" prefWidth="1185.0" style="-fx-opacity: 0;" styleClass="glassmorphism" stylesheets="@../css/general.css" />
+</StackPane>
