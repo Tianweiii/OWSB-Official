@@ -109,13 +109,16 @@ public class FinanceReportController implements Initializable {
     }
 
     private void populateSalesContainer() throws IOException, ReflectiveOperationException {
+        double salesMult = 1.15;
         ArrayList<SalesItemDTO> salesItemDTOs = new ArrayList<>();
         ArrayList<Transaction> transactions = FileIO.getObjectsFromXLines(Transaction.class, "Transaction", 3);
 
         for (Transaction i : transactions) {
             Item item = FileIO.getIDsAsObject(Item.class, "Item", i.getItemID());
 
-            salesItemDTOs.add(new SalesItemDTO(item.getItemName(), i.getSoldQuantity(), (i.getSoldQuantity() * item.getUnitPrice())));
+            double amount = Math.round((i.getSoldQuantity() * item.getUnitPrice()) * salesMult * 100.0) / 100.0;
+
+            salesItemDTOs.add(new SalesItemDTO(item.getItemName(), i.getSoldQuantity(), amount));
         }
 
         // get sales item

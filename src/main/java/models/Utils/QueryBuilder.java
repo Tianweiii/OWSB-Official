@@ -54,7 +54,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 	private String[] sortByClause;
 
 	private String targetFile;
-	private boolean customIdFlag;
 	private String createValues;
 
 	private ArrayList<Class<? extends ModelInitializable>> joins;
@@ -149,17 +148,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 		this.queue.add(0);
 		return this;
 	}
-
-	/**
-	 * Sets the sort by clause to be used when querying data.
-	 * Defaults to sorting by the ID field.
-	 *
-	 * @return a QueryBuilder of the type you passed in for method chaining.
-	 * */
-//	public QueryBuilder<T> sort() {
-//		this.sortByClause = new String[]{getClassName().toLowerCase() + "_id", "asc"};
-//		return this;
-//	}
 
 	/**
 	 * Sets the joins to be used when querying data.
@@ -976,22 +964,6 @@ public class QueryBuilder<T extends ModelInitializable>{
 		}
 
 		return dataMap;
-	}
-
-	/**
-	 * Adds an element to the start of an array.
-	 * Used for adding the id of the class into the available attributes.
-	 *
-	 * @param array <b>T[]</b> <br> The array to be modified.
-	 * @param element <b>T</b> <br> The item to be added into the array.
-	 * @return The new array with the element at index 0.
-	 * */
-	public static <T> T[] addToBeginningOfArray(T[] array, T element) {
-		T[] result = Arrays.copyOf(array, array.length + 1);
-		result[0] = element;
-		System.arraycopy(array, 0, result, 1, array.length);
-
-		return result;
 	}
 
 	/**

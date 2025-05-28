@@ -9,7 +9,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <VBox alignment="CENTER" fillWidth="false" prefHeight="1000.0" prefWidth="1185.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FinanceController.PaymentSuccessController">
    <children>
       <VBox alignment="CENTER" prefHeight="800.0" prefWidth="650.0" spacing="30.0" style="-fx-background-color: white;">
@@ -34,7 +33,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Credit Card">
+                        <Text fx:id="paymentType" strokeType="OUTSIDE" strokeWidth="0.0" text="Credit Card">
                            <font>
                               <Font name="Baloo 2 Medium" size="20.0" />
                            </font>
@@ -49,7 +48,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient Name">
+                        <Text fx:id="receipientName" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient Name">
                            <font>
                               <Font name="Baloo 2 Medium" size="20.0" />
                            </font>
@@ -64,22 +63,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="20.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-                  <HBox prefWidth="200.0">
-                     <children>
-                        <Text fill="#ababab" strokeType="OUTSIDE" strokeWidth="0.0" text="Mobile">
-                           <font>
-                              <Font name="Baloo 2 Medium" size="20.0" />
-                           </font>
-                        </Text>
-                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mobile">
+                        <Text fx:id="email" strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
                            <font>
                               <Font name="Baloo 2 Medium" size="20.0" />
                            </font>
@@ -94,7 +78,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="RM 99999">
+                        <Text fx:id="amountPaid" strokeType="OUTSIDE" strokeWidth="0.0" text="RM 99999">
                            <font>
                               <Font name="Baloo 2 SemiBold" size="28.0" />
                            </font>
@@ -109,7 +93,7 @@
                            </font>
                         </Text>
                         <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PY123456789">
+                        <Text fx:id="paymentReference" strokeType="OUTSIDE" strokeWidth="0.0" text="PY123456789">
                            <font>
                               <Font name="Baloo 2 Medium" size="20.0" />
                            </font>
