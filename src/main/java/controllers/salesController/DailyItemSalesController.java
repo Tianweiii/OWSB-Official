@@ -508,4 +508,8 @@ public class DailyItemSalesController implements Initializable {
 	public BorderPane getRootPane() {
 		return this.rootPane;
 	}
+
+	public TableView<Transaction> getTable() {
+		return this.table;
+	}
 }

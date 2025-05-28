@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 public class AddNewDailyItemSalesController implements Initializable {
 
 	@FXML
-    public Pane root;
+	public Pane root;
 	@FXML private VBox container;
 	@FXML private Label titleLabel;
 	@FXML private ComboBox<Item> itemCombo;
@@ -126,7 +126,7 @@ public class AddNewDailyItemSalesController implements Initializable {
 
 	private void validateForm() {
 		boolean isValid = Validation.isValidQuantity(qtyField.getText()) &&
-						 itemCombo.getValue() != null;
+				itemCombo.getValue() != null;
 		submitBtn.setDisable(!isValid);
 	}
 
@@ -134,19 +134,33 @@ public class AddNewDailyItemSalesController implements Initializable {
 		Item selectedItem = itemCombo.getValue();
 		int quantity = parseQuantity();
 
+		TableView<Transaction> table = AddNewDailyItemSalesView.getRootController().getTable();
+
+		ObservableList<Transaction> txs = table.getItems();
+		Transaction existingTransaction = txs.stream()
+				.filter(t -> t.getItemID().equals(selectedItem.getItemID()))
+				.findFirst()
+				.orElse(null);
+
 		try {
-			if (mode == AddNewDailyItemSalesView.Mode.FIRST) {
-				service.recordSale(selectedItem, quantity, selectedDate);
-				notify("Sale entry added successfully", NotificationController.popUpType.success);
-				DailyItemSalesController.setSelectedDate(selectedDate);
-				Navigator.getInstance().navigate(Navigator.getInstance().getRouters("sales").getRoute("daily-sales"));
-			} else if (mode == AddNewDailyItemSalesView.Mode.NEW) {
-				service.recordSale(selectedItem, quantity, selectedDate);
+			if (mode == AddNewDailyItemSalesView.Mode.NEW && existingTransaction != null) {
+				service.updateTransaction(existingTransaction, selectedItem, existingTransaction.getSoldQuantity() + quantity);
 				notify("Sale entry added successfully", NotificationController.popUpType.success);
 				AddNewDailyItemSalesView.getRootController().reload();
-			} else if (mode == AddNewDailyItemSalesView.Mode.UPDATE) {
-				service.updateTransaction(currentTx, selectedItem, quantity);
-				notify("Sale entry updated successfully", NotificationController.popUpType.success);
+			} else {
+				if (mode == AddNewDailyItemSalesView.Mode.FIRST) {
+					service.recordSale(selectedItem, quantity, selectedDate);
+					notify("Sale entry added successfully", NotificationController.popUpType.success);
+					DailyItemSalesController.setSelectedDate(selectedDate);
+					Navigator.getInstance().navigate(Navigator.getInstance().getRouters("sales").getRoute("daily-sales"));
+				} else if (mode == AddNewDailyItemSalesView.Mode.NEW) {
+					service.recordSale(selectedItem, quantity, selectedDate);
+					notify("Sale entry added successfully", NotificationController.popUpType.success);
+					AddNewDailyItemSalesView.getRootController().reload();
+				} else if (mode == AddNewDailyItemSalesView.Mode.UPDATE) {
+					service.updateTransaction(currentTx, selectedItem, quantity);
+					notify("Sale entry updated successfully", NotificationController.popUpType.success);
+				}
 			}
 			close();
 		} catch (Exception ex) {

@@ -13,7 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import models.DTO.ItemListDTO;
 import models.Datas.Supplier;
@@ -28,7 +27,6 @@ import views.salesViews.AddItemView;
 import views.salesViews.DeleteConfirmationView;
 import views.salesViews.EditItemView;
 
-import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -117,7 +115,7 @@ public class ItemListController implements Initializable {
 		String changedItemDescription = this.editItemDescField.getText();
 		String changedItemPrice = this.editItemPriceField.getText();
 		Supplier selectedSupplier = this.editSupplierComboBox.getValue();
-		
+
 		// Validation
 		if (changedItemName == null || changedItemName.trim().isEmpty()) {
 			try {
@@ -128,7 +126,7 @@ public class ItemListController implements Initializable {
 			}
 			return;
 		}
-		
+
 		if (selectedSupplier == null) {
 			try {
 				notificationView = new NotificationView("Please select a supplier", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
@@ -138,9 +136,9 @@ public class ItemListController implements Initializable {
 			}
 			return;
 		}
-		
+
 		String changedSupplierID = selectedSupplier.getSupplierId();
-		
+
 		// Validate price is a valid number
 		try {
 			double price = Double.parseDouble(changedItemPrice);
@@ -161,7 +159,7 @@ public class ItemListController implements Initializable {
 			System.out.println(e.getMessage());
 			return;
 		}
-		
+
 		String itemId = EditItemView.getData().get("itemID");
 
 		HashMap<String, String> dataToUpdate = new HashMap<>();
@@ -250,26 +248,26 @@ public class ItemListController implements Initializable {
 
 		try {
 			NotificationView notificationView;
-			
+
 			// Validation
 			if (itemName == null || itemName.trim().isEmpty()) {
 				notificationView = new NotificationView("Item name cannot be empty", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 				return;
 			}
-			
+
 			if (supplier == null) {
 				notificationView = new NotificationView("Please select a supplier", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 				return;
 			}
-			
+
 			if (itemPrice == null || itemPrice.trim().isEmpty()) {
 				notificationView = new NotificationView("Item price cannot be empty", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 				notificationView.show();
 				return;
 			}
-			
+
 			// Validate price is a valid number
 			try {
 				double price = Double.parseDouble(itemPrice);
@@ -283,7 +281,7 @@ public class ItemListController implements Initializable {
 				notificationView.show();
 				return;
 			}
-			
+
 			ItemListController controllerReference = AddItemView.getRootController();
 			ObservableList<ItemListDTO> data = getLatestData();
 
@@ -295,7 +293,7 @@ public class ItemListController implements Initializable {
 					return;
 				}
 			}
-			
+
 			boolean res = itemListService.add(itemName, itemDescription, "0", itemPrice, supplier.getSupplierId());
 
 			if (res) {
@@ -508,30 +506,31 @@ public class ItemListController implements Initializable {
 		TableColumn<ItemListDTO, String> optionsColumns = new TableColumn<>("Actions");
 
 		optionsColumns.setCellFactory(column -> new TableCell<>() {
-			private final Button actionButton = new Button("⋮");
+			private final MenuButton actionButton = new MenuButton("⋮");
 			{
 				actionButton.getStyleClass().addAll("action-button-table");
 				actionButton.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
 				actionButton.setCursor(javafx.scene.Cursor.HAND);
-				
-				actionButton.setOnAction(event -> {
+
+				MenuItem editItem = new MenuItem("Edit");
+				MenuItem deleteItem = new MenuItem("Delete");
+				deleteItem.setStyle("-fx-text-fill: #ba0202;");
+
+				// Add icons to menu items
+				ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
+				editIcon.setFitWidth(16);
+				editIcon.setFitHeight(16);
+				editItem.setGraphic(editIcon);
+
+				ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png")));
+				deleteIcon.setFitWidth(16);
+				deleteIcon.setFitHeight(16);
+				deleteItem.setGraphic(deleteIcon);
+
+				actionButton.getItems().addAll(editItem, deleteItem);
+
+				actionButton.setOnShowing(event -> {
 					ItemListDTO data = this.getTableView().getItems().get(this.getIndex());
-					
-					ContextMenu contextMenu = new ContextMenu();
-					MenuItem editItem = new MenuItem("Edit");
-					MenuItem deleteItem = new MenuItem("Delete");
-					deleteItem.setStyle("-fx-text-fill: #ba0202;");
-					
-					// Add icons to menu items
-					ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
-					editIcon.setFitWidth(16);
-					editIcon.setFitHeight(16);
-					editItem.setGraphic(editIcon);
-					
-					ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png")));
-					deleteIcon.setFitWidth(16);
-					deleteIcon.setFitHeight(16);
-					deleteItem.setGraphic(deleteIcon);
 
 					editItem.setOnAction(e -> {
 						try {
@@ -540,7 +539,7 @@ public class ItemListController implements Initializable {
 							throw new RuntimeException(ex);
 						}
 					});
-					
+
 					deleteItem.setOnAction(e -> {
 						try {
 							handleDelete(data.toMap());
@@ -549,13 +548,10 @@ public class ItemListController implements Initializable {
 						}
 					});
 
-					contextMenu.getItems().addAll(editItem, deleteItem);
-					contextMenu.show(actionButton, javafx.geometry.Side.BOTTOM, 0, 0);
 				});
-				
 				setAlignment(Pos.CENTER);
 			}
-			
+
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
@@ -599,7 +595,7 @@ public class ItemListController implements Initializable {
 	private void handleDelete(HashMap<String, String> data) throws IOException {
 		DeleteConfirmationView.setData(data);
 		DeleteConfirmationView deleteConfirmationView = new DeleteConfirmationView(this);
-		
+
 		deleteConfirmationView.showDeleteConfirmationView();
 
 		this.rootPane.setDisable(true);
@@ -660,15 +656,15 @@ public class ItemListController implements Initializable {
 
 	private void validateAddForm() {
 		boolean isValid = Validation.isValidName(addItemNameField.getText()) &&
-						 Validation.isValidDecimal(addItemPriceField.getText()) &&
-						 supplierComboBox.getValue() != null;
+				Validation.isValidDecimal(addItemPriceField.getText()) &&
+				supplierComboBox.getValue() != null;
 		saveAddItemButton.setDisable(!isValid);
 	}
 
 	private void validateEditForm() {
 		boolean isValid = Validation.isValidName(editItemNameField.getText()) &&
-						 Validation.isValidDecimal(editItemPriceField.getText()) &&
-						 editSupplierComboBox.getValue() != null;
+				Validation.isValidDecimal(editItemPriceField.getText()) &&
+				editSupplierComboBox.getValue() != null;
 		saveEditItemButton.setDisable(!isValid);
 	}
 }

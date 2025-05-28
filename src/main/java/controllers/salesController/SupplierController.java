@@ -8,8 +8,6 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -129,7 +127,7 @@ public class SupplierController implements Initializable {
     }
 
     /** Hide the "add" panel with animation */
-    @FXML private void hideAddForm() {  
+    @FXML private void hideAddForm() {
         hidePane(addFormPane);
     }
 
@@ -155,9 +153,9 @@ public class SupplierController implements Initializable {
                 txt.isEmpty()
                         ? masterList
                         : masterList.filtered(s ->
-                            s.getSupplierName().toLowerCase().contains(txt) ||
-                            s.getCompanyName().toLowerCase().contains(txt) ||
-                            s.getPhoneNumber().contains(txt))
+                        s.getSupplierName().toLowerCase().contains(txt) ||
+                                s.getCompanyName().toLowerCase().contains(txt) ||
+                                s.getPhoneNumber().contains(txt))
         );
         updateSupplierCount(table.getItems().size());
     }
@@ -168,11 +166,11 @@ public class SupplierController implements Initializable {
         if (choice == null) return;
 
         FXCollections.sort(table.getItems(), (a, b) -> switch (choice) {
-	        case "Name (A-Z)" -> a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
-	        case "Name (Z-A)" -> b.getSupplierName().compareToIgnoreCase(a.getSupplierName());
-	        case "Company (A-Z)" -> a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
-	        case "Company (Z-A)" -> b.getCompanyName().compareToIgnoreCase(a.getCompanyName());
-	        default -> 0;
+            case "Name (A-Z)" -> a.getSupplierName().compareToIgnoreCase(b.getSupplierName());
+            case "Name (Z-A)" -> b.getSupplierName().compareToIgnoreCase(a.getSupplierName());
+            case "Company (A-Z)" -> a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
+            case "Company (Z-A)" -> b.getCompanyName().compareToIgnoreCase(a.getCompanyName());
+            default -> 0;
         });
         table.refresh();
     }
@@ -190,16 +188,32 @@ public class SupplierController implements Initializable {
     /** Add "⋮" Actions column */
     private void addActionsColumn() {
         Callback<TableColumn<Supplier, Void>, TableCell<Supplier, Void>> cf = col -> new TableCell<>() {
-            private final Button actionButton = new Button("⋮");
+            private final MenuButton actionButton = new MenuButton("⋮");
             {
                 actionButton.getStyleClass().addAll("action-button-table");
                 actionButton.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
                 actionButton.setCursor(javafx.scene.Cursor.HAND);
 
-                actionButton.setOnAction(e -> {
+                MenuItem edit = new MenuItem("Edit");
+                MenuItem del = new MenuItem("Delete");
+                del.setStyle("-fx-text-fill: #ba0202;");
+
+                // Add icons to menu items
+                ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
+                editIcon.setFitWidth(16);
+                editIcon.setFitHeight(16);
+                edit.setGraphic(editIcon);
+
+                ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png")));
+                deleteIcon.setFitWidth(16);
+                deleteIcon.setFitHeight(16);
+                del.setGraphic(deleteIcon);
+
+                actionButton.getItems().addAll(edit, del);
+                actionButton.setOnShowing(e -> {
                     if (getIndex() >= 0 && getIndex() < getTableView().getItems().size()) {
                         Supplier s = getTableView().getItems().get(getIndex());
-                        showContextMenu(s, actionButton);
+                        setupContextMenu(s, edit, del);
                     }
                 });
 
@@ -222,28 +236,13 @@ public class SupplierController implements Initializable {
     }
 
     /** Popup menu for edit/delete with red delete button */
-    private void showContextMenu(Supplier s, Node anchor) {
-        ContextMenu menu = new ContextMenu();
-        MenuItem edit = new MenuItem("Edit");
-        MenuItem del = new MenuItem("Delete");
-        del.setStyle("-fx-text-fill: #ba0202;");
-
-        // Add icons to menu items
-        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit.png")));
-        editIcon.setFitWidth(16);
-        editIcon.setFitHeight(16);
-        edit.setGraphic(editIcon);
-
-        ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png")));
-        deleteIcon.setFitWidth(16);
-        deleteIcon.setFitHeight(16);
-        del.setGraphic(deleteIcon);
+    private void setupContextMenu(Supplier s, MenuItem edit, MenuItem del) {
 
         // Edit action
         edit.setOnAction(e -> showEditForm(s));
 
+        // Delete confirmation
         del.setOnAction(e -> {
-            // Delete confirmation
             try {
                 DeleteSupplierView.setSupplier(s);
                 DeleteSupplierView deleteSupplierView = new DeleteSupplierView(this);
@@ -254,8 +253,6 @@ public class SupplierController implements Initializable {
             }
         });
 
-        menu.getItems().addAll(edit, del);
-        menu.show(anchor, Side.BOTTOM, 0, 0);
     }
 
     /** Slide in */
@@ -407,15 +404,15 @@ public class SupplierController implements Initializable {
 
     private void validateAddForm() {
         boolean isValid = Validation.isValidName(addNameField.getText()) &&
-                         Validation.isValidPhone(addPhoneField.getText()) &&
-                         !addCompanyField.getText().trim().isEmpty() && !addAddressField.getText().trim().isEmpty();
+                Validation.isValidPhone(addPhoneField.getText()) &&
+                !addCompanyField.getText().trim().isEmpty() && !addAddressField.getText().trim().isEmpty();
         addSubmitBtn.setDisable(!isValid);
     }
 
     private void validateEditForm() {
         boolean isValid = Validation.isValidName(editNameField.getText()) &&
-                         Validation.isValidPhone(editPhoneField.getText()) &&
-                         !editCompanyField.getText().trim().isEmpty() && !editAddressField.getText().trim().isEmpty();
+                Validation.isValidPhone(editPhoneField.getText()) &&
+                !editCompanyField.getText().trim().isEmpty() && !editAddressField.getText().trim().isEmpty();
         editSaveBtn.setDisable(!isValid);
     }
 
@@ -442,10 +439,10 @@ public class SupplierController implements Initializable {
             }
 
             boolean success = svc.add(
-                addNameField.getText(),
-                addCompanyField.getText(),
-                addPhoneField.getText(),
-                addAddressField.getText()
+                    addNameField.getText(),
+                    addCompanyField.getText(),
+                    addPhoneField.getText(),
+                    addAddressField.getText()
             );
             if (success) {
                 refreshTable();
@@ -477,17 +474,17 @@ public class SupplierController implements Initializable {
 
             // Check for duplicate supplier excluding current one
             if (isDuplicateSupplierExcludingCurrent(editingSupplier.getSupplierId(),
-                editNameField.getText(), editCompanyField.getText())) {
+                    editNameField.getText(), editCompanyField.getText())) {
                 showNotification("Supplier with same name and company already exists", NotificationController.popUpType.error);
                 return;
             }
 
             boolean success = svc.update(
-                editingSupplier.getSupplierId(),
-                editNameField.getText(),
-                editCompanyField.getText(),
-                editPhoneField.getText(),
-                editAddressField.getText()
+                    editingSupplier.getSupplierId(),
+                    editNameField.getText(),
+                    editCompanyField.getText(),
+                    editPhoneField.getText(),
+                    editAddressField.getText()
             );
             if (success) {
                 refreshTable();
@@ -512,14 +509,14 @@ public class SupplierController implements Initializable {
 
     private boolean isDuplicateSupplier(String name, String company) {
         return masterList.stream().anyMatch(s ->
-            s.getSupplierName().equalsIgnoreCase(name) &&
-            s.getCompanyName().equalsIgnoreCase(company));
+                s.getSupplierName().equalsIgnoreCase(name) &&
+                        s.getCompanyName().equalsIgnoreCase(company));
     }
 
     private boolean isDuplicateSupplierExcludingCurrent(String currentId, String name, String company) {
         return masterList.stream().anyMatch(s ->
-            !s.getSupplierId().equals(currentId) &&
-            s.getSupplierName().equalsIgnoreCase(name) &&
-            s.getCompanyName().equalsIgnoreCase(company));
+                !s.getSupplierId().equals(currentId) &&
+                        s.getSupplierName().equalsIgnoreCase(name) &&
+                        s.getCompanyName().equalsIgnoreCase(company));
     }
 }

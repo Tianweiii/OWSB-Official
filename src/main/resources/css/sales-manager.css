@@ -1319,6 +1319,17 @@ HBox {
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
 }
 
+.action-button-table .arrow {
+    -fx-shape: null;
+    -fx-padding: 0;
+    -fx-background-color: null;
+}
+
+.action-button-table .arrow-button {
+    -fx-padding: 0;
+    -fx-background-color: null;
+}
+
 .notification-container {
     -fx-background-color: white;
     -fx-background-radius: 8px;
