@@ -63,6 +63,8 @@ public class FinanceHomeController implements Initializable {
     private Text totalNetProfitField;
     @FXML
     private Text totalRevenueField;
+    @FXML
+    private Text profitMarginField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -493,7 +495,13 @@ public class FinanceHomeController implements Initializable {
 
         totalRevenueField.setText("RM " + String.format("%.2f", thisMonthRevenue));
         totalCostField.setText("RM " + String.format("%.2f", thisMonthCost));
-        totalNetProfitField.setText("RM " + String.format("%.2f", thisMonthRevenue - thisMonthCost));
+
+        double netProfit = thisMonthRevenue - thisMonthCost;
+        String formattedProfit = String.format("%.2f", Math.abs(netProfit));
+        String prefix = netProfit < 0 ? "-RM " : "RM ";
+
+        totalNetProfitField.setText(prefix + formattedProfit);
+
 
         XYChart.Series<String, Number> gpmSeries = new XYChart.Series<>();
         gpmSeries.setName("Gross Profit Margin (%)");
@@ -515,5 +523,9 @@ public class FinanceHomeController implements Initializable {
         lineChart.setLegendVisible(false);
 
         lineChart.getData().add(gpmSeries);
+
+        double thisMonthGPM = thisMonthRevenue != 0 ? ((thisMonthRevenue - thisMonthCost) / thisMonthRevenue) * 100 : 0;
+        profitMarginField.setText(String.format("%.2f%%", thisMonthGPM));
+
     }
 }
