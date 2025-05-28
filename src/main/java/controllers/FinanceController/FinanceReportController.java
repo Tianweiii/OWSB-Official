@@ -1,5 +1,6 @@
 package controllers.FinanceController;
 
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,13 +9,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import models.DTO.SalesItemDTO;
 import models.Datas.FinanceReportHeaderData;
 import models.Datas.Item;
 import models.Datas.Payment;
 import models.Datas.Transaction;
 import models.Utils.FileIO;
-import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.SessionManager;
 import net.sf.jasperreports.engine.*;
@@ -62,17 +63,20 @@ public class FinanceReportController implements Initializable {
     private Map<String, Double> costMap = new HashMap<>();
     private Map<String, Double> priceMap = new HashMap<>();
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             populatePaymentsContainer();
             populateSalesContainer();
-            initLineChart();
+            initAnimatedLineChart();
 
             totalSalesField.setText("RM " + String.format("%.2f", getTotalSales()));
             totalTransactionsField.setText(String.valueOf(getTotalTransactions()));
             totalPendingField.setText("RM " + String.format("%.2f", getTotalPendingPayments()));
             totalCostField.setText("RM " + String.format("%.2f", getTotalCost()));
+
+            startDataPointHighlights();
 
         } catch (IOException | ReflectiveOperationException e) {
             throw new RuntimeException(e);
@@ -178,20 +182,13 @@ public class FinanceReportController implements Initializable {
         return FileIO.getCountOfX("Payment", 3);
     }
 
-    public void initLineChart() {
+    public void initAnimatedLineChart() {
         double priceMultiplier = 1.15;
         try {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_DATE;
             DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy MMM");
 
-//            // Revenue: Month -> Total Sales
-//            revenueMap = new HashMap<>();
-//
-//            // Cost: Month -> Total Payments
-//            costMap = new HashMap<>();
-
             // Parse item prices
-//            Map<String, Double> priceMap = new HashMap<>();
             try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Item.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -206,7 +203,7 @@ public class FinanceReportController implements Initializable {
             try (BufferedReader transReader = new BufferedReader(new FileReader("src/main/java/db/Transaction.txt"));
                  BufferedReader salesReader = new BufferedReader(new FileReader("src/main/java/db/Sales.txt"))) {
 
-                Map<String, String> salesDateMap = new HashMap<>(); // SalesID -> CreatedDate
+                Map<String, String> salesDateMap = new HashMap<>();
 
                 String line;
                 while ((line = salesReader.readLine()) != null) {
@@ -229,7 +226,6 @@ public class FinanceReportController implements Initializable {
                             .add(BigDecimal.valueOf(amount))
                             .setScale(2, RoundingMode.HALF_UP);
                     revenueMap.put(month, newRevenue.doubleValue());
-
                 }
             }
 
@@ -245,44 +241,133 @@ public class FinanceReportController implements Initializable {
                             .add(BigDecimal.valueOf(amount))
                             .setScale(2, RoundingMode.HALF_UP);
                     costMap.put(month, newCost.doubleValue());
-
                 }
             }
 
-            // Collect all months from both maps
-//            TreeSet<String> allMonths = new TreeSet<>(Comparator.comparing(m -> LocalDate.parse(m + "-01", DateTimeFormatter.ofPattern("yyyy MMM-dd"))));
             allMonths.addAll(revenueMap.keySet());
             allMonths.addAll(costMap.keySet());
 
-            // Create data series
-            XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
-            revenueSeries.setName("Revenue");
-
-            XYChart.Series<String, Number> costSeries = new XYChart.Series<>();
-            costSeries.setName("Cost");
-
-            XYChart.Series<String, Number> profitSeries = new XYChart.Series<>();
-            profitSeries.setName("Profit");
-
-            for (String month : allMonths) {
-                double revenue = revenueMap.getOrDefault(month, 0.0);
-                double cost = costMap.getOrDefault(month, 0.0);
-                double profit = BigDecimal.valueOf(revenue - cost).setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-                revenueSeries.getData().add(new XYChart.Data<>(month, revenue));
-                costSeries.getData().add(new XYChart.Data<>(month, cost));
-                profitSeries.getData().add(new XYChart.Data<>(month, profit));
-            }
-
-            lineChart.getData().addAll(revenueSeries, costSeries, profitSeries);
+            createAnimatedChartSeries();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private void createAnimatedChartSeries() {
+        XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
+        revenueSeries.setName("Revenue");
+
+        XYChart.Series<String, Number> costSeries = new XYChart.Series<>();
+        costSeries.setName("Cost");
+
+        XYChart.Series<String, Number> profitSeries = new XYChart.Series<>();
+        profitSeries.setName("Profit");
+
+        lineChart.getData().addAll(revenueSeries, costSeries, profitSeries);
+
+        lineChart.getStylesheets().add(getClass().getResource("/css/animated-chart.css").toExternalForm());
+
+        Timeline dataAnimation = new Timeline();
+        List<String> monthsList = new ArrayList<>(allMonths);
+
+        for (int i = 0; i < monthsList.size(); i++) {
+            final int index = i;
+            final String month = monthsList.get(i);
+
+            KeyFrame keyFrame = new KeyFrame(
+                    Duration.millis(500 + i * 300),
+                    e -> {
+                        double revenue = revenueMap.getOrDefault(month, 0.0);
+                        double cost = costMap.getOrDefault(month, 0.0);
+                        double profit = BigDecimal.valueOf(revenue - cost).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+                        XYChart.Data<String, Number> revenueData = new XYChart.Data<>(month, revenue);
+                        XYChart.Data<String, Number> costData = new XYChart.Data<>(month, cost);
+                        XYChart.Data<String, Number> profitData = new XYChart.Data<>(month, profit);
+
+                        revenueSeries.getData().add(revenueData);
+                        costSeries.getData().add(costData);
+                        profitSeries.getData().add(profitData);
+
+                        animateDataPointAppearance(revenueData);
+                        animateDataPointAppearance(costData);
+                        animateDataPointAppearance(profitData);
+                    }
+            );
+            dataAnimation.getKeyFrames().add(keyFrame);
+        }
+
+        dataAnimation.play();
+    }
+
+    private void animateDataPointAppearance(XYChart.Data<String, Number> data) {
+        Timeline waitForNode = new Timeline(new KeyFrame(Duration.millis(50), e -> {
+            if (data.getNode() != null) {
+                data.getNode().setScaleX(0);
+                data.getNode().setScaleY(0);
+
+                ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(400), data.getNode());
+                scaleTransition.setFromX(0);
+                scaleTransition.setFromY(0);
+                scaleTransition.setToX(1.2);
+                scaleTransition.setToY(1.2);
+                scaleTransition.setInterpolator(Interpolator.EASE_OUT);
+
+                ScaleTransition bounceBack = new ScaleTransition(Duration.millis(200), data.getNode());
+                bounceBack.setFromX(1.2);
+                bounceBack.setFromY(1.2);
+                bounceBack.setToX(1);
+                bounceBack.setToY(1);
+
+                SequentialTransition sequence = new SequentialTransition(scaleTransition, bounceBack);
+                sequence.play();
+            }
+        }));
+        waitForNode.play();
+    }
+
+
+    private void startDataPointHighlights() {
+        Timeline highlightTimeline = new Timeline();
+
+        KeyFrame highlightFrame = new KeyFrame(Duration.seconds(2), e -> {
+            if (!lineChart.getData().isEmpty()) {
+                Random random = new Random();
+                XYChart.Series<String, Number> randomSeries = lineChart.getData().get(random.nextInt(lineChart.getData().size()));
+
+                if (!randomSeries.getData().isEmpty()) {
+                    XYChart.Data<String, Number> randomData = randomSeries.getData().get(random.nextInt(randomSeries.getData().size()));
+
+                    if (randomData.getNode() != null) {
+                        ScaleTransition pulse = new ScaleTransition(Duration.millis(800), randomData.getNode());
+                        pulse.setFromX(1);
+                        pulse.setFromY(1);
+                        pulse.setToX(1.5);
+                        pulse.setToY(1.5);
+                        pulse.setCycleCount(2);
+                        pulse.setAutoReverse(true);
+                        pulse.setInterpolator(Interpolator.EASE_BOTH);
+                        pulse.play();
+
+                        randomData.getNode().setStyle("-fx-effect: dropshadow(gaussian, rgba(139, 43, 255, 0.8), 15, 0.5, 0, 0);");
+
+                        Timeline removeGlow = new Timeline(new KeyFrame(Duration.millis(1600), ev -> {
+                            randomData.getNode().setStyle("");
+                        }));
+                        removeGlow.play();
+                    }
+                }
+            }
+        });
+
+        highlightTimeline.getKeyFrames().add(highlightFrame);
+        highlightTimeline.setCycleCount(Timeline.INDEFINITE);
+        highlightTimeline.play();
+    }
+
     public void generateFinanceReport() throws JRException {
-        LocalDateTime now = LocalDateTime.now();  // Get current date and time
+        LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedNow = now.format(formatter);
 
@@ -331,6 +416,6 @@ public class FinanceReportController implements Initializable {
             System.out.println("PDF file was not generated.");
         }
     }
-
-
 }
+
+

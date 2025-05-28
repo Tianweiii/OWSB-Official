@@ -78,7 +78,7 @@
                         </Text>
                         <Text fx:id="profitMarginField" strokeType="OUTSIDE" strokeWidth="0.0" text="Profit Margin">
                            <font>
-                              <Font name="October Tamil Black" size="14.0" />
+                              <Font name="October Tamil Black" size="20.0" />
                            </font>
                         </Text>
                         <Text fill="#909090" strokeType="OUTSIDE" strokeWidth="0.0" text="This month">
