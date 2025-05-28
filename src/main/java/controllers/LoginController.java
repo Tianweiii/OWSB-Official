@@ -1,12 +1,11 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import models.Datas.Role;
 import models.Users.FinanceManager;
 import models.Users.User;
@@ -16,7 +15,6 @@ import models.Utils.QueryBuilder;
 import models.Utils.SessionManager;
 import org.start.owsb.Layout;
 import views.NotificationView;
-import views.adminViews.AdminDashboardView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,7 +23,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-	@FXML private AnchorPane rootPane;
+	@FXML private HBox rootPane;
 	@FXML private Button loginButton;
 	@FXML private TextField usernameField = new TextField();
 	@FXML private TextField passwordField = new TextField();
