@@ -68,6 +68,19 @@ public class Payment implements ModelInitializable {
 		paymentReference = data.get("paymentReference");
 	}
 
+	@Override
+	public String toString() {
+		return "Payment{" +
+				"paymentID='" + paymentID + '\'' +
+				", PO_ID='" + PO_ID + '\'' +
+				", userID='" + userID + '\'' +
+				", amount=" + amount +
+				", paymentMethod='" + paymentMethod + '\'' +
+				", createdAt='" + createdAt + '\'' +
+				", paymentReference='" + paymentReference + '\'' +
+				'}';
+	}
+
 	public static String generatePaymentReference(int hashKey) {
 		String prefix = "REF";
 		String temp = String.valueOf(hashKey);

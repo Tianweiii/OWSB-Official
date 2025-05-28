@@ -78,13 +78,12 @@ public class FinanceManager extends User {
         return qb.target(path).update(PO_ID, target);
     }
 
-    public void sendReceipt(String receiverEmail, String subject, String filename) throws IOException {
-//        String senderEmail = "tootzejiat@gmail.com";
+    public void sendReceipt(String receiverEmail, String subject, String body, String filename) throws IOException {
         String senderEmail = "tianweilow1003@gmail.com";
         String senderPassword = "wevy bwod yaai vnfy";
         String smtpHostServer = "smtp.gmail.com";
 
-        String emailBody = "Test message 123";
+        String emailBody = body;
        try {
            Properties props = System.getProperties();
            props.put("mail.smtp.host", smtpHostServer); // smtp host

@@ -63,9 +63,8 @@ public class PaymentSuccessController implements Initializable {
     private void setMainData() throws IOException, ReflectiveOperationException {
         // Payment details
         payment = FileIO.getObjectFromID(Payment.class, "Payment", 1, currentPO.getPoID());
-        System.out.println(payment);
+        System.out.println(payment.toString());
         user = FileIO.getIDsAsObject(FinanceManager.class, "User", payment.getUserID());
-        System.out.println(user);
 
         amountPaid.setText("RM " + payment.getAmount());
         email.setText(user.getEmail());
@@ -111,7 +110,7 @@ public class PaymentSuccessController implements Initializable {
 
         JasperPrint print = JasperFillManager.fillReport(report, params, dataSource);
 
-        String pdfPath = "receipt.pdf";
+        String pdfPath = "tmp/receipt" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".pdf";
         JasperExportManager.exportReportToPdfFile(print, pdfPath);
 
         File pdfFile = new File(pdfPath);
@@ -130,6 +129,6 @@ public class PaymentSuccessController implements Initializable {
         }
 
         // tootzejiat@gmail.com
-        fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "receipt.pdf");
+        fm.sendReceipt("leeaikyen@gmail.com", MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "Receipt for payment", pdfPath);
     }
 }

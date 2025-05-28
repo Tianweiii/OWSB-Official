@@ -114,6 +114,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
     }
 
     ObservableList<SalesTransactionDTO> getAllSales() throws IOException {
+        double salesMult = 1.15;
         Map<String, Item> priceMap = new HashMap<>();
         Map<String, Sales> salesMap = new HashMap<>();
         ArrayList<SalesTransactionDTO> list = new ArrayList<>();
@@ -133,11 +134,10 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String itemId = parts[0].trim();
-                Item item = new Item(itemId, parts[1].trim(), Double.parseDouble(parts[7].trim()));
+                Item item = new Item(itemId, parts[1].trim(), Double.parseDouble(parts[7].trim()) * salesMult);
                 priceMap.put(itemId, item);
             }
         }
-        System.out.println("there");
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Transaction.txt"))) {
             String line;
@@ -145,7 +145,7 @@ public class ViewAllSalesController extends ViewPageEssentials implements Initia
                 String[] parts = line.split(",");
                 String itemId = parts[3].trim();
                 int quantity = Integer.parseInt(parts[2].trim());
-                double amount = priceMap.get(itemId).getUnitPrice() * quantity;
+                double amount = Math.round((priceMap.get(itemId).getUnitPrice() * quantity) * 100.0) / 100.0;
 
                 list.add(new SalesTransactionDTO(parts[0], priceMap.get(itemId).getItemName(), amount, salesMap.get(parts[4]).getCreatedAt().toString(), salesMap.get(parts[4]).getUserID()));
             }

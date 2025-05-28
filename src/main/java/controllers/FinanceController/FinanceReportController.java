@@ -398,7 +398,7 @@ public class FinanceReportController implements Initializable {
 
         JasperPrint print = JasperFillManager.fillReport(report, params, dataSource);
 
-        String pdfPath = "financeReport" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".pdf";
+        String pdfPath = "tmp/financeReport" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".pdf";
         JasperExportManager.exportReportToPdfFile(print, pdfPath);
 
         File pdfFile = new File(pdfPath);
