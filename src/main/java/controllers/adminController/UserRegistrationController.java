@@ -13,6 +13,7 @@ import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
+import models.Utils.Validation;
 import views.NotificationView;
 
 import java.net.URL;
@@ -33,6 +34,23 @@ public class UserRegistrationController implements Initializable {
 	@FXML
 	public void handleRegisterButtonClick() {
 		try {
+			if (!Validation.isValidEmail(emailField.getText())) {
+				NotificationView notificationView = new NotificationView("Invalid email", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+				notificationView.show();
+				return;
+			}
+
+			if (!Validation.isValidNumeric(ageField.getText())) {
+				NotificationView notificationView = new NotificationView("Age must be numeric", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+				notificationView.show();
+				return;
+			} else {
+				if (Integer.parseInt(ageField.getText()) < 0) {
+					NotificationView notificationView = new NotificationView("Age cannot be negative", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+					notificationView.show();
+					return;
+				}
+			}
 			String[] dataToAdd = new String[]{
 					usernameField.getText(),
 					emailField.getText(),

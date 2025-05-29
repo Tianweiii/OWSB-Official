@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class UserListController implements Initializable {
 	private String[] columns;
-	@FXML private AnchorPane rootPane;
+	@FXML private HBox rootPane;
 	@FXML private ComboBox<String> filterComboBox;
 	@FXML private TextField searchField;
 	@FXML private Button btnSearch;
@@ -219,7 +219,7 @@ public class UserListController implements Initializable {
 		deleteUserView.show();
 	}
 
-	public AnchorPane getRootPane() {
+	public HBox getRootPane() {
 		return this.rootPane;
 	}
 }
