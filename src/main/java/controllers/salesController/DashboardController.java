@@ -395,7 +395,7 @@ public class DashboardController implements Initializable {
         double finalTotalRevenue = totalRevenue;
         ObservableList<PieChart.Data> pieData = productMetrics.entrySet().stream()
                 .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
-                .limit(8)  // Limit to top 8 products for better visibility
+                .limit(5)  // Limit to top 5 products for better visibility
                 .map(entry -> {
                     double percentage = (entry.getValue() / finalTotalRevenue) * 100;
                     return new PieChart.Data(
