@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import models.DTO.PODataDTO;
@@ -35,13 +36,14 @@ import java.util.*;
 import static models.Datas.Item.stringifyDateTime;
 
 public class EditPRPOController implements Initializable {
-
     public interface ItemRow {
         String getItemID();
         String getItemName();
         int getQuantity();
     }
 
+    @FXML
+    public Text goBackButton;
     @FXML
     public Text title_text; // Eg. Purchase Request Item List
     @FXML
@@ -1307,6 +1309,18 @@ public class EditPRPOController implements Initializable {
                 }
             }
         }
+    }
+
+    public void goBack(){
+        Navigator.getInstance().goBack();
+    }
+
+    public void hoverGoBack(){
+        goBackButton.setFill(Color.web("#505050"));
+    }
+
+    public void mouseExitGoBack(){
+        goBackButton.setFill(Color.web("#909090"));
     }
 
 }
