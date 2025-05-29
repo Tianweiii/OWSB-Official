@@ -171,6 +171,7 @@ public class DailyItemSalesController implements Initializable {
 		}
 
 		double total = service.calculateTotalFor(datePicker.getValue());
+		System.out.println("total:" + String.format("$%.2f", total) + " " + total);
 		totalLabel.setText(String.format("$%.2f", total));
 		totalLabel.setTooltip(new Tooltip("Total sales for " + dateFormatter.format(datePicker.getValue())));
 	}
@@ -222,12 +223,14 @@ public class DailyItemSalesController implements Initializable {
 						} else {
 							// Special handling for unit price - show original and markup
 							if (propertyName.equals("markedUpPrice") && item instanceof Double price) {
-                                setText(String.format("$%.2f\n(+15%%)", price));
-								setTooltip(new Tooltip(String.format("Original: $%.2f, Markup: 15%%", price/1.15)));
-
+								setText(String.format("$%.2f\n(+15%%)", price));
+								setTooltip(new Tooltip(String.format("Original: $%.2f, Markup: 15%%", price / 1.15)));
+							} else if (propertyName.equals("markedUpSubtotal") && item instanceof Double subtotal) {
+								setText(String.format("$%.2f\n(+15%%)", subtotal));
 							} else {
 								setText(item.toString());
 							}
+
 							setAlignment(Pos.CENTER);
 							setWrapText(true);
 							setTextAlignment(TextAlignment.CENTER);
