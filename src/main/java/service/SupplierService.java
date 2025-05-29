@@ -5,9 +5,6 @@ import models.Utils.QueryBuilder;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Business logic for managing suppliers.
- */
 public class SupplierService extends Service<Supplier> {
     private static final String DB_PATH = "db/supplier";
 
@@ -22,36 +19,28 @@ public class SupplierService extends Service<Supplier> {
         }
     }
 
-    /**
-     * Add a new supplier. Returns true if creation succeeds.
-     */
     public boolean add(String name, String company, String phone, String address) {
         try {
+            String modifiedAddress = address.replace(",", "|");
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-            return qb.target(DB_PATH).values(new String[]{name, company, phone, address}).create();
+            return qb.target(DB_PATH).values(new String[]{name, company, phone, modifiedAddress}).create();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    /**
-     * Update an existing supplier by ID. Returns true on success.
-     */
     public boolean update(String id, String name, String company, String phone, String address) {
         try {
+            String modifiedAddress = address.replace(",", "|");
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-            return qb.update(id, new String[]{name, company, phone, address}
-            );
+            return qb.update(id, new String[]{name, company, phone, modifiedAddress});
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    /**
-     * Delete a supplier by ID. Returns true on success.
-     */
     public boolean delete(String id) {
         try {
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);

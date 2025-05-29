@@ -42,7 +42,7 @@ public class Supplier implements ModelInitializable {
     }
 
     public String getAddress() {
-        return this.address;
+        return this.address.replace("|", ",");
     }
 
 	public static ArrayList<HashMap<String, String>> getSupplierNameById(String supplierID) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -60,10 +60,9 @@ public class Supplier implements ModelInitializable {
 		this.supplierName = data.get("supplierName");
 		this.company = data.get("company");
 		this.phoneNumber = data.get("phoneNumber");
-        this.address = data.get("address");
+        this.address = data.get("address").replace("|", ",");
     }
 
-	// for the fileIO class init
 	public Supplier(String[] data) {
 		supplierID = data[0];
 		supplierName = data[1];
