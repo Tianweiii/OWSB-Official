@@ -32,9 +32,9 @@ public class SupplierService extends Service<Supplier> {
 
     public boolean update(String id, String name, String company, String phone, String address) {
         try {
+            String modifiedAddress = address.replace(",", "|");
             QueryBuilder<Supplier> qb = new QueryBuilder<>(Supplier.class);
-            return qb.update(id, new String[]{name, company, phone, address}
-            );
+            return qb.update(id, new String[]{name, company, phone, modifiedAddress});
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
