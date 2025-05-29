@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane fx:id="editUserPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminController.EditUserController">
+<Pane fx:id="editUserPane" prefHeight="476.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminController.EditUserController">
    <children>
-      <HBox alignment="CENTER" layoutX="69.0" prefHeight="400.0" prefWidth="462.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <HBox alignment="CENTER" layoutX="89.0" prefHeight="476.0" prefWidth="422.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
             <VBox alignment="CENTER" prefHeight="393.0" prefWidth="278.0">
                <children>
@@ -27,7 +27,7 @@
                               <Label prefHeight="18.0" prefWidth="280.0" text="Username" />
                               <TextField fx:id="editUsernameField" />
                               <Label layoutX="10.0" layoutY="97.0" prefHeight="18.0" prefWidth="280.0" text="Password" />
-                              <TextField fx:id="editEmailField1" layoutX="10.0" layoutY="126.0" />
+                              <TextField fx:id="editPasswordField" layoutX="10.0" layoutY="126.0" />
                               <Label layoutX="10.0" layoutY="10.0" prefHeight="18.0" prefWidth="280.0" text="Email" />
                               <TextField fx:id="editEmailField" layoutX="10.0" layoutY="28.0" />
                               <Label layoutX="10.0" layoutY="54.0" prefHeight="18.0" prefWidth="280.0" text="Position" />

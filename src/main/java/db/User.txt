@@ -1,13 +1,13 @@
-U3,Maika,many@mail.com,abcde,addy,21,2
-U1,John,man@mail.com,abcde,addy,20,1
-U2,Poon,man@mail.com,abcde,addy,21,2
-U4,Mannn,man@mail.com,abcde,addyib,20,1
-U5,Albert,man@mail.com,abcde,addy,20,3
-U6,Sien,man@mail.com,abcde,addy,40,1
-U7,Amber,man@mail.com,abcde,addy,69,1
-U8,Gamer,man@mail.com,abcde,addy,32,2
-U9,Yasuo,man@mail.com,abcde,addy,22,3
-U10,Poppy,man@mail.com,abcde,addy,320,1
+U3,Maika,many@mail.com,abcde,Purchase Manager,21,3
+U1,John,man@mail.com,abcde,Purchase Manager,20,3
+U2,Poon,man@mail.com,abcde,Sales Manager,21,2
+U4,Mannn,man@mail.com,abcde,Admin,20,1
+U5,Albert,man@mail.com,abcde,Admin,20,1
+U6,Sien,man@mail.com,abcde,Admin,40,1
+U7,Amber,man@mail.com,abcde,Admin,69,1
+U8,Gamer,man@mail.com,abcde,Sales Manager,32,2
+U9,Yasuo,man@mail.com,abcde,Purchase Manager,22,3
+U10,Poppy,man@mail.com,abcde,Admin,320,1
 U11,TestUser1,mail@mail.com,7NcYcNGWMxapfjrDQIyYNa2M8PPBvHA1J8MCZVNPda4=,Admin,83,1
 U12,testSales,mamamam@ammama.com,jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=,Sales Manager,54,2
 U13,inventory,inventory@gmail.com,zWPvJx+fXIHDrJ4k5UT36YI2DrwCe/TmtpYEhbE/iec=,Inventory Manager,28,4
@@ -18,3 +18,4 @@ U17,Tian,tian123@gmail.com,123123123,FinanceManager,21,5
 U18,Ethan,ethan@gmail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Finance Manager,21,5
 U19,testInventory,adfasd@mail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Inventory Manager,22,4
 U20,Cindy,sales@gmail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Sales Manager,100,2
+U21,Jia Yin,jiayin@gmail.com,e9MNmaZIpwKD4CAT9V79gPn6YadBGBavjb3707SVSsg=,Inventory Manager,25,4

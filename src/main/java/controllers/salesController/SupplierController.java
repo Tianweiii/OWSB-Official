@@ -124,6 +124,7 @@ public class SupplierController implements Initializable {
         this.txtSearch.clear();
         this.table.setItems(this.masterList);
         this.table.refresh();
+        this.updateSupplierCount(masterList.size());
     }
 
     @FXML private void hideAddForm() {
