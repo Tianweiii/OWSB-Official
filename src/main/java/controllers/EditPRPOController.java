@@ -85,6 +85,8 @@ public class EditPRPOController implements Initializable {
     @FXML
     public HBox datepicker_container;
     @FXML
+    public Text datepicker_title_text;
+    @FXML
     public DatePicker datepicker;
     @FXML
     public Button action_button_1;
@@ -366,8 +368,10 @@ public class EditPRPOController implements Initializable {
                     po_title_container.setVisible(true);
                     po_title_text_field.setText(poData.getTitle());
                 } else if (prData != null){
-                    datepicker.setEditable(false);
-                    datepicker.setDisable(true);
+                    datepicker.setVisible(false);
+                    DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+                    String prRequiredDate = datepicker.getValue().format(formatter);
+                    datepicker_title_text.setText("PR Required Date: " + prRequiredDate);
                 }
             }
 
@@ -558,7 +562,10 @@ public class EditPRPOController implements Initializable {
                 po_title_container.setVisible(true);
                 po_title_text.setText("Enter a Purchase Order Title: ");
                 po_title_text_field.setEditable(true);
-                datepicker_container.setVisible(false);
+                datepicker.setVisible(false);
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+                String prRequiredDate = datepicker.getValue().format(formatter);
+                datepicker_title_text.setText("PR Required Date: " + prRequiredDate);
 
                 action_button_1.setVisible(false);
                 action_button_2.setText("Approve PR");
@@ -1312,7 +1319,8 @@ public class EditPRPOController implements Initializable {
     }
 
     public void goBack(){
-        Navigator.getInstance().goBack();
+        Navigator navigator = Navigator.getInstance();
+        navigator.navigate(navigator.getRouters("purchase").getRoute("PRPO"));
     }
 
     public void hoverGoBack(){

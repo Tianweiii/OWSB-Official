@@ -169,7 +169,7 @@
             </HBox>
             <HBox fx:id="datepicker_container" spacing="20.0" visible="false" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="25.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PR Required Date: ">
+                  <Text fx:id="datepicker_title_text" strokeType="OUTSIDE" strokeWidth="0.0" text="PR Required Date: ">
                      <font>
                         <Font size="16.0" />
                      </font>
