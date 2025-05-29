@@ -37,31 +37,47 @@ public class ItemListController implements Initializable {
 	private final SupplierService supplierService = new SupplierService();
 	private SessionManager session = SessionManager.getInstance();
 	private String user_role = session.getUserData().get("roleID");
-	@FXML private AnchorPane rootPane;
-	@FXML private Button addItemButton,searchButton, clearSearchButton, deleteButton, cancelDeleteItemButton, saveEditItemButton, cancelEditItemButton, saveAddItemButton, cancelAddItemButton;
-	@FXML private ChoiceBox<String> filterByChoiceBox;
-	@FXML private TextField searchField;
-	@FXML private TableView<ItemListDTO> itemTable = new TableView<>();
-	@FXML private ComboBox<String> filterComboBox;
-	@FXML private Label totalItemsLabel;
+	@FXML
+	private AnchorPane rootPane;
+	@FXML
+	private Button addItemButton, searchButton, clearSearchButton, deleteButton, cancelDeleteItemButton, saveEditItemButton, cancelEditItemButton, saveAddItemButton, cancelAddItemButton;
+	@FXML
+	private ChoiceBox<String> filterByChoiceBox;
+	@FXML
+	private TextField searchField;
+	@FXML
+	private TableView<ItemListDTO> itemTable = new TableView<>();
+	@FXML
+	private ComboBox<String> filterComboBox;
+	@FXML
+	private Label totalItemsLabel;
 
 	@FXML
 	Pane addItemPane, deleteItemPane;
 
 	@FXML
 	private TextField addItemNameField;
-	@FXML private TextField addItemPriceField, itemDescField;
-	@FXML private ComboBox<Supplier> supplierComboBox = new ComboBox<>();
+	@FXML
+	private TextField addItemPriceField, itemDescField;
+	@FXML
+	private ComboBox<Supplier> supplierComboBox = new ComboBox<>();
 
 
-	@FXML private VBox deletePane;
-	@FXML private Label itemToBeDeleted = new Label();
+	@FXML
+	private VBox deletePane;
+	@FXML
+	private Label itemToBeDeleted = new Label();
 
-	@FXML private Pane editItemPane;
-	@FXML private TextField editItemNameField = new TextField();
-	@FXML private TextField editItemDescField = new TextField();
-	@FXML private TextField editItemPriceField = new TextField();
-	@FXML private ComboBox<Supplier> editSupplierComboBox = new ComboBox<>();
+	@FXML
+	private Pane editItemPane;
+	@FXML
+	private TextField editItemNameField = new TextField();
+	@FXML
+	private TextField editItemDescField = new TextField();
+	@FXML
+	private TextField editItemPriceField = new TextField();
+	@FXML
+	private ComboBox<Supplier> editSupplierComboBox = new ComboBox<>();
 
 	// Clears the search field and refreshes results
 	public void onClear() {
@@ -97,7 +113,7 @@ public class ItemListController implements Initializable {
 	}
 
 	@FXML
-	public void onCancelEditItemButtonClick(){
+	public void onCancelEditItemButtonClick() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
 		root.getChildren().remove(this.editItemPane);
@@ -187,7 +203,7 @@ public class ItemListController implements Initializable {
 					itemTable.refresh();
 				});
 				notificationView = new NotificationView("Item has been successfully changed", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
-			}else {
+			} else {
 				notificationView = new NotificationView("Item update failed", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 			}
 			notificationView.show();
@@ -196,7 +212,8 @@ public class ItemListController implements Initializable {
 		}
 	}
 
-	@FXML public void onDeleteItemButtonClick() throws IOException {
+	@FXML
+	public void onDeleteItemButtonClick() throws IOException {
 		HashMap<String, String> oldData = DeleteConfirmationView.getData();
 		String selectedId = oldData.get("itemID");
 		try {
@@ -214,7 +231,7 @@ public class ItemListController implements Initializable {
 					controller.getItemTable().refresh();
 					controller.updateItemCount(controller.getItemTable().getItems().size());
 				});
-			}else {
+			} else {
 				notificationView = new NotificationView("Item deletion failed", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 			}
 			notificationView.show();
@@ -223,14 +240,15 @@ public class ItemListController implements Initializable {
 			BorderPane root = layout.getRoot();
 			root.getChildren().remove(this.deleteItemPane);
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			NotificationView notificationView = new NotificationView(e.getMessage(), NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
 			notificationView.show();
 		}
 
 	}
 
-	@FXML public void onCancelDeleteItemButtonClick() {
+	@FXML
+	public void onCancelDeleteItemButtonClick() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
 		root.getChildren().remove(this.deleteItemPane);
@@ -240,7 +258,8 @@ public class ItemListController implements Initializable {
 		controller.getRootPane().setDisable(false);
 	}
 
-	@FXML public void onSaveAddItemButtonClick() throws IOException {
+	@FXML
+	public void onSaveAddItemButtonClick() throws IOException {
 		String itemName = this.addItemNameField.getText();
 		Supplier supplier = this.supplierComboBox.getValue();
 		String itemDescription = this.itemDescField.getText();
@@ -324,7 +343,8 @@ public class ItemListController implements Initializable {
 		}
 	}
 
-	@FXML public void onCancelAddItemButtonClick() {
+	@FXML
+	public void onCancelAddItemButtonClick() {
 		Layout layout = Layout.getInstance();
 		BorderPane root = layout.getRoot();
 		root.getChildren().remove(this.addItemPane);
@@ -380,7 +400,7 @@ public class ItemListController implements Initializable {
 				itemTable.getColumns().add(column);
 			}
 
-			if(user_role.equals("1") || user_role.equals("2")){
+			if (user_role.equals("1") || user_role.equals("2")) {
 				TableColumn<ItemListDTO, String> optionsColumns = this.getOptionsColumns();
 				itemTable.getColumns().add(optionsColumns);
 			} else if (user_role.equals("3")) {
@@ -427,7 +447,7 @@ public class ItemListController implements Initializable {
 
 		ObservableList<ItemListDTO> items = itemTable.getItems();
 
-		switch(sortOption) {
+		switch (sortOption) {
 			case "Name (A-Z)":
 				FXCollections.sort(items, Comparator.comparing(ItemListDTO::getItemName));
 				break;
@@ -507,6 +527,7 @@ public class ItemListController implements Initializable {
 
 		optionsColumns.setCellFactory(column -> new TableCell<>() {
 			private final MenuButton actionButton = new MenuButton("⋮");
+
 			{
 				actionButton.getStyleClass().addAll("action-button-table");
 				actionButton.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent; -fx-text-fill: #092165; -fx-background-radius: 4px; -fx-padding: 2px 10px;");
@@ -611,9 +632,16 @@ public class ItemListController implements Initializable {
 		// Add Form Validation
 		if (type.equals("add")) {
 			addItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidName(newValue)) {
+				if (newValue == null || newValue.trim().isEmpty()) {
+					addItemNameField.setStyle("");
+					validateAddForm();
+					return;
+				}
+
+				if (!Validation.isValidItemName(newValue)) {
 					addItemNameField.setStyle("-fx-border-color: red;");
 					saveAddItemButton.setDisable(true);
+					showNotification("Item name must be 2-100 characters with valid characters only", NotificationController.popUpType.error);
 				} else {
 					addItemNameField.setStyle("");
 					validateAddForm();
@@ -621,20 +649,52 @@ public class ItemListController implements Initializable {
 			});
 
 			addItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidDecimal(newValue)) {
+				if (newValue == null || newValue.trim().isEmpty()) {
+					addItemPriceField.setStyle("");
+					validateAddForm();
+					return;
+				}
+
+				if (!Validation.isValidPrice(newValue)) {
 					addItemPriceField.setStyle("-fx-border-color: red;");
 					saveAddItemButton.setDisable(true);
+					showNotification("Price must be a valid number greater than 0", NotificationController.popUpType.error);
 				} else {
 					addItemPriceField.setStyle("");
 					validateAddForm();
 				}
 			});
-		} else {
+
+			itemDescField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue == null || newValue.trim().isEmpty()) {
+					itemDescField.setStyle("");
+					validateAddForm();
+					return;
+				}
+
+				if (!Validation.isValidDescription(newValue)) {
+					itemDescField.setStyle("-fx-border-color: red;");
+					saveAddItemButton.setDisable(true);
+					showNotification("Description must be less than 500 characters with valid characters only", NotificationController.popUpType.error);
+				} else {
+					itemDescField.setStyle("");
+					validateAddForm();
+				}
+			});
+
+			supplierComboBox.valueProperty().addListener((observable, oldValue, newValue) -> validateAddForm());
+
+		} else if (type.equals("edit")) {
 			// Edit Form Validation
 			editItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidName(newValue)) {
+				if (newValue == null || newValue.trim().isEmpty()) {
 					editItemNameField.setStyle("-fx-border-color: red;");
 					saveEditItemButton.setDisable(true);
+					showNotification("Item name cannot be empty", NotificationController.popUpType.error);
+				} else if (!Validation.isValidItemName(newValue)) {
+					editItemNameField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+					showNotification("Item name must be 2-100 characters with valid characters only", NotificationController.popUpType.error);
 				} else {
 					editItemNameField.setStyle("");
 					validateEditForm();
@@ -642,29 +702,67 @@ public class ItemListController implements Initializable {
 			});
 
 			editItemPriceField.textProperty().addListener((observable, oldValue, newValue) -> {
-				if (!Validation.isValidDecimal(newValue)) {
+				if (newValue == null || newValue.trim().isEmpty()) {
 					editItemPriceField.setStyle("-fx-border-color: red;");
 					saveEditItemButton.setDisable(true);
+					showNotification("Price cannot be empty", NotificationController.popUpType.error);
+				} else if (!Validation.isValidPrice(newValue)) {
+					editItemPriceField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+					showNotification("Price must be a valid number greater than 0", NotificationController.popUpType.error);
 				} else {
 					editItemPriceField.setStyle("");
 					validateEditForm();
 				}
 			});
-		}
 
+			editItemDescField.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue == null || newValue.trim().isEmpty()) {
+					editItemDescField.setStyle("");
+					validateEditForm();
+					return;
+				}
+
+				if (!Validation.isValidDescription(newValue)) {
+					editItemDescField.setStyle("-fx-border-color: red;");
+					saveEditItemButton.setDisable(true);
+					showNotification("Description must be less than 500 characters with valid characters only", NotificationController.popUpType.error);
+				} else {
+					editItemDescField.setStyle("");
+					validateEditForm();
+				}
+			});
+
+			editSupplierComboBox.valueProperty().addListener((observable, oldValue, newValue) -> validateEditForm());
+		}
 	}
 
 	private void validateAddForm() {
-		boolean isValid = Validation.isValidName(addItemNameField.getText()) &&
-				Validation.isValidDecimal(addItemPriceField.getText()) &&
+		boolean isValid = Validation.isNotEmpty(addItemNameField.getText()) &&
+				Validation.isValidItemName(addItemNameField.getText()) &&
+				Validation.isNotEmpty(addItemPriceField.getText()) &&
+				Validation.isValidPrice(addItemPriceField.getText()) &&
+				Validation.isValidDescription(itemDescField.getText()) &&
 				supplierComboBox.getValue() != null;
 		saveAddItemButton.setDisable(!isValid);
 	}
 
 	private void validateEditForm() {
-		boolean isValid = Validation.isValidName(editItemNameField.getText()) &&
-				Validation.isValidDecimal(editItemPriceField.getText()) &&
+		boolean isValid = Validation.isNotEmpty(editItemNameField.getText()) &&
+				Validation.isValidItemName(editItemNameField.getText()) &&
+				Validation.isNotEmpty(editItemPriceField.getText()) &&
+				Validation.isValidPrice(editItemPriceField.getText()) &&
+				Validation.isValidDescription(editItemDescField.getText()) &&
 				editSupplierComboBox.getValue() != null;
 		saveEditItemButton.setDisable(!isValid);
+	}
+
+	private void showNotification(String message, NotificationController.popUpType type) {
+		try {
+			NotificationView notificationView = new NotificationView(message, type, NotificationController.popUpPos.TOP);
+			notificationView.show();
+		} catch (Exception ex) {
+			System.err.println("Failed to show notification: " + ex.getMessage());
+		}
 	}
 }

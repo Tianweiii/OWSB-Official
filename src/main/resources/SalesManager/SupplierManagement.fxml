@@ -83,10 +83,11 @@
             <VBox spacing="10">
                 <TableView fx:id="table" prefWidth="684.0" styleClass="sales-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                        <TableColumn fx:id="colId" prefWidth="30" text="ID" />
                         <TableColumn fx:id="colName" prefWidth="180" text="Name" />
                         <TableColumn fx:id="colPhone" prefWidth="140" text="Phone" />
                         <TableColumn fx:id="colCompany" prefWidth="180" text="Company" />
+                        <TableColumn fx:id="colAddress" prefWidth="180" text="Address" />
                         <TableColumn fx:id="colActions" maxWidth="100.0" prefWidth="80" />
                     </columns>
                     <columnResizePolicy>

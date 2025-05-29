@@ -31,10 +31,6 @@ public class DailySalesHistory implements ModelInitializable {
 	public LocalDate getCreatedAt() {
 		return this.createdAt;
 	}
-
-	public LocalDate getUpdatedAt() {
-		return this.updatedAt;
-	}
 	
 	public String getStatus() {
 		return this.status == null ? "Pending" : this.status;

@@ -34,7 +34,6 @@ public class Transaction implements ModelInitializable {
 		this.salesID = data.get("salesID");
 	}
 
-	// Call this after you load the Item record
 	public void enrich(String name, double price) {
 
 	}

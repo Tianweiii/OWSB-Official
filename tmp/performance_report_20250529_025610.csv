@@ -1,0 +1,37 @@
+﻿OWSB Sales Performance Dashboard Report
+==========================================
+Generated on: 2025-05-29 02:56:10
+
+1. EXECUTIVE SUMMARY
+------------------
+Total Revenue (Period),12014.97
+Total Profit (Period),1567.17
+Total Orders (Period),13
+Overall Profit Margin,13.0%
+Active Suppliers,21
+
+2. DAILY PERFORMANCE METRICS
+-------------------------
+Date,Revenue,Profit,Orders,Average Order Value,Profit Margin %,Target Achievement %,Growth Rate %
+May 21, 2025,45.77,5.97,1,45.77,13.0,0.5,0.0
+May 22, 2025,68.66,8.96,1,68.66,13.0,0.7,50.0
+May 23, 2025,1746.85,227.85,5,349.37,13.0,17.5,2444.4
+May 24, 2025,9338.00,1218.00,1,9338.00,13.0,93.4,434.6
+May 28, 2025,815.69,106.39,3,271.90,13.0,8.2,-91.3
+
+3. PRODUCT PERFORMANCE ANALYSIS
+-----------------------------
+Product Name,Total Revenue,Total Units Sold,Profit Contribution %,Average Price,Profit per Unit,Performance Status
+Screwdriver Set,9579.50,238,78.7,40.25,5.25,Top Performer
+Power Drills,1656.00,8,13.6,207.00,27.00,Strong Performer
+Adjustable Wrench,503.47,22,4.1,22.88,2.99,Under Performer
+Pliers Set,276.00,6,2.3,46.00,6.00,Under Performer
+Utility Knife,109.25,10,0.9,10.92,1.42,Under Performer
+Wire Cutters,50.60,2,0.4,25.30,3.30,Under Performer
+
+4. PERFORMANCE INDICATORS
+------------------------
+Metric,Value,Status
+Average Daily Revenue,2434.96,Below Target
+Average Order Value,936.52,Exceptional
+Profit Margin,13.0%,Below Target

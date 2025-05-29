@@ -27,29 +27,13 @@ public class Sales implements ModelInitializable {
 	public String getSalesID() {
 		return this.salesID;
 	}
-	public StringProperty salesIDProperty() {
-		return new SimpleStringProperty(this.salesID);
-	}
 
 	public LocalDate getCreatedAt() {
 		return this.createdAt;
 	}
-	public LocalDate createdAtProperty() {
-		return this.createdAt;
-	}
-
-	public LocalDate getUpdatedAt() {
-		return this.updatedAt;
-	}
-	public LocalDate updatedAtProperty() {
-		return this.updatedAt;
-	}
 
 	public String getUserID() {
 		return this.userID;
-	}
-	public StringProperty userIDProperty() {
-		return new SimpleStringProperty(this.userID);
 	}
 
 	@Override

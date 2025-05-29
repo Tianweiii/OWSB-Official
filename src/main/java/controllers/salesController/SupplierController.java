@@ -32,7 +32,7 @@ public class SupplierController implements Initializable {
     @FXML private Button addSupplierBtn;
     @FXML private StackPane rootPane;
     @FXML private TableView<Supplier> table;
-    @FXML private TableColumn<Supplier, String> colId,colName,colPhone,colCompany;
+    @FXML private TableColumn<Supplier, String> colId,colName,colPhone,colCompany,colAddress;
     @FXML private TableColumn<Supplier, Void> colActions;
     @FXML private Label totalSupplierLabel;
 
@@ -72,7 +72,8 @@ public class SupplierController implements Initializable {
         colPhone.setStyle("-fx-alignment: CENTER;");
         colCompany.setCellValueFactory(new PropertyValueFactory<>("companyName"));
         colCompany.setStyle("-fx-alignment: CENTER;");
-
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colAddress.setStyle("-fx-alignment: CENTER;");
 
         masterList = FXCollections.observableArrayList(svc.getAll());
         updateSupplierCount(masterList.size());
@@ -110,7 +111,6 @@ public class SupplierController implements Initializable {
         }
     }
 
-    /** Show the "add" panel with animation */
     @FXML private void showAddForm() {
         showPane(addFormPane);
         addNameField.clear();
@@ -126,12 +126,10 @@ public class SupplierController implements Initializable {
         this.table.refresh();
     }
 
-    /** Hide the "add" panel with animation */
     @FXML private void hideAddForm() {
         hidePane(addFormPane);
     }
 
-    /** Show the "edit" panel with animation */
     private void showEditForm(Supplier s) {
         editingSupplier = s;
         editNameField.setText(s.getSupplierName());
@@ -141,7 +139,7 @@ public class SupplierController implements Initializable {
         showPane(editFormPane);
     }
 
-    /** Hide the "edit" panel with animation */
+
     @FXML private void hideEditForm() {
         hidePane(editFormPane);
     }
@@ -155,12 +153,12 @@ public class SupplierController implements Initializable {
                         : masterList.filtered(s ->
                         s.getSupplierName().toLowerCase().contains(txt) ||
                                 s.getCompanyName().toLowerCase().contains(txt) ||
+                                s.getAddress().toLowerCase().contains(txt) ||
                                 s.getPhoneNumber().contains(txt))
         );
         updateSupplierCount(table.getItems().size());
     }
 
-    /** Sort handler */
     private void applySort() {
         String choice = cmbSort.getValue();
         if (choice == null) return;
@@ -175,7 +173,6 @@ public class SupplierController implements Initializable {
         table.refresh();
     }
 
-    /** Refresh table data */
     private void refreshTable() {
         Platform.runLater(() -> {
             masterList.setAll(svc.getAll());
@@ -185,7 +182,6 @@ public class SupplierController implements Initializable {
         });
     }
 
-    /** Add "⋮" Actions column */
     private void addActionsColumn() {
         Callback<TableColumn<Supplier, Void>, TableCell<Supplier, Void>> cf = col -> new TableCell<>() {
             private final MenuButton actionButton = new MenuButton("⋮");
@@ -288,7 +284,6 @@ public class SupplierController implements Initializable {
     }
 
     private void setupFormValidation() {
-        // Add Form Validation
         addNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.trim().isEmpty()) {
                 addNameField.setStyle("");
@@ -299,7 +294,7 @@ public class SupplierController implements Initializable {
             if (!Validation.isValidName(newValue)) {
                 addNameField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
-                showNotification("Invalid name format", NotificationController.popUpType.error);
+                showNotification("Name must contain only letters, numbers, and spaces", NotificationController.popUpType.error);
             } else {
                 addNameField.setStyle("");
                 validateAddForm();
@@ -316,7 +311,7 @@ public class SupplierController implements Initializable {
             if (!Validation.isValidPhone(newValue)) {
                 addPhoneField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
-                showNotification("Invalid phone number format", NotificationController.popUpType.error);
+                showNotification("Please enter a valid phone number", NotificationController.popUpType.error);
             } else {
                 addPhoneField.setStyle("");
                 validateAddForm();
@@ -330,10 +325,10 @@ public class SupplierController implements Initializable {
                 return;
             }
 
-            if (!Validation.isValidName(newValue)) {
+            if (!Validation.isValidCompanyName(newValue)) {
                 addCompanyField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
-                showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+                showNotification("Company name contains invalid characters", NotificationController.popUpType.error);
             } else {
                 addCompanyField.setStyle("");
                 validateAddForm();
@@ -347,21 +342,26 @@ public class SupplierController implements Initializable {
                 return;
             }
 
-            if (!Validation.isValidName(newValue)) {
+            if (!Validation.isValidAddress(newValue)) {
                 addAddressField.setStyle("-fx-border-color: red;");
                 addSubmitBtn.setDisable(true);
-                showNotification("Invalid address format", NotificationController.popUpType.error);
+                showNotification("Address must be 5-200 characters and contain valid characters only", NotificationController.popUpType.error);
+            } else {
+                addAddressField.setStyle("");
+                validateAddForm();
             }
-            addAddressField.setStyle("");
-            validateAddForm();
         });
 
         // Edit Form Validation
         editNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Validation.isValidName(newValue)) {
+            if (newValue == null || newValue.trim().isEmpty()) {
                 editNameField.setStyle("-fx-border-color: red;");
                 editSaveBtn.setDisable(true);
-                showNotification("Invalid name format", NotificationController.popUpType.error);
+                showNotification("Supplier name cannot be empty", NotificationController.popUpType.error);
+            } else if (!Validation.isValidName(newValue)) {
+                editNameField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Name must contain only letters, numbers, and spaces", NotificationController.popUpType.error);
             } else {
                 editNameField.setStyle("");
                 validateEditForm();
@@ -369,10 +369,14 @@ public class SupplierController implements Initializable {
         });
 
         editPhoneField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Validation.isValidPhone(newValue)) {
+            if (newValue == null || newValue.trim().isEmpty()) {
                 editPhoneField.setStyle("-fx-border-color: red;");
                 editSaveBtn.setDisable(true);
-                showNotification("Invalid phone number format", NotificationController.popUpType.error);
+                showNotification("Phone number cannot be empty", NotificationController.popUpType.error);
+            } else if (!Validation.isValidPhone(newValue)) {
+                editPhoneField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Please enter a valid phone number", NotificationController.popUpType.error);
             } else {
                 editPhoneField.setStyle("");
                 validateEditForm();
@@ -380,10 +384,14 @@ public class SupplierController implements Initializable {
         });
 
         editCompanyField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.trim().isEmpty()) {
+            if (newValue == null || newValue.trim().isEmpty()) {
                 editCompanyField.setStyle("-fx-border-color: red;");
                 editSaveBtn.setDisable(true);
                 showNotification("Company name cannot be empty", NotificationController.popUpType.error);
+            } else if (!Validation.isValidCompanyName(newValue)) {
+                editCompanyField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Company name contains invalid characters", NotificationController.popUpType.error);
             } else {
                 editCompanyField.setStyle("");
                 validateEditForm();
@@ -391,10 +399,14 @@ public class SupplierController implements Initializable {
         });
 
         editAddressField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Validation.isValidName(newValue)) {
+            if (newValue == null || newValue.trim().isEmpty()) {
                 editAddressField.setStyle("-fx-border-color: red;");
                 editSaveBtn.setDisable(true);
-                showNotification("Invalid address format", NotificationController.popUpType.error);
+                showNotification("Address cannot be empty", NotificationController.popUpType.error);
+            } else if (!Validation.isValidAddress(newValue)) {
+                editAddressField.setStyle("-fx-border-color: red;");
+                editSaveBtn.setDisable(true);
+                showNotification("Address must be 5-200 characters and contain valid characters only", NotificationController.popUpType.error);
             } else {
                 editAddressField.setStyle("");
                 validateEditForm();
@@ -403,19 +415,28 @@ public class SupplierController implements Initializable {
     }
 
     private void validateAddForm() {
-        boolean isValid = Validation.isValidName(addNameField.getText()) &&
+        boolean isValid = Validation.isNotEmpty(addNameField.getText()) &&
+                Validation.isValidName(addNameField.getText()) &&
+                Validation.isNotEmpty(addPhoneField.getText()) &&
                 Validation.isValidPhone(addPhoneField.getText()) &&
-                !addCompanyField.getText().trim().isEmpty() && !addAddressField.getText().trim().isEmpty();
+                Validation.isNotEmpty(addCompanyField.getText()) &&
+                Validation.isValidCompanyName(addCompanyField.getText()) &&
+                Validation.isNotEmpty(addAddressField.getText()) &&
+                Validation.isValidAddress(addAddressField.getText());
         addSubmitBtn.setDisable(!isValid);
     }
 
     private void validateEditForm() {
-        boolean isValid = Validation.isValidName(editNameField.getText()) &&
+        boolean isValid = Validation.isNotEmpty(editNameField.getText()) &&
+                Validation.isValidName(editNameField.getText()) &&
+                Validation.isNotEmpty(editPhoneField.getText()) &&
                 Validation.isValidPhone(editPhoneField.getText()) &&
-                !editCompanyField.getText().trim().isEmpty() && !editAddressField.getText().trim().isEmpty();
+                Validation.isNotEmpty(editCompanyField.getText()) &&
+                Validation.isValidCompanyName(editCompanyField.getText()) &&
+                Validation.isNotEmpty(editAddressField.getText()) &&
+                Validation.isValidAddress(editAddressField.getText());
         editSaveBtn.setDisable(!isValid);
     }
-
     @FXML public void onSaveAddSupplierButtonClick() {
         try {
             // Validate form fields

@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import models.Datas.*;
 import models.Utils.QueryBuilder;
-import javafx.scene.chart.NumberAxis;
 import service.DailySalesService;
 import service.PurchaseRequisitionCreationRequestService;
 import service.SupplierService;
@@ -53,9 +52,10 @@ public class DashboardController implements Initializable {
     @FXML private Text welcomeText;
     @FXML private Button btnNotifications;
     @FXML private Circle notificationBadge;
-    @FXML private BarChart<String, Number> lowStockChart;
+    @FXML private BarChart<String, Number> prRequestsChart;
+    @FXML private Label prRequestsCountLabel;
 
-    @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount,lowStockCountLabel;
+    @FXML private Label lblTotalRevenue,lblTotalProfit, lblTotalOrders, lblProfitMargin, lblSupplierCount;
     @FXML private ProgressBar revenueProgress, profitProgress, ordersProgress, marginProgress, supplierProgress;
 
     @FXML private StackedAreaChart<String, Number> trendChart;
@@ -175,14 +175,10 @@ public class DashboardController implements Initializable {
                 trendChart.getYAxis().setLabel("Amount ($)");
             }
 
-            if (lowStockChart != null) {
-                lowStockChart.setAnimated(false);
-                lowStockChart.setTitle("Inventory Alerts");
-                if (lowStockChart.getYAxis() instanceof NumberAxis) {
-                    NumberAxis yAxis = (NumberAxis) lowStockChart.getYAxis();
-                    yAxis.setTickUnit(1);
-                    yAxis.setMinorTickCount(0);
-                }
+            if (prRequestsChart != null) {
+                prRequestsChart.setAnimated(false);
+                prRequestsChart.getXAxis().setLabel("Item Name");
+                prRequestsChart.getYAxis().setLabel("Minimum Purchase Quantity");
             }
         } catch (Exception e) {
             System.err.println("Error in setupCharts: " + e.getMessage());
@@ -236,14 +232,18 @@ public class DashboardController implements Initializable {
                 final List<Transaction> finalTransactions = transactions;
                 final List<Item> finalItems = items;
                 final Map<String, Item> itemMap = finalItems.stream()
-                    .collect(Collectors.toMap(Item::getItemID, item -> item));
+                        .collect(Collectors.toMap(Item::getItemID, item -> item));
                 List<PurchaseRequisitionCreationRequest> prRequests = new PurchaseRequisitionCreationRequestService().getAll();
 
                 Platform.runLater(() -> {
                     try {
                         updateKPIs(finalTransactions, itemMap);
-                        updateCharts(finalTransactions, itemMap, prRequests);
-                        updateLowStockChart(prRequests);
+                        updateCharts(finalTransactions, itemMap);
+                        updatePRRequestsChart(prRequests, itemMap);
+                        if (prRequestsCountLabel != null) {
+                            prRequestsCountLabel.setText(prRequests.size() + " PRs to be created");
+                            prRequestsCountLabel.setStyle("-fx-text-fill: " + (!prRequests.isEmpty() ? "#2196F3" : "#aaa") + ";");
+                        }
                     } catch (Exception e) {
                         System.err.println("Error updating UI: " + e.getMessage());
                         System.out.println(e.getMessage());
@@ -330,10 +330,9 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void updateCharts(List<Transaction> transactions, Map<String, Item> itemMap, List<PurchaseRequisitionCreationRequest> prRequests) {
+    private void updateCharts(List<Transaction> transactions, Map<String, Item> itemMap) {
         updateTrendChart(transactions, itemMap);
         updateProductMix(transactions);
-        updateLowStockChart(prRequests);
         updateRevenueAnalysis(transactions);
     }
 
@@ -435,92 +434,33 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void updateLowStockChart(List<PurchaseRequisitionCreationRequest> prRequests) {
+    private void addUnreadNotifications(List<PurchaseRequisitionCreationRequest> prRequests) {
         try {
-//            if (lowStockChart == null) {
-//                System.err.println("Low stock chart is null");
-//                return;
-//            }
-//
-//            lowStockChart.getData().clear();
-//
-//            // Create series for different alert levels
-//            XYChart.Series<String, Number> criticalSeries = new XYChart.Series<>();
-//            criticalSeries.setName("Critical Stock");
-//
-//            XYChart.Series<String, Number> lowSeries = new XYChart.Series<>();
-//            lowSeries.setName("Low Stock");
-//
-//            List<Item> stockAlerts = items.stream()
-//                .filter(item -> {
-//                    int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-//                    return item.getQuantity() < alertThreshold;
-//                })
-//                .sorted(Comparator.comparingInt(Item::getQuantity))
-//                .toList();
-//
-//            // Show only top 5 items in chart
-//            List<Item> topAlerts = stockAlerts.stream()
-//                .limit(5)
-//                .toList();
-//
-//            for (Item item : topAlerts) {
-//                int quantity = item.getQuantity();
-//                int alertThreshold = item.getAlertSetting() > 0 ? item.getAlertSetting() : 10;
-//
-//                XYChart.Data<String, Number> data = new XYChart.Data<>(
-//                    item.getItemName() + "\n(" + quantity + "/" + alertThreshold + ")",
-//                    quantity
-//                );
-//
-//                if (quantity <= alertThreshold * 0.5) {
-//                    criticalSeries.getData().add(data);
-//                } else {
-//                    lowSeries.getData().add(data);
-//                }
-//            }
-//
-//            if (!criticalSeries.getData().isEmpty()) lowStockChart.getData().add(criticalSeries);
-//            if (!lowSeries.getData().isEmpty()) lowStockChart.getData().add(lowSeries);
-//
-//            criticalSeries.getData().forEach(data -> {
-//                if (data.getNode() != null) {
-//                    data.getNode().setStyle("-fx-bar-fill: #ff4444;"); // Red for critical
-//                    setupTooltip(data, "Critical");
-//                }
-//            });
-//
-//            lowSeries.getData().forEach(data -> {
-//                if (data.getNode() != null) {
-//                    data.getNode().setStyle("-fx-bar-fill: #ffa726;"); // Orange for low
-//                    setupTooltip(data, "Low");
-//                }
-//            });
-
-
-            // Update alert count label and notification badge
             Platform.runLater(() -> {
-                if (lowStockCountLabel != null) {
-                    lowStockCountLabel.setText(prRequests.size() + " purchase requests need to be made");
-                    lowStockCountLabel.setStyle("-fx-text-fill: " +
-                        (!prRequests.isEmpty() ? "#ff4444" : "#ffa726") + ";");
+                if (prRequestsCountLabel != null) {
+                    prRequestsCountLabel.setText(prRequests.size() + " purchase requests need to be made");
+                    prRequestsCountLabel.setStyle("-fx-text-fill: " + (!prRequests.isEmpty() ? "#2196F3" : "#aaa") + ";");
                 }
 
                 notifications.clear();
+                Map<String, Item> itemMap = loadItems().stream().collect(Collectors.toMap(Item::getItemID, item -> item));
                 for (PurchaseRequisitionCreationRequest prRequest : prRequests) {
                     int minimumPurchaseQuantity = prRequest.getMinimumPurchaseQuantity();
-
+                    String itemName = prRequest.getItemID();
+                    if (itemMap.containsKey(prRequest.getItemID())) {
+                        itemName = itemMap.get(prRequest.getItemID()).getItemName();
+                    }
                     notifications.add(String.format(
-                        "Please create a PR for: %s (Minimum Purchase Quantity: %s)",
-                        prRequest.getItemID(),
-                        minimumPurchaseQuantity
+                            "Please create a purchase request for: %s (Minimum Purchase Quantity: %s)",
+                            itemName,
+                            minimumPurchaseQuantity
                     ));
                 }
                 hasUnreadNotifications.set(!prRequests.isEmpty());
             });
 
         } catch (Exception e) {
-            System.err.println("Error updating low stock chart: " + e.getMessage());
+            System.err.println("Error updating purchase requests notifications: " + e.getMessage());
             System.out.println(e.getMessage());
         }
     }
@@ -680,7 +620,7 @@ public class DashboardController implements Initializable {
             String filename = REPORTS_DIR + File.separator + "performance_report_" + timestamp + ".csv";
 
             try (PrintWriter writer = new PrintWriter(filename)) {
-                writer.write('\ufeff'); // UTF-8 BOM for proper Excel encoding
+                writer.write('\ufeff');
 
                 writer.println("OWSB Sales Performance Dashboard Report");
                 writer.println("==========================================");
@@ -853,7 +793,7 @@ public class DashboardController implements Initializable {
     @FXML
     private void showNotifications() {
         if (notifications.isEmpty()) {
-            showNotification("No new notifications", NotificationController.popUpType.info);
+            showNotification("No new purchase requests", NotificationController.popUpType.info);
             return;
         }
 
@@ -891,7 +831,7 @@ public class DashboardController implements Initializable {
             // Header
             HBox header = new HBox(10);
             header.setAlignment(Pos.CENTER_LEFT);
-            Label titleLabel = new Label("Inventory Alerts");
+            Label titleLabel = new Label("Purchase Requests");
             titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
             Region spacer = new Region();
@@ -914,15 +854,15 @@ public class DashboardController implements Initializable {
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             scrollPane.setStyle("-fx-background-color: white;");
 
-            VBox alertsContainer = new VBox(10);
-            alertsContainer.setStyle("-fx-padding: 10 0;");
+            VBox requestsContainer = new VBox(10);
+            requestsContainer.setStyle("-fx-padding: 10 0;");
 
             for (String notification : notifications) {
-                HBox alertBox = createAlertBox(notification);
-                alertsContainer.getChildren().add(alertBox);
+                HBox requestBox = createRequestBox(notification);
+                requestsContainer.getChildren().add(requestBox);
             }
 
-            scrollPane.setContent(alertsContainer);
+            scrollPane.setContent(requestsContainer);
             VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
             // Footer with actions
@@ -930,14 +870,14 @@ public class DashboardController implements Initializable {
             footer.setAlignment(Pos.CENTER_RIGHT);
             footer.setStyle("-fx-padding: 10 0 0 0; -fx-border-color: transparent #ddd transparent transparent; -fx-border-width: 1;");
 
-            Button exportButton = new Button("Export Alerts");
+            Button exportButton = new Button("Export Purchase Requests");
             exportButton.setStyle(
                     "-fx-background-color: #2196F3;" +
                             "-fx-text-fill: white;" +
                             "-fx-padding: 8 15;" +
                             "-fx-background-radius: 4;"
             );
-            exportButton.setOnAction(e -> exportAlerts());
+            exportButton.setOnAction(e -> exportPurchaseRequests());
 
             Button markReadButton = new Button("Mark All Read");
             markReadButton.setStyle(
@@ -968,42 +908,30 @@ public class DashboardController implements Initializable {
             slideIn.play();
 
         } catch (Exception e) {
-            System.err.println("Error showing notifications dialog: " + e.getMessage());
+            System.err.println("Error showing purchase requests dialog: " + e.getMessage());
             System.out.println(e.getMessage());
-            showNotification("Error showing notifications", NotificationController.popUpType.error);
+            showNotification("Error showing purchase requests", NotificationController.popUpType.error);
         }
     }
 
-    private HBox createAlertBox(String notification) {
-        HBox alertBox = new HBox(10);
-        alertBox.setAlignment(Pos.CENTER_LEFT);
-        alertBox.setPadding(new Insets(10));
-        alertBox.setStyle(
-                "-fx-background-color: " +
-                        (notification.contains("CRITICAL") ? "#fff5f5" :
-                                notification.contains("REORDER") ? "#fff8e1" : "#f5f5f5") +
-                        ";" +
-                        "-fx-background-radius: 4;"
+    private HBox createRequestBox(String notification) {
+        HBox requestBox = new HBox(10);
+        requestBox.setAlignment(Pos.CENTER_LEFT);
+        requestBox.setPadding(new Insets(10));
+        requestBox.setStyle(
+                "-fx-background-color: #f5f5f5;" +
+                "-fx-background-radius: 4;"
         );
 
         Circle icon = new Circle(8);
-        icon.setFill(javafx.scene.paint.Color.web(
-                notification.contains("CRITICAL") ? "#ff4444" :
-                        notification.contains("REORDER") ? "#ffa726" : "#666666"
-        ));
+        icon.setFill(javafx.scene.paint.Color.web("#2196F3"));
 
         Label label = new Label(notification);
         label.setWrapText(true);
-        label.setStyle(
-                "-fx-text-fill: " +
-                        (notification.contains("CRITICAL") ? "#ff4444" :
-                                notification.contains("REORDER") ? "#f57c00" : "#333333") +
-                        ";" +
-                        (notification.contains("CRITICAL") ? "-fx-font-weight: bold;" : "")
-        );
+        label.setStyle("-fx-text-fill: #333333;");
 
-        alertBox.getChildren().addAll(icon, label);
-        return alertBox;
+        requestBox.getChildren().addAll(icon, label);
+        return requestBox;
     }
 
     private void hideNotificationPanel() {
@@ -1021,146 +949,84 @@ public class DashboardController implements Initializable {
         }
     }
 
-
-    private void exportAlerts() {
+    private void exportPurchaseRequests() {
         new Thread(() -> {
             try {
-                String filePath = generateAlertsReport();
+                String filePath = generatePurchaseRequestsReport();
                 if (filePath != null) {
                     Platform.runLater(() -> {
-                        showNotification("Alerts report generated successfully", NotificationController.popUpType.success);
-                        // Open file location automatically
+                        showNotification("Purchase requests report generated successfully", NotificationController.popUpType.success);
                         openFileLocation(filePath);
                     });
                 } else {
-                    Platform.runLater(() -> showNotification("Error generating alerts report", NotificationController.popUpType.error));
+                    Platform.runLater(() -> showNotification("Error generating purchase requests report", NotificationController.popUpType.error));
                 }
             } catch (Exception e) {
-                System.err.println("Error in exportAlerts: " + e.getMessage());
-                Platform.runLater(() -> showNotification("Error exporting alerts", NotificationController.popUpType.error));
+                System.err.println("Error in exportPurchaseRequests: " + e.getMessage());
+                Platform.runLater(() -> showNotification("Error exporting purchase requests", NotificationController.popUpType.error));
             }
         }).start();
     }
 
-    private String generateAlertsReport() {
+    private String generatePurchaseRequestsReport() {
         try {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            String filename = REPORTS_DIR + File.separator + "inventory_alerts_" + timestamp + ".csv";
+            String filename = REPORTS_DIR + File.separator + "purchase_requests_" + timestamp + ".csv";
 
             try (PrintWriter writer = new PrintWriter(filename)) {
                 writer.write('\ufeff');
 
-                writer.println("OWSB Inventory Alerts Report");
-                writer.println("===========================");
+                // Company Header
+                writer.println("OWSB Corporation");
+                writer.println("Sales Management System");
+                writer.println("Purchase Requests Report");
                 writer.println("Generated on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 writer.println();
 
-                writer.println("1. ALERT SUMMARY");
-                writer.println("--------------");
-                int criticalCount = 0, lowCount = 0, reorderCount = 0;
-                for (String notification : notifications) {
-                    if (notification.contains("CRITICAL")) criticalCount++;
-                    else if (notification.contains("LOW")) lowCount++;
-                    else reorderCount++;
-                }
-                writer.println("Critical Alerts," + criticalCount);
-                writer.println("Low Stock Alerts," + lowCount);
-                writer.println("Reorder Alerts," + reorderCount);
-                writer.println("Total Alerts," + notifications.size());
+                writer.println("SECTION 1: EXECUTIVE SUMMARY");
+                writer.println("----------------------------");
+                List<PurchaseRequisitionCreationRequest> prRequests = new PurchaseRequisitionCreationRequestService().getAll();
+                int totalPRs = prRequests.size();
+                int totalQuantity = prRequests.stream().mapToInt(PurchaseRequisitionCreationRequest::getMinimumPurchaseQuantity).sum();
+                writer.println("Total Pending Purchase Requests," + totalPRs);
+                writer.println("Total Minimum Quantity Required," + totalQuantity);
                 writer.println();
 
-                writer.println("2. DETAILED ALERT REPORT");
-                writer.println("----------------------");
-                writer.println("Priority,Alert Type,Item Name,Current Stock,Alert Threshold,Status,Action Required,Risk Level,Estimated Reorder Time,Last Updated");
-
-                Map<String, Item> itemMap = loadItems().stream()
-                        .collect(Collectors.toMap(Item::getItemID, item -> item));
-
-                LocalDateTime now = LocalDateTime.now();
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-                for (String notification : notifications) {
-                    String type = notification.contains("CRITICAL") ? "CRITICAL" :
-                            notification.contains("REORDER") ? "REORDER" : "LOW";
-
-                    String itemName = "";
-                    int currentStock = 0;
-                    int threshold = 0;
-
-                    if (notification.contains("Low stock alert:")) {
-                        String[] parts = notification.split("Low stock alert: ");
-                        if (parts.length > 1) {
-                            String[] details = parts[1].split("\\(Qty: ");
-                            itemName = details[0].trim();
-                            if (details.length > 1) {
-                                String[] stockInfo = details[1].replace(")", "").split("/");
-                                if (stockInfo.length > 1) {
-                                    currentStock = Integer.parseInt(stockInfo[0].trim());
-                                    threshold = Integer.parseInt(stockInfo[1].trim());
-                                }
-                            }
-                        }
+                writer.println("SECTION 2: DETAILED PURCHASE REQUESTS");
+                writer.println("-------------------------------------");
+                writer.println("Item Name,Item ID,Minimum Purchase Quantity (Units),Request Status,Date Generated");
+                Map<String, Item> itemMap = loadItems().stream().collect(Collectors.toMap(Item::getItemID, item -> item));
+                String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                for (PurchaseRequisitionCreationRequest pr : prRequests) {
+                    String itemName = pr.getItemID();
+                    if (itemMap.containsKey(pr.getItemID())) {
+                        itemName = itemMap.get(pr.getItemID()).getItemName();
                     }
-
-                    String priority = type.equals("CRITICAL") ? "1-High" :
-                            type.equals("REORDER") ? "2-Medium" : "3-Low";
-
-                    String status = currentStock == 0 ? "OUT OF STOCK" :
-                            currentStock <= threshold * 0.25 ? "CRITICAL" :
-                                    currentStock <= threshold * 0.5 ? "LOW" : "REORDER";
-
-                    String action = status.equals("OUT OF STOCK") ? "Immediate Reorder Required" :
-                            status.equals("CRITICAL") ? "Place Order ASAP" :
-                                    status.equals("LOW") ? "Review and Reorder" : "Monitor Stock";
-
-                    String riskLevel = getRiskLevel(currentStock, threshold);
-                    String estimatedReorder = getEstimatedReorderTime(status);
-
-                    writer.printf("%s,%s,%s,%d,%d,%s,%s,%s,%s,%s%n",
-                            priority,
-                            type,
+                    writer.printf("%s,%s,%d,Pending,%s%n",
                             itemName,
-                            currentStock,
-                            threshold,
-                            status,
-                            action,
-                            riskLevel,
-                            estimatedReorder,
-                            now.format(dtf)
+                            pr.getItemID(),
+                            pr.getMinimumPurchaseQuantity(),
+                            now
                     );
                 }
-
                 writer.println();
-                writer.println("3. RISK ASSESSMENT");
-                writer.println("----------------");
-                writer.println("Risk Level,Description,Recommended Action");
-                writer.println("High Risk,Stock levels critical or depleted,Immediate action required within 24 hours");
-                writer.println("Medium Risk,Stock levels below optimal threshold,Action required within 3-5 days");
-                writer.println("Low Risk,Stock levels approaching reorder point,Review within 1 week");
+
+                writer.println("SECTION 3: NOTES & CONTACT");
+                writer.println("--------------------------");
+                writer.println("This report lists all pending purchase requisition requests as of the generation date.");
+                writer.println("For questions or clarifications, please contact: sales@owsb-corp.com");
+                writer.println();
+
+                // Footer/Disclaimer
+                writer.println("--------------------------------------------------");
+                writer.println("This is a system-generated report. For internal use only.");
+                writer.println("OWSB Corporation © " + LocalDate.now().getYear());
 
                 return filename;
             }
         } catch (Exception e) {
-            System.err.println("Error generating alerts report: " + e.getMessage());
+            System.err.println("Error generating purchase requests report: " + e.getMessage());
             return null;
-        }
-    }
-
-    private String getRiskLevel(int currentStock, int threshold) {
-        if (currentStock == 0 || currentStock <= threshold * 0.25) return "High Risk";
-        if (currentStock <= threshold * 0.5) return "Medium Risk";
-        return "Low Risk";
-    }
-
-    private String getEstimatedReorderTime(String status) {
-        switch (status) {
-            case "OUT OF STOCK":
-            case "CRITICAL":
-                return "24 hours";
-            case "LOW":
-                return "3-5 days";
-            default:
-                return "7 days";
         }
     }
 
@@ -1214,5 +1080,23 @@ public class DashboardController implements Initializable {
             this.profit += profit;
             this.orders++;
         }
+    }
+
+    private void updatePRRequestsChart(List<PurchaseRequisitionCreationRequest> prRequests, Map<String, Item> itemMap) {
+        if (prRequestsChart == null) return;
+
+        this.addUnreadNotifications(prRequests);
+
+        prRequestsChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        for (PurchaseRequisitionCreationRequest pr : prRequests) {
+            String itemName = pr.getItemID();
+            if (itemMap.containsKey(pr.getItemID())) {
+                itemName = itemMap.get(pr.getItemID()).getItemName();
+            }
+            int qty = pr.getMinimumPurchaseQuantity();
+            series.getData().add(new XYChart.Data<>(itemName, qty));
+        }
+        prRequestsChart.getData().add(series);
     }
 }

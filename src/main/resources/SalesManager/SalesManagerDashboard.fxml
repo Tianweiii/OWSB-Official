@@ -132,7 +132,7 @@
                               <ColumnConstraints percentWidth="50" />
                               <ColumnConstraints percentWidth="50" />
                           </columnConstraints>
-          
+
                             <!-- Revenue & Profit Trend -->
                           <VBox styleClass="chart-container" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <Label styleClass="chart-title" text="Revenue &amp; Profit Trend" />
@@ -145,26 +145,26 @@
                                   </yAxis>
                     </StackedAreaChart>
                           </VBox>
-          
-                            <!-- Low Stock Alert Chart -->
+
+                            <!-- Purchase Requests by Item Chart -->
                           <VBox styleClass="chart-container" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label styleClass="chart-title" text="Inventory Alerts">
+                    <Label styleClass="chart-title" text="Purchase Requests by Item">
                         <graphic>
                             <ImageView fitHeight="24" fitWidth="24">
-                                <Image url="@../images/warning.png" />
+                                <Image url="@../images/request.png" />
                             </ImageView>
                         </graphic>
                     </Label>
-                    <BarChart fx:id="lowStockChart" animated="false" legendSide="TOP" legendVisible="true">
-                                  <xAxis>
+                    <BarChart fx:id="prRequestsChart" animated="false" legendSide="TOP" legendVisible="false">
+                        <xAxis>
                             <CategoryAxis animated="false" label="Item Name" tickLabelRotation="45" />
-                                  </xAxis>
-                                  <yAxis>
-                            <NumberAxis animated="false" label="Current Stock" minorTickCount="0" tickUnit="1" />
-                                  </yAxis>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis animated="false" label="PR Quantity" minorTickCount="0" tickUnit="1" />
+                        </yAxis>
                     </BarChart>
                     <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="chart-footer">
-                        <Label fx:id="lowStockCountLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="alert-count" textAlignment="CENTER" />
+                        <Label fx:id="prRequestsCountLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="alert-count" textAlignment="CENTER" />
                     </HBox>
                 </VBox>
 
@@ -173,7 +173,7 @@
                     <Label styleClass="chart-title" text="Daily Orders Distribution" />
                     <PieChart fx:id="ordersChart" labelsVisible="true" />
                           </VBox>
-          
+
                           <!-- Revenue Analysis -->
                 <VBox styleClass="chart-container" GridPane.columnIndex="1" GridPane.rowIndex="1">
                               <Label styleClass="chart-title" text="Revenue Analysis" />
