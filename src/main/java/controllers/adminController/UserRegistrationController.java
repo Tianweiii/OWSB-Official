@@ -68,9 +68,8 @@ public class UserRegistrationController implements Initializable {
 			}else {
 				boolean res = qb.target("db/User.txt").values(dataToAdd).create();
 				if (res) {
-					FXMLLoader home = new FXMLLoader(new URL("file:src/main/resources/org/start/owsb/test.fxml"));
 					Navigator navigator = Navigator.getInstance();
-					navigator.navigate(home.load());
+					navigator.navigate(navigator.getRouters("admin").getRoute("user-list"));
 				}
 			}
 
