@@ -43,13 +43,13 @@ public class EditUserController implements Initializable {
 	public void onConfirmEditButtonClick() throws IOException {
 
 		if (editUsernameField.getText().isEmpty() || editEmailField.getText().isEmpty() || editAgeField.getText().isEmpty()) {
-			NotificationView notificationView = new NotificationView("Please fill in the missing fields", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+			NotificationView notificationView = new NotificationView("Please fill in the missing fields", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
 			notificationView.show();
 			return;
 		}
 
 		if (!Validation.isValidEmail(editEmailField.getText())) {
-			NotificationView notificationView = new NotificationView("Invalid email", NotificationController.popUpType.error, NotificationController.popUpPos.BOTTOM_RIGHT);
+			NotificationView notificationView = new NotificationView("Invalid email", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
 			notificationView.show();
 			return;
 		}
