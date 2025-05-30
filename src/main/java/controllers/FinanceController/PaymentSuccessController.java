@@ -129,6 +129,6 @@ public class PaymentSuccessController implements Initializable {
         }
 
         // tootzejiat@gmail.com
-        fm.sendReceipt("leeaikyen@gmail.com", MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "Receipt for payment", pdfPath);
+        fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "Receipt for payment", pdfPath);
     }
 }
