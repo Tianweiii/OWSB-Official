@@ -17,7 +17,7 @@ public class Validation {
     public static final Pattern ADDRESS_PATTERN = Pattern.compile("^[a-zA-Z0-9 ,.#/-]+$");
 
     // Item-specific patterns
-    public static final Pattern ITEM_NAME_PATTERN = Pattern.compile("\"^[a-zA-Z0-9 &.,()\\\\-]+$\"");
+    public static final Pattern ITEM_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9 &.,()\\\\-]{2,100}$");
     public static final Pattern DESCRIPTION_PATTERN = Pattern.compile("^[a-zA-Z0-9 ,.!?&()-]+$");
     public static final Pattern PRICE_PATTERN = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
 
