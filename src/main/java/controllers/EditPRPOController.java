@@ -105,7 +105,7 @@ public class EditPRPOController implements Initializable {
         // FM = Approve PO
         // IM = Verify PO
     @FXML
-    public AnchorPane dimmedBg;
+    public VBox dimmedBg;
     @FXML
     public AnchorPane popup_modal;
     @FXML

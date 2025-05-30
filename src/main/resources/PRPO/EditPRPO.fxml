@@ -179,7 +179,7 @@
             </HBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="dimmedBg" onMouseClicked="#closeAllPopup" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #00000066;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="dimmedBg" alignment="CENTER" fillWidth="false" onMouseClicked="#closeAllPopup" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #00000066;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane id="popup_modal" fx:id="popup_modal" layoutX="184.0" layoutY="213.0" prefHeight="300.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10;" visible="false">
                <children>
@@ -309,6 +309,6 @@
                </children>
             </AnchorPane>
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
 </AnchorPane>
