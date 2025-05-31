@@ -148,9 +148,47 @@ public class DailySalesService {
     /** Delete a transaction by ID. */
     public void deleteTransaction(String txId) {
         try {
-            new QueryBuilder<>(Transaction.class)
-                    .target(TRANS_FILE)
-                    .delete(txId);
+            QueryBuilder<Transaction> qb = new QueryBuilder<>(Transaction.class);
+            QueryBuilder<DailySalesHistory> dshQB = new QueryBuilder<>(DailySalesHistory.class);
+
+            // Get transaction's history ID
+            List<Transaction> transactions = qb
+                .select()
+                .from(TRANS_FILE)
+                .where("transactionID", "=", txId)
+                .getAsObjects();
+
+            if (transactions.isEmpty()) {
+                return;
+            }
+
+            Transaction transaction = transactions.get(0);
+            String histId = transaction.getDailySalesHistoryID();
+
+            qb.target(TRANS_FILE).delete(txId);
+
+            // Attempt to see if there are any other transactions for this history
+            List<Transaction> sameDSHTransactions = qb
+                    .select()
+                    .from(TRANS_FILE)
+                    .where("dailySalesHistoryID", "=", histId)
+                    .getAsObjects();
+
+            // If there are no other transactions for this history, delete it
+            if (sameDSHTransactions.isEmpty()) {
+                dshQB.target(HIST_FILE).delete(histId);
+
+                qb.target(TRANS_FILE).delete(txId);
+                return;
+            }
+
+            // Update the history's updated date
+            HashMap<String, String> map = new HashMap<>();
+            map.put("updatedAt", LocalDate.now().format(ISO));
+            dshQB
+                .target(HIST_FILE)
+                .update(txId, map);
+
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to delete transaction " + txId, e);
         }
