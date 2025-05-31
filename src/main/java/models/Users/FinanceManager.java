@@ -22,6 +22,8 @@ import java.util.*;
 
 public class FinanceManager extends User {
 //    private int FinanceId;
+    private String SenderEmail = "tianweilow1003@gmail.com";
+    private String SenderPassword = "wevy bwod yaai vnfy";
 
     final String paymentPath = "db/Payment.txt";
     final String[] paymentColumns = new String[]{"paymentID", "poID", "userID", "paymentMethod", "amount", "createdAt", "paymentReference"};
@@ -79,8 +81,8 @@ public class FinanceManager extends User {
     }
 
     public void sendReceipt(String receiverEmail, String subject, String body, String filename) throws IOException {
-        String senderEmail = "tianweilow1003@gmail.com";
-        String senderPassword = "wevy bwod yaai vnfy";
+        String senderEmail = SenderEmail;
+        String senderPassword = SenderPassword;
         String smtpHostServer = "smtp.gmail.com";
 
         String emailBody = body;
@@ -123,30 +125,26 @@ public class FinanceManager extends User {
            Multipart multipart = new MimeMultipart();
            multipart.addBodyPart(messageBodyPart);
 
-           // this is the attachment shit
+           // this is the attachment
            messageBodyPart = new MimeBodyPart();
-//           String filename = "payment_report.pdf";
            FileDataSource source = new FileDataSource(filename);
            messageBodyPart.setDataHandler(new DataHandler(source));
            messageBodyPart.setFileName(filename);
            multipart.addBodyPart(messageBodyPart);
 
-           // setting all the shit just now
+           // setting all the contents from just now
            msg.setContent(multipart);
 
-           // actually send the shit now
+           // actually send the email now
            Transport.send(msg);
 
            NotificationView notificationView = new NotificationView("Successfully sent to email, please check spam folder.", NotificationController.popUpType.success, NotificationController.popUpPos.TOP);
            notificationView.show();
 
-       } catch (MessagingException e) {
-           throw new RuntimeException(e);
-       } catch (IOException e) {
+       } catch (MessagingException | IOException e) {
+           NotificationView notificationView = new NotificationView("Failed to send email.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+           notificationView.show();
            throw new RuntimeException(e);
        }
-
-        NotificationView notificationView = new NotificationView("Failed to send email.", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
-        notificationView.show();
     }
 }

@@ -42,6 +42,7 @@ import models.DTO.PaymentDTO;
 import models.Datas.Payment;
 import models.Datas.PaymentCard;
 import models.Datas.PurchaseOrder;
+import models.Users.FinanceManager;
 import models.Utils.Helper;
 import models.Utils.Navigator;
 import models.Utils.QueryBuilder;
@@ -76,6 +77,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
     @FXML
     private Text totalField;
 
+    FinanceManager fm = SessionManager.getInstance().getFinanceManagerData();
     Navigator navigator = Navigator.getInstance();
 
     // PO data
@@ -249,7 +251,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                     res = qb.target("db/Payment")
                             .values(new String[]{
                                     currentPO.getpoID(),
-                                    currentPO.getUserID(),
+                                    fm.getId(),
                                     String.valueOf(subtotal + shipping),
                                     "Credit Card",
                                     Helper.getTodayDate(),
@@ -284,7 +286,7 @@ public class MakePaymentController implements Initializable, IdkWhatToNameThis {
                 }
 
                 long elapsed = System.currentTimeMillis() - startTime;
-                // load for at least 2 seconds to mimic real ting lol
+                // simulate real
                 long remainingTime = Math.max(0, 2000 - elapsed);
 
                 boolean finalRes = res;
