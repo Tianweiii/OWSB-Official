@@ -203,4 +203,30 @@ public class FileIO {
         }
         return amount;
     }
+
+    public static <T> ArrayList<T> getObjectsFromLastXLines(Class<T> classname, String filenameWithoutTXT, int lines)
+            throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Deque<String> lastLines = new ArrayDeque<>(lines);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/" + filenameWithoutTXT + ".txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                lastLines.addLast(line);
+
+                if (lastLines.size() > lines) {
+                    lastLines.removeFirst();
+                }
+            }
+        }
+
+        ArrayList<T> list = new ArrayList<>();
+        Constructor<T> constructor = classname.getConstructor(String[].class);
+
+        for (String line : lastLines) {
+            String[] parts = line.split(",");
+            list.add(constructor.newInstance((Object) parts));
+        }
+
+        return list;
+    }
 }

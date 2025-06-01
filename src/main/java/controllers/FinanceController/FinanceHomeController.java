@@ -83,7 +83,7 @@ public class FinanceHomeController implements Initializable {
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Payment.txt"))) {
             String line;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -132,6 +132,8 @@ public class FinanceHomeController implements Initializable {
                 Color.web("#448aff"), Color.web("#40c4ff"), Color.web("#18ffff"),
                 Color.web("#64ffda"), Color.web("#69f0ae"), Color.web("#b2ff59"), Color.web("#eeff41")
         };
+
+        System.out.println(monthTotals);
 
         List<Map.Entry<YearMonth, Double>> sortedEntries = monthTotals.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
@@ -410,7 +412,7 @@ public class FinanceHomeController implements Initializable {
         String[] colors = new String[]{"pink", " #7fab92", " #f39583", " #5cb9e0"};
         int count = 0;
 
-        ArrayList<Payment> transactions = FileIO.getObjectsFromXLines(Payment.class, "Payment", 3);
+        ArrayList<Payment> transactions = FileIO.getObjectsFromLastXLines(Payment.class, "Payment", 5);
         System.out.println("transactions" + transactions);
 
         for (Payment i : transactions) {
@@ -419,7 +421,7 @@ public class FinanceHomeController implements Initializable {
 
             RecentTransactionItemController controller = loader.getController();
             controller.setData(i.getPaymentID(), i.getCreatedAt(), i.getAmount());
-            controller.setColor(colors[count]);
+            controller.setColor(colors[count % colors.length]);
 
             recentTransactionContainer.getChildren().add(card);
 

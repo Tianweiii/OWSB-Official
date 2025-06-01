@@ -31,6 +31,11 @@
                               <Font name="October Tamil Black" size="14.0" />
                            </font>
                         </Text>
+                        <Text fill="#838383" strokeType="OUTSIDE" strokeWidth="0.0" text="This Month">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="10.0" />
+                           </font>
+                        </Text>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" spacing="5.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
@@ -45,6 +50,11 @@
                               <Font name="October Tamil Black" size="14.0" />
                            </font>
                         </Text>
+                        <Text fill="#838383" strokeType="OUTSIDE" strokeWidth="0.0" text="This Month">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="10.0" />
+                           </font>
+                        </Text>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="141.0" prefWidth="189.0" spacing="5.0" style="-fx-background-color: #ededf6; -fx-background-radius: 16;" HBox.hgrow="ALWAYS">
@@ -57,6 +67,11 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Net Profit">
                            <font>
                               <Font name="October Tamil Black" size="14.0" />
+                           </font>
+                        </Text>
+                        <Text fill="#838383" strokeType="OUTSIDE" strokeWidth="0.0" text="This Month">
+                           <font>
+                              <Font name="Baloo 2 Medium" size="10.0" />
                            </font>
                         </Text>
                      </children>
