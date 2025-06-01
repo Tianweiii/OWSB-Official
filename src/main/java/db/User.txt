@@ -15,7 +15,7 @@ U14,lee,leeaikyen@gmail.com,0VeLgnEFrJl5k8qcWnA5iYAH6nsOjLnEjbpOo53Outg=,Purchas
 U15,sales,sales,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Sales Manager,111,2
 U16,testAdmin,aaaa@mail.com,lsrjXOipsCRBeL8o5JZsLOG4OFcjqWprg4hYzdbKCh4=,Admin,33,1
 U17,Tian,tian123@gmail.com,123123123,FinanceManager,21,5
-U18,Ethan,ethan@gmail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Finance Manager,21,5
+U18,Ethan,onlyfortheswitch@gmail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Finance Manager,21,5
 U19,testInventory,adfasd@mail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Inventory Manager,22,4
 U20,Cindy,sales@gmail.com,pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=,Sales Manager,100,2
 U21,Jia Yin,jiayin@gmail.com,e9MNmaZIpwKD4CAT9V79gPn6YadBGBavjb3707SVSsg=,Inventory Manager,25,4

@@ -83,14 +83,14 @@
                                     <Region prefHeight="59.0" prefWidth="155.0" VBox.vgrow="ALWAYS" />
                                     <VBox prefWidth="100.0">
                                        <children>
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="RM">
+                                             <font>
+                                                <Font name="Baloo 2 Medium" size="13.0" />
+                                             </font>
+                                          </Text>
                                           <Text fx:id="totalSalesField" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="10,580">
                                              <font>
                                                 <Font name="PingFang HK Semibold" size="28.0" />
-                                             </font>
-                                          </Text>
-                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="From Last Month">
-                                             <font>
-                                                <Font name="Baloo 2 Medium" size="13.0" />
                                              </font>
                                           </Text>
                                        </children>
@@ -133,11 +133,6 @@
                                                 <Font name="PingFang HK Semibold" size="28.0" />
                                              </font>
                                           </Text>
-                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="From Last Month">
-                                             <font>
-                                                <Font name="Baloo 2 Medium" size="13.0" />
-                                             </font>
-                                          </Text>
                                        </children>
                                     </VBox>
                                  </children>
@@ -177,14 +172,14 @@
                                     <Region prefHeight="59.0" prefWidth="155.0" VBox.vgrow="ALWAYS" />
                                     <VBox prefWidth="100.0">
                                        <children>
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="RM">
+                                             <font>
+                                                <Font name="Baloo 2 Medium" size="13.0" />
+                                             </font>
+                                          </Text>
                                           <Text fx:id="totalCostField" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="131,123">
                                              <font>
                                                 <Font name="PingFang HK Semibold" size="28.0" />
-                                             </font>
-                                          </Text>
-                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="From Last Month">
-                                             <font>
-                                                <Font name="Baloo 2 Medium" size="13.0" />
                                              </font>
                                           </Text>
                                        </children>
@@ -222,14 +217,14 @@
                                     <Region prefHeight="59.0" prefWidth="155.0" VBox.vgrow="ALWAYS" />
                                     <VBox prefWidth="100.0">
                                        <children>
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="RM">
+                                             <font>
+                                                <Font name="Baloo 2 Medium" size="13.0" />
+                                             </font>
+                                          </Text>
                                           <Text fx:id="totalPendingField" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="9">
                                              <font>
                                                 <Font name="PingFang HK Semibold" size="28.0" />
-                                             </font>
-                                          </Text>
-                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="From Last Month">
-                                             <font>
-                                                <Font name="Baloo 2 Medium" size="13.0" />
                                              </font>
                                           </Text>
                                        </children>

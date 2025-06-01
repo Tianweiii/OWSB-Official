@@ -159,7 +159,7 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="45.0" prefWidth="420.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recent Transactions">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recent Payments">
                            <font>
                               <Font name="October Tamil Black" size="18.0" />
                            </font>

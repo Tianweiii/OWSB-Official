@@ -71,10 +71,10 @@ public class FinanceReportController implements Initializable {
             populateSalesContainer();
             initAnimatedLineChart();
 
-            totalSalesField.setText("RM " + String.format("%.2f", getTotalSales()));
+            totalSalesField.setText(String.format("%.2f", getTotalSales()));
             totalTransactionsField.setText(String.valueOf(getTotalTransactions()));
-            totalPendingField.setText("RM " + String.format("%.2f", getTotalPendingPayments()));
-            totalCostField.setText("RM " + String.format("%.2f", getTotalCost()));
+            totalPendingField.setText(String.format("%.2f", getTotalPendingPayments()));
+            totalCostField.setText(String.format("%.2f", getTotalCost()));
 
             startDataPointHighlights();
 
