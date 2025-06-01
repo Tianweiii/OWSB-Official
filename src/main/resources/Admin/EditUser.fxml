@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -10,8 +11,8 @@
          <children>
             <VBox alignment="CENTER" prefHeight="393.0" prefWidth="278.0">
                <children>
-                  <Region prefHeight="25.0" prefWidth="278.0" />
-                  <HBox prefHeight="35.0" prefWidth="278.0">
+                  <Region prefHeight="46.0" prefWidth="278.0" />
+                  <HBox prefHeight="57.0" prefWidth="278.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="92.0" prefWidth="278.0" text="Edit User" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                            <font>
@@ -20,14 +21,14 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <HBox prefHeight="388.0" prefWidth="278.0">
                      <children>
-                        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="278.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" prefHeight="433.0" prefWidth="278.0" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label prefHeight="18.0" prefWidth="280.0" text="Username" />
                               <TextField fx:id="editUsernameField" />
                               <Label layoutX="10.0" layoutY="97.0" prefHeight="18.0" prefWidth="280.0" text="Password" />
-                              <TextField fx:id="editPasswordField" layoutX="10.0" layoutY="126.0" />
+                              <TextField fx:id="editPasswordField" layoutX="10.0" layoutY="126.0" promptText="Leave empty if password remains the same..." />
                               <Label layoutX="10.0" layoutY="10.0" prefHeight="18.0" prefWidth="280.0" text="Email" />
                               <TextField fx:id="editEmailField" layoutX="10.0" layoutY="28.0" />
                               <Label layoutX="10.0" layoutY="54.0" prefHeight="18.0" prefWidth="280.0" text="Position" />
@@ -42,15 +43,19 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="278.0" spacing="30.0">
+                  <HBox alignment="TOP_CENTER" prefHeight="65.0" prefWidth="278.0" spacing="30.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="confirmEditButton" mnemonicParsing="false" onAction="#onConfirmEditButtonClick" prefHeight="26.0" prefWidth="100.0" text="Edit" />
-                        <Button fx:id="cancelEditButton" mnemonicParsing="false" onAction="#onCancelEditButtonClick" prefWidth="100.0" text="Cancel" />
+                        <Button fx:id="confirmEditButton" mnemonicParsing="false" onAction="#onConfirmEditButtonClick" prefHeight="26.0" prefWidth="100.0" styleClass="btn-primary" stylesheets="@../css/sales-manager.css" text="Edit" />
+                        <Button fx:id="cancelEditButton" maxHeight="32.0" mnemonicParsing="false" onAction="#onCancelEditButtonClick" prefHeight="33.0" prefWidth="100.0" styleClass="btn-secondary" stylesheets="@../css/sales-manager.css" text="Cancel" />
                      </children>
                   </HBox>
+                  <Region prefHeight="44.0" prefWidth="278.0" />
                </children>
             </VBox>
          </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
       </HBox>
    </children>
 </Pane>

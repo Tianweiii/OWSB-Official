@@ -438,7 +438,7 @@ public class DashboardController implements Initializable {
         try {
             Platform.runLater(() -> {
                 if (prRequestsCountLabel != null) {
-                    prRequestsCountLabel.setText(prRequests.size() + " purchase requests need to be made");
+                    prRequestsCountLabel.setText(prRequests.size() + " PR requests need to be made");
                     prRequestsCountLabel.setStyle("-fx-text-fill: " + (!prRequests.isEmpty() ? "#2196F3" : "#aaa") + ";");
                 }
 
@@ -451,7 +451,7 @@ public class DashboardController implements Initializable {
                         itemName = itemMap.get(prRequest.getItemID()).getItemName();
                     }
                     notifications.add(String.format(
-                            "Please create a purchase request for: %s (Minimum Purchase Quantity: %s)",
+                            "Please create a PR for: %s (Minimum Purchase Quantity: %s)",
                             itemName,
                             minimumPurchaseQuantity
                     ));
@@ -460,7 +460,7 @@ public class DashboardController implements Initializable {
             });
 
         } catch (Exception e) {
-            System.err.println("Error updating purchase requests notifications: " + e.getMessage());
+            System.err.println("Error updating PR requests notifications: " + e.getMessage());
             System.out.println(e.getMessage());
         }
     }
@@ -793,7 +793,7 @@ public class DashboardController implements Initializable {
     @FXML
     private void showNotifications() {
         if (notifications.isEmpty()) {
-            showNotification("No new purchase requests", NotificationController.popUpType.info);
+            showNotification("No new PR requests", NotificationController.popUpType.info);
             return;
         }
 
@@ -831,7 +831,7 @@ public class DashboardController implements Initializable {
             // Header
             HBox header = new HBox(10);
             header.setAlignment(Pos.CENTER_LEFT);
-            Label titleLabel = new Label("Purchase Requests");
+            Label titleLabel = new Label("PR Requests");
             titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
             Region spacer = new Region();
@@ -870,7 +870,7 @@ public class DashboardController implements Initializable {
             footer.setAlignment(Pos.CENTER_RIGHT);
             footer.setStyle("-fx-padding: 10 0 0 0; -fx-border-color: transparent #ddd transparent transparent; -fx-border-width: 1;");
 
-            Button exportButton = new Button("Export Purchase Requests");
+            Button exportButton = new Button("Export PR Requests");
             exportButton.setStyle(
                     "-fx-background-color: #2196F3;" +
                             "-fx-text-fill: white;" +
@@ -908,9 +908,9 @@ public class DashboardController implements Initializable {
             slideIn.play();
 
         } catch (Exception e) {
-            System.err.println("Error showing purchase requests dialog: " + e.getMessage());
+            System.err.println("Error showing PR requests dialog: " + e.getMessage());
             System.out.println(e.getMessage());
-            showNotification("Error showing purchase requests", NotificationController.popUpType.error);
+            showNotification("Error showing PR requests", NotificationController.popUpType.error);
         }
     }
 
@@ -955,15 +955,15 @@ public class DashboardController implements Initializable {
                 String filePath = generatePurchaseRequestsReport();
                 if (filePath != null) {
                     Platform.runLater(() -> {
-                        showNotification("Purchase requests report generated successfully", NotificationController.popUpType.success);
+                        showNotification("PR requests report generated successfully", NotificationController.popUpType.success);
                         openFileLocation(filePath);
                     });
                 } else {
-                    Platform.runLater(() -> showNotification("Error generating purchase requests report", NotificationController.popUpType.error));
+                    Platform.runLater(() -> showNotification("Error generating PR requests report", NotificationController.popUpType.error));
                 }
             } catch (Exception e) {
                 System.err.println("Error in exportPurchaseRequests: " + e.getMessage());
-                Platform.runLater(() -> showNotification("Error exporting purchase requests", NotificationController.popUpType.error));
+                Platform.runLater(() -> showNotification("Error exporting PR requests", NotificationController.popUpType.error));
             }
         }).start();
     }
@@ -979,7 +979,7 @@ public class DashboardController implements Initializable {
                 // Company Header
                 writer.println("OWSB Corporation");
                 writer.println("Sales Management System");
-                writer.println("Purchase Requests Report");
+                writer.println("PR Requests Report");
                 writer.println("Generated on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 writer.println();
 
@@ -988,11 +988,11 @@ public class DashboardController implements Initializable {
                 List<PurchaseRequisitionCreationRequest> prRequests = new PurchaseRequisitionCreationRequestService().getAll();
                 int totalPRs = prRequests.size();
                 int totalQuantity = prRequests.stream().mapToInt(PurchaseRequisitionCreationRequest::getMinimumPurchaseQuantity).sum();
-                writer.println("Total Pending Purchase Requests," + totalPRs);
+                writer.println("Total Pending PR Requests," + totalPRs);
                 writer.println("Total Minimum Quantity Required," + totalQuantity);
                 writer.println();
 
-                writer.println("SECTION 2: DETAILED PURCHASE REQUESTS");
+                writer.println("SECTION 2: DETAILED PR REQUESTS");
                 writer.println("-------------------------------------");
                 writer.println("Item Name,Item ID,Minimum Purchase Quantity (Units),Request Status,Date Generated");
                 Map<String, Item> itemMap = loadItems().stream().collect(Collectors.toMap(Item::getItemID, item -> item));
@@ -1013,7 +1013,7 @@ public class DashboardController implements Initializable {
 
                 writer.println("SECTION 3: NOTES & CONTACT");
                 writer.println("--------------------------");
-                writer.println("This report lists all pending purchase requisition requests as of the generation date.");
+                writer.println("This report lists all pending PR requisition requests as of the generation date.");
                 writer.println("For questions or clarifications, please contact: sales@owsb-corp.com");
                 writer.println();
 
@@ -1025,7 +1025,7 @@ public class DashboardController implements Initializable {
                 return filename;
             }
         } catch (Exception e) {
-            System.err.println("Error generating purchase requests report: " + e.getMessage());
+            System.err.println("Error generating PR requests report: " + e.getMessage());
             return null;
         }
     }

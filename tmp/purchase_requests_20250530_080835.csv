@@ -1,0 +1,26 @@
+﻿OWSB Corporation
+Sales Management System
+PR Requests Report
+Generated on: 2025-05-30 08:08:35
+
+SECTION 1: EXECUTIVE SUMMARY
+----------------------------
+Total Pending PR Requests,4
+Total Minimum Quantity Required,90
+
+SECTION 2: DETAILED PR REQUESTS
+-------------------------------------
+Item Name,Item ID,Minimum Purchase Quantity (Units),Request Status,Date Generated
+Pliers Set,I7,39,Pending,2025-05-30 08:08:35
+Paint Brushes Set,I14,34,Pending,2025-05-30 08:08:35
+Organic Full-Cream Milk,I16,7,Pending,2025-05-30 08:08:35
+I19,I19,10,Pending,2025-05-30 08:08:35
+
+SECTION 3: NOTES & CONTACT
+--------------------------
+This report lists all pending PR requisition requests as of the generation date.
+For questions or clarifications, please contact: sales@owsb-corp.com
+
+--------------------------------------------------
+This is a system-generated report. For internal use only.
+OWSB Corporation © 2025

@@ -3,13 +3,13 @@ package views;
 import controllers.adminController.UserRegistrationController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class UserRegistrationView implements View{
-	private final AnchorPane userRegistrationPane;
+	private final HBox userRegistrationPane;
 
 	public UserRegistrationView() throws IOException {
 		FXMLLoader loader = new FXMLLoader(new URL("file:src/main/resources/AuthFXML/registerUser.fxml"));

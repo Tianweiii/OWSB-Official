@@ -16,6 +16,7 @@ import models.Datas.Role;
 import models.Users.User;
 import models.Utils.Helper;
 import models.Utils.QueryBuilder;
+import models.Utils.Validation;
 import org.start.owsb.Layout;
 import views.NotificationView;
 import views.adminViews.EditUserView;
@@ -40,6 +41,32 @@ public class EditUserController implements Initializable {
 
 	@FXML
 	public void onConfirmEditButtonClick() throws IOException {
+
+		if (editUsernameField.getText().isEmpty() || editEmailField.getText().isEmpty() || editAgeField.getText().isEmpty()) {
+			NotificationView notificationView = new NotificationView("Please fill in the missing fields", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+			notificationView.show();
+			return;
+		}
+
+		if (!Validation.isValidEmail(editEmailField.getText())) {
+			NotificationView notificationView = new NotificationView("Invalid email", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+			notificationView.show();
+			return;
+		}
+
+		if (!Validation.isValidNumeric(editAgeField.getText())) {
+			NotificationView notificationView = new NotificationView("Age must be numeric", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+			notificationView.show();
+			return;
+		} else {
+			if (Integer.parseInt(editAgeField.getText()) < 0) {
+				NotificationView notificationView = new NotificationView("Age cannot be negative", NotificationController.popUpType.error, NotificationController.popUpPos.TOP);
+				notificationView.show();
+				return;
+			}
+		}
+
+
 		HashMap<String, String> data = EditUserView.getData();
 		String username = editUsernameField.getText();
 		String email = editEmailField.getText();

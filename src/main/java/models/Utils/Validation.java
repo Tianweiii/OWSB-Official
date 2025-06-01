@@ -10,14 +10,14 @@ public class Validation {
 
     // Text patterns
     public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9 ]+$");
-    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     public static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]\\d{0,14}$");
 
     // Address pattern - more flexible than name pattern
     public static final Pattern ADDRESS_PATTERN = Pattern.compile("^[a-zA-Z0-9 ,.#/-]+$");
 
     // Item-specific patterns
-    public static final Pattern ITEM_NAME_PATTERN = Pattern.compile("\"^[a-zA-Z0-9 &.,()\\\\-]+$\"");
+    public static final Pattern ITEM_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9 &.,()\\\\-]{2,100}$");
     public static final Pattern DESCRIPTION_PATTERN = Pattern.compile("^[a-zA-Z0-9 ,.!?&()-]+$");
     public static final Pattern PRICE_PATTERN = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
 

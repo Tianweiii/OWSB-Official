@@ -180,7 +180,7 @@ public class FinancePaymentsController implements Initializable, IdkWhatToNameTh
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/java/db/Payment.txt"))) {
             String line;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");

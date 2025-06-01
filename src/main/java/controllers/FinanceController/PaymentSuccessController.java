@@ -1,8 +1,17 @@
 package controllers.FinanceController;
 
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import models.DTO.PaymentDTO;
 import models.Datas.Payment;
 import models.Datas.PurchaseOrder;
@@ -38,6 +47,8 @@ public class PaymentSuccessController implements Initializable {
     private Text paymentType;
     @FXML
     private Text receipientName;
+    @FXML
+    private VBox loaderPane;
 
     private PurchaseOrder currentPO = SessionManager.getCurrentPaymentPO();
     private FinanceMainController mainController;
@@ -63,7 +74,6 @@ public class PaymentSuccessController implements Initializable {
     private void setMainData() throws IOException, ReflectiveOperationException {
         // Payment details
         payment = FileIO.getObjectFromID(Payment.class, "Payment", 1, currentPO.getPoID());
-        System.out.println(payment.toString());
         user = FileIO.getIDsAsObject(FinanceManager.class, "User", payment.getUserID());
 
         amountPaid.setText("RM " + payment.getAmount());
@@ -78,6 +88,8 @@ public class PaymentSuccessController implements Initializable {
     }
 
     public void pressPrintReceipt() throws ReflectiveOperationException, IOException, JRException {
+        renderLoader();
+
         LocalDateTime now = LocalDateTime.now();  // Get current date and time
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedNow = now.format(formatter);
@@ -129,6 +141,42 @@ public class PaymentSuccessController implements Initializable {
         }
 
         // tootzejiat@gmail.com
-        fm.sendReceipt("leeaikyen@gmail.com", MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "Receipt for payment", pdfPath);
+        fm.sendReceipt(fm.getEmail(), MessageFormat.format("Payment receipt for {0}", currentPO.getPoID()), "Receipt for payment", pdfPath);
+
+        removeLoader();
+    }
+
+    public void renderLoader() {
+        Group spinnerGroup = new Group();
+
+        Circle outerRing = new Circle(25, javafx.scene.paint.Color.TRANSPARENT);
+        outerRing.setStroke(javafx.scene.paint.Color.DODGERBLUE);
+        outerRing.setStrokeWidth(3);
+        // Create a gap in the circle
+        outerRing.getStrokeDashArray().addAll(90.0, 10.0);
+
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.rgb(70, 150, 255, 0.7));
+        glow.setRadius(10);
+        outerRing.setEffect(glow);
+
+        spinnerGroup.getChildren().add(outerRing);
+
+        RotateTransition rotate = new RotateTransition(Duration.seconds(1.2), outerRing);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setInterpolator(Interpolator.EASE_BOTH);
+        rotate.play();
+
+        loaderPane.getChildren().add(spinnerGroup);
+
+        loaderPane.setOpacity(1);
+        loaderPane.setMouseTransparent(false);
+    }
+
+    public void removeLoader() {
+        loaderPane.setOpacity(0);
+        loaderPane.setMouseTransparent(true);
+        loaderPane.getChildren().clear();
     }
 }
