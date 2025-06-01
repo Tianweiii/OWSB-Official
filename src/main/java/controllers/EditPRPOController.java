@@ -367,11 +367,13 @@ public class EditPRPOController implements Initializable {
                 if(poData != null){
                     po_title_container.setVisible(true);
                     po_title_text_field.setText(poData.getTitle());
+                    title_text.setText("Purchase Order Item List");
                 } else if (prData != null){
                     datepicker.setVisible(false);
                     DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
                     String prRequiredDate = datepicker.getValue().format(formatter);
                     datepicker_title_text.setText("PR Required Date: " + prRequiredDate);
+                    title_text.setText("Purchase Request Item List");
                 }
             }
 
@@ -488,6 +490,7 @@ public class EditPRPOController implements Initializable {
             case APPROVE_PO -> {
                 addActionButtons();
 
+                title_text.setText("Purchase Order Item List");
                 action_button_2.setText("Approve PO");
                 action_button_2.setOnMouseClicked(event -> {
                     setPopUpNotifButtonToNormal("Approve");
@@ -522,6 +525,7 @@ public class EditPRPOController implements Initializable {
             }
 
             case VERIFY_PO -> {
+                title_text.setText("Purchase Order Item List");
                 edit_button.setVisible(false);
                 action_button_1.setText("Mark As Returned");
                 po_title_container.setVisible(true);
